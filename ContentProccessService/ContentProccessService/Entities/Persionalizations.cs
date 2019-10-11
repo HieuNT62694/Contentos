@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ContentProccessService.Entites
+namespace ContentProccessService.Entities
 {
     public partial class Persionalizations
     {

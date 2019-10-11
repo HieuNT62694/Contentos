@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ContentProccessService.Entites
+namespace ContentProccessService.Entities
 {
     public partial class Campaign
     {
         public Campaign()
         {
+            CampaignTags = new HashSet<CampaignTags>();
             Tasks = new HashSet<Tasks>();
         }
 
@@ -21,6 +22,7 @@ namespace ContentProccessService.Entites
         public int? IdMarketer { get; set; }
         public int? IdEditor { get; set; }
 
+        public virtual ICollection<CampaignTags> CampaignTags { get; set; }
         public virtual ICollection<Tasks> Tasks { get; set; }
     }
 }

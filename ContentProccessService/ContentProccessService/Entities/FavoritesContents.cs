@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ContentProccessService.Entites
+namespace ContentProccessService.Entities
 {
     public partial class FavoritesContents
     {
         public int Id { get; set; }
         public int IdContent { get; set; }
         public int IdUser { get; set; }
-        public bool? Status { get; set; }
+        public bool? IsActive { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? Modified { get; set; }
 

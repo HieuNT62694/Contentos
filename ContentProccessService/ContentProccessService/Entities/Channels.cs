@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ContentProccessService.Entites
+namespace ContentProccessService.Entities
 {
     public partial class Channels
     {
@@ -13,7 +13,7 @@ namespace ContentProccessService.Entites
         public int Id { get; set; }
         public string Name { get; set; }
         public string Link { get; set; }
-        public bool? Status { get; set; }
+        public bool? IsActive { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? Modified { get; set; }
 

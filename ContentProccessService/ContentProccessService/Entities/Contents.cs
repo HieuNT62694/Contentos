@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ContentProccessService.Entites
+namespace ContentProccessService.Entities
 {
     public partial class Contents
     {
@@ -12,7 +12,7 @@ namespace ContentProccessService.Entites
         }
 
         public int Id { get; set; }
-        public int IdStask { get; set; }
+        public int IdTask { get; set; }
         public string Name { get; set; }
         public string TheContent { get; set; }
         public int? Version { get; set; }
@@ -20,7 +20,8 @@ namespace ContentProccessService.Entites
         public DateTime? Created { get; set; }
         public DateTime? Modified { get; set; }
 
-        public virtual TasksChannels IdStaskNavigation { get; set; }
+        public virtual Tasks IdTaskNavigation { get; set; }
+        public virtual Status StatusNavigation { get; set; }
         public virtual ICollection<Activations> Activations { get; set; }
         public virtual ICollection<FavoritesContents> FavoritesContents { get; set; }
     }

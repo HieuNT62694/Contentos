@@ -1,4 +1,4 @@
-﻿using ContentProccessService.Entites;
+﻿using ContentProccessService.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;

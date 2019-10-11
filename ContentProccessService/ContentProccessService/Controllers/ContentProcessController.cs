@@ -2,18 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ContentProccessService.Application.Dtos;
 using ContentProccessService.Application.Queries.GetTags;
 using Microsoft.AspNetCore.Mvc;
+using ContentProccessService.Application.Commands.CreateTag;
+using ContentProccessService.Application.Queries.GetTagsByCampaignId;
 
 namespace ContentProccessService.Controllers
 {
     public class ContentProcessController : BaseController
     {
 
-        [HttpGet()]
+        [HttpGet("tags")]
         public async Task<IActionResult> GetListTagAsync()
         {
             var response = await Mediator.Send(new GetTagRequest());
+            return Ok(response);
+        }
+
+        [HttpPost("tags")]
+        public async Task<IActionResult> CreateTag([FromBody]TagsDto dto)
+        {
+            var response = await Mediator.Send(new CreateTagRequest { dto = dto });
+            return Ok(response);
+        }
+
+        [HttpGet("tags/campaign/{id}")]
+        public async Task<IActionResult> GetTagsByCampaignId(int id)
+        {
+            var response = await Mediator.Send(new GetTagsByCampaignIdRequest {campaignId = id});
             return Ok(response);
         }
     }

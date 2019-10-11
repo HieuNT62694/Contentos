@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace ContentProccessService.Entites
+namespace ContentProccessService.Entities
 {
     public partial class ContentoContext : DbContext
     {
@@ -17,15 +17,9 @@ namespace ContentProccessService.Entites
 
         public virtual DbSet<Accounts> Accounts { get; set; }
         public virtual DbSet<Activations> Activations { get; set; }
-        public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
-        public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
-        public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
-        public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
-        public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
-        public virtual DbSet<AspNetUserTokens> AspNetUserTokens { get; set; }
-        public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<Behaviours> Behaviours { get; set; }
         public virtual DbSet<Campaign> Campaign { get; set; }
+        public virtual DbSet<CampaignTags> CampaignTags { get; set; }
         public virtual DbSet<Channels> Channels { get; set; }
         public virtual DbSet<Contents> Contents { get; set; }
         public virtual DbSet<FavoritesContents> FavoritesContents { get; set; }
@@ -45,8 +39,7 @@ namespace ContentProccessService.Entites
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=34.87.31.23;Database=Contento;User ID=sa;Password=Hieunguyen1@;MultipleActiveResultSets=True;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
+                optionsBuilder.UseSqlServer("Server=34.87.31.23;Database=Contento;User ID=sa;Password=Hieunguyen1@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
             }
         }
 
@@ -72,6 +65,8 @@ namespace ContentProccessService.Entites
 
                 entity.Property(e => e.IdUser).HasColumnName("id_user");
 
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
                 entity.Property(e => e.Modified)
                     .HasColumnName("modified")
                     .HasColumnType("datetime");
@@ -79,8 +74,6 @@ namespace ContentProccessService.Entites
                 entity.Property(e => e.Password)
                     .HasColumnName("password")
                     .HasMaxLength(50);
-
-                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Accounts)
@@ -130,100 +123,6 @@ namespace ContentProccessService.Entites
                     .HasConstraintName("FK_activations_contents");
             });
 
-            modelBuilder.Entity<AspNetRoleClaims>(entity =>
-            {
-                entity.HasIndex(e => e.RoleId);
-
-                entity.Property(e => e.RoleId).IsRequired();
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.AspNetRoleClaims)
-                    .HasForeignKey(d => d.RoleId);
-            });
-
-            modelBuilder.Entity<AspNetRoles>(entity =>
-            {
-                entity.HasIndex(e => e.NormalizedName)
-                    .HasName("RoleNameIndex")
-                    .IsUnique()
-                    .HasFilter("([NormalizedName] IS NOT NULL)");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Name).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedName).HasMaxLength(256);
-            });
-
-            modelBuilder.Entity<AspNetUserClaims>(entity =>
-            {
-                entity.HasIndex(e => e.UserId);
-
-                entity.Property(e => e.UserId).IsRequired();
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.AspNetUserClaims)
-                    .HasForeignKey(d => d.UserId);
-            });
-
-            modelBuilder.Entity<AspNetUserLogins>(entity =>
-            {
-                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
-
-                entity.HasIndex(e => e.UserId);
-
-                entity.Property(e => e.UserId).IsRequired();
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.AspNetUserLogins)
-                    .HasForeignKey(d => d.UserId);
-            });
-
-            modelBuilder.Entity<AspNetUserRoles>(entity =>
-            {
-                entity.HasKey(e => new { e.UserId, e.RoleId });
-
-                entity.HasIndex(e => e.RoleId);
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.AspNetUserRoles)
-                    .HasForeignKey(d => d.RoleId);
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.AspNetUserRoles)
-                    .HasForeignKey(d => d.UserId);
-            });
-
-            modelBuilder.Entity<AspNetUserTokens>(entity =>
-            {
-                entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.AspNetUserTokens)
-                    .HasForeignKey(d => d.UserId);
-            });
-
-            modelBuilder.Entity<AspNetUsers>(entity =>
-            {
-                entity.HasIndex(e => e.NormalizedEmail)
-                    .HasName("EmailIndex");
-
-                entity.HasIndex(e => e.NormalizedUserName)
-                    .HasName("UserNameIndex")
-                    .IsUnique()
-                    .HasFilter("([NormalizedUserName] IS NOT NULL)");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
-
-                entity.Property(e => e.Email).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
-
-                entity.Property(e => e.UserName).HasMaxLength(256);
-            });
-
             modelBuilder.Entity<Behaviours>(entity =>
             {
                 entity.ToTable("behaviours");
@@ -234,6 +133,8 @@ namespace ContentProccessService.Entites
                     .HasColumnName("created")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
                 entity.Property(e => e.Modified)
                     .HasColumnName("modified")
                     .HasColumnType("datetime");
@@ -241,8 +142,6 @@ namespace ContentProccessService.Entites
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasMaxLength(100);
-
-                entity.Property(e => e.Status).HasColumnName("status");
             });
 
             modelBuilder.Entity<Campaign>(entity =>
@@ -278,6 +177,37 @@ namespace ContentProccessService.Entites
                     .HasMaxLength(200);
             });
 
+            modelBuilder.Entity<CampaignTags>(entity =>
+            {
+                entity.ToTable("campaign_tags");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Created)
+                    .HasColumnName("created")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.IdCampaign).HasColumnName("id_campaign");
+
+                entity.Property(e => e.IdTags).HasColumnName("id_tags");
+
+                entity.Property(e => e.Modified)
+                    .HasColumnName("modified")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdCampaignNavigation)
+                    .WithMany(p => p.CampaignTags)
+                    .HasForeignKey(d => d.IdCampaign)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_campaign_tags_campaign");
+
+                entity.HasOne(d => d.IdTagsNavigation)
+                    .WithMany(p => p.CampaignTags)
+                    .HasForeignKey(d => d.IdTags)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_campaign_tags_tags");
+            });
+
             modelBuilder.Entity<Channels>(entity =>
             {
                 entity.ToTable("channels");
@@ -288,6 +218,8 @@ namespace ContentProccessService.Entites
                     .HasColumnName("created")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
                 entity.Property(e => e.Link).HasColumnName("link");
 
                 entity.Property(e => e.Modified)
@@ -297,8 +229,6 @@ namespace ContentProccessService.Entites
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasMaxLength(100);
-
-                entity.Property(e => e.Status).HasColumnName("status");
             });
 
             modelBuilder.Entity<Contents>(entity =>
@@ -311,7 +241,7 @@ namespace ContentProccessService.Entites
                     .HasColumnName("created")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.IdStask).HasColumnName("id_stask");
+                entity.Property(e => e.IdTask).HasColumnName("id_task");
 
                 entity.Property(e => e.Modified)
                     .HasColumnName("modified")
@@ -327,11 +257,16 @@ namespace ContentProccessService.Entites
 
                 entity.Property(e => e.Version).HasColumnName("version");
 
-                entity.HasOne(d => d.IdStaskNavigation)
+                entity.HasOne(d => d.IdTaskNavigation)
                     .WithMany(p => p.Contents)
-                    .HasForeignKey(d => d.IdStask)
+                    .HasForeignKey(d => d.IdTask)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_contents_tasks_channels");
+                    .HasConstraintName("FK_contents_tasks");
+
+                entity.HasOne(d => d.StatusNavigation)
+                    .WithMany(p => p.Contents)
+                    .HasForeignKey(d => d.Status)
+                    .HasConstraintName("FK_contents_status");
             });
 
             modelBuilder.Entity<FavoritesContents>(entity =>
@@ -348,11 +283,11 @@ namespace ContentProccessService.Entites
 
                 entity.Property(e => e.IdUser).HasColumnName("id_user");
 
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
                 entity.Property(e => e.Modified)
                     .HasColumnName("modified")
                     .HasColumnType("datetime");
-
-                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.HasOne(d => d.IdContentNavigation)
                     .WithMany(p => p.FavoritesContents)
@@ -426,6 +361,8 @@ namespace ContentProccessService.Entites
                     .HasColumnName("created")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
                 entity.Property(e => e.Modified)
                     .HasColumnName("modified")
                     .HasColumnType("datetime");
@@ -433,8 +370,6 @@ namespace ContentProccessService.Entites
                 entity.Property(e => e.Role)
                     .HasColumnName("role")
                     .HasMaxLength(50);
-
-                entity.Property(e => e.Status).HasColumnName("status");
             });
 
             modelBuilder.Entity<Status>(entity =>
@@ -456,6 +391,8 @@ namespace ContentProccessService.Entites
                     .HasColumnName("created")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
                 entity.Property(e => e.Modified)
                     .HasColumnName("modified")
                     .HasColumnType("datetime");
@@ -463,8 +400,6 @@ namespace ContentProccessService.Entites
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasMaxLength(50);
-
-                entity.Property(e => e.Status).HasColumnName("status");
             });
 
             modelBuilder.Entity<Tasks>(entity =>
@@ -487,6 +422,8 @@ namespace ContentProccessService.Entites
 
                 entity.Property(e => e.IdWriter).HasColumnName("id_writer");
 
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
                 entity.Property(e => e.Modified)
                     .HasColumnName("modified")
                     .HasColumnType("datetime");
@@ -494,8 +431,6 @@ namespace ContentProccessService.Entites
                 entity.Property(e => e.PublishTime)
                     .HasColumnName("publish_time")
                     .HasColumnType("datetime");
-
-                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.Title)
                     .HasColumnName("title")
@@ -511,6 +446,11 @@ namespace ContentProccessService.Entites
                     .WithMany(p => p.Tasks)
                     .HasForeignKey(d => d.IdWriter)
                     .HasConstraintName("FK_tasks_users");
+
+                entity.HasOne(d => d.IsActiveNavigation)
+                    .WithMany(p => p.Tasks)
+                    .HasForeignKey(d => d.IsActive)
+                    .HasConstraintName("FK_tasks_status");
             });
 
             modelBuilder.Entity<TasksChannels>(entity =>
@@ -591,11 +531,11 @@ namespace ContentProccessService.Entites
 
                 entity.Property(e => e.IdUser).HasColumnName("id_user");
 
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
                 entity.Property(e => e.Modified)
                     .HasColumnName("modified")
                     .HasColumnType("datetime");
-
-                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.Token)
                     .HasColumnName("token")
@@ -623,13 +563,13 @@ namespace ContentProccessService.Entites
 
                 entity.Property(e => e.IdOccupation).HasColumnName("id_occupation");
 
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasMaxLength(100);
 
                 entity.Property(e => e.Quote).HasColumnName("quote");
-
-                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.HasOne(d => d.IdLocationNavigation)
                     .WithMany(p => p.Users)
