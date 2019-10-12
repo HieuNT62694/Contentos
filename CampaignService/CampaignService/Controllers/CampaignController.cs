@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CampaignService.Application.Commands.CreateCampaign;
+using CampaignService.Application.Commands.UpdateCampaign;
 using CampaignService.Application.Queries.GetCampaign;
 using CampaignService.Application.Queries.GetListCampaign;
 using CampaignService.Application.Queries.GetListCampaignByUserId;
@@ -39,6 +40,13 @@ namespace CampaignService.Controllers
         {
             await Mediator.Send(command);
             return Accepted("Create Successful !!");
+        }
+
+        [HttpPut("campaign")]
+        public async Task<IActionResult> PostCampaignAsync(UpdateCampaignCommand command)
+        {
+            await Mediator.Send(command);
+            return Accepted("Update Successful !!");
         }
     }
 }
