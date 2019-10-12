@@ -3,12 +3,6 @@
     {
       "DownstreamPathTemplate": "/api/campaign/{everything}",
       "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "http://campaign-c965bbb85-bsbht",
-          "Port": 80
-        }
-      ]
       "UpstreamPathTemplate": "/campaign/{everything}",
       "ServiceName": "CampaignService"
     },
@@ -25,7 +19,7 @@
     "UseServiceDiscovery": true,
     "ServiceDiscoveryProvider": {
       "Type": "Eureka",
-      "Host": "http://eureka-cluster-ip-service",
+      "Host": "eureka-cluster-ip-service",
       "Port": "8761"
     }
   }

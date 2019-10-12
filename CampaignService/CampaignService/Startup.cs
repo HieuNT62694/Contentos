@@ -18,6 +18,7 @@ using FluentValidation.AspNetCore;
 using CampaignService.Application.Queries;
 using CampaignService.Application.Queries.GetCampaign;
 using Steeltoe.Discovery.Client;
+using CampaignService.Application.Commands.CreateCampaign;
 
 namespace CampaignService
 {
@@ -27,7 +28,6 @@ namespace CampaignService
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -59,9 +59,20 @@ namespace CampaignService
             services.AddMediatR(typeof(GetCampaignRequest).Assembly);
             services.AddRouting(o => o.LowercaseUrls = true);
             services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GetCampaignValidator>());
+            //services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateCampaignCommand>());
             //add ueraka
             services.AddDiscoveryClient(Configuration);
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options => {
+                options.SerializerSettings.ReferenceLoopHandling =
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
+            //addd cors
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +86,7 @@ namespace CampaignService
             app.UseOpenApi();
             app.UseSwaggerUi3();
             app.UseHttpsRedirection();
+            app.UseCors("MyPolicy");
             app.UseDiscoveryClient();
             app.UseMvc();
         }

@@ -1,26 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Capstone\\Doan\\Contento\\CampaignService\\CampaignService\\CampaignService.csproj": {}
+    "D:\\Study\\Capstone\\BE\\Contentos\\CampaignService\\CampaignService\\CampaignService.csproj": {}
   },
   "projects": {
-    "D:\\Capstone\\Doan\\Contento\\CampaignService\\CampaignService\\CampaignService.csproj": {
+    "D:\\Study\\Capstone\\BE\\Contentos\\CampaignService\\CampaignService\\CampaignService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Capstone\\Doan\\Contento\\CampaignService\\CampaignService\\CampaignService.csproj",
+        "projectUniqueName": "D:\\Study\\Capstone\\BE\\Contentos\\CampaignService\\CampaignService\\CampaignService.csproj",
         "projectName": "CampaignService",
-        "projectPath": "D:\\Capstone\\Doan\\Contento\\CampaignService\\CampaignService\\CampaignService.csproj",
-        "packagesPath": "C:\\Users\\HieuNTSE62694\\.nuget\\packages\\",
-        "outputPath": "D:\\Capstone\\Doan\\Contento\\CampaignService\\CampaignService\\obj\\",
+        "projectPath": "D:\\Study\\Capstone\\BE\\Contentos\\CampaignService\\CampaignService\\CampaignService.csproj",
+        "packagesPath": "C:\\Users\\zzdai\\.nuget\\packages\\",
+        "outputPath": "D:\\Study\\Capstone\\BE\\Contentos\\CampaignService\\CampaignService\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\HieuNTSE62694\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\zzdai\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp2.2"
