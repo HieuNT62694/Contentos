@@ -7,7 +7,7 @@ namespace CampaignService.Entities
     {
         public Tasks()
         {
-            TasksAccounts = new HashSet<TasksAccounts>();
+            Contents = new HashSet<Contents>();
             TasksChannels = new HashSet<TasksChannels>();
             TasksTags = new HashSet<TasksTags>();
         }
@@ -18,12 +18,14 @@ namespace CampaignService.Entities
         public string Description { get; set; }
         public DateTime? Deadline { get; set; }
         public DateTime? PublishTime { get; set; }
-        public string Status { get; set; }
-        public DateTime? Created { get; set; }
+        public int? Status { get; set; }
+        public DateTime? StartedDate { get; set; }
         public DateTime? Modified { get; set; }
+        public int? IdWriter { get; set; }
 
         public virtual Campaign IdCampaignNavigation { get; set; }
-        public virtual ICollection<TasksAccounts> TasksAccounts { get; set; }
+        public virtual Status StatusNavigation { get; set; }
+        public virtual ICollection<Contents> Contents { get; set; }
         public virtual ICollection<TasksChannels> TasksChannels { get; set; }
         public virtual ICollection<TasksTags> TasksTags { get; set; }
     }

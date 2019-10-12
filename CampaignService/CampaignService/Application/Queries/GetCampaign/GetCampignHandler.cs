@@ -1,5 +1,6 @@
 ﻿using CampaignService.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,12 @@ namespace CampaignService.Application.Queries.GetCampaign
 
         public async Task<Campaign> Handle(GetCampaignRequest request, CancellationToken cancellationToken)
         {
-            return await contentodbContext.Campaign.FindAsync(request.IdCampaign);
+            //Task<Campaign> returnResult = await contentodbContext.Campaign.find(request.IdCampaign);
+            //return await returnResult;
+            return await contentodbContext.Campaign.Include(i => i.Tasks).FirstOrDefaultAsync(x => x.Id == request.IdCampaign);
+            //return await contentodbContext.Campaign.FindAsync(request.IdCampaign);
         }
+
 
     }
 }

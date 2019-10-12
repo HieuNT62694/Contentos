@@ -20,7 +20,7 @@ namespace CampaignService.Entities
         public string Quote { get; set; }
         public int IdOccupation { get; set; }
         public int IdLocation { get; set; }
-        public bool? Status { get; set; }
+        public bool? IsActive { get; set; }
         public int IdManager { get; set; }
 
         public virtual Locations IdLocationNavigation { get; set; }

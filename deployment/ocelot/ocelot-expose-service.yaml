@@ -7,5 +7,5 @@ spec:
   selector:
     component: ocelot
   ports:
-  - port: 8760
-    targetPort: 8760
+  - port: 80
+    targetPort: 80

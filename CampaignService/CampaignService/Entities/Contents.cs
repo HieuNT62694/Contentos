@@ -12,15 +12,16 @@ namespace CampaignService.Entities
         }
 
         public int Id { get; set; }
-        public int IdStask { get; set; }
+        public int IdTask { get; set; }
         public string Name { get; set; }
-        public string Content { get; set; }
+        public string TheContent { get; set; }
         public int? Version { get; set; }
-        public string Status { get; set; }
+        public int? Status { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? Modified { get; set; }
 
-        public virtual TasksChannels IdStaskNavigation { get; set; }
+        public virtual Tasks IdTaskNavigation { get; set; }
+        public virtual Status StatusNavigation { get; set; }
         public virtual ICollection<Activations> Activations { get; set; }
         public virtual ICollection<FavoritesContents> FavoritesContents { get; set; }
     }

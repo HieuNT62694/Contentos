@@ -8,7 +8,7 @@ namespace CampaignService.Entities
         public int Id { get; set; }
         public int IdContent { get; set; }
         public int IdUser { get; set; }
-        public bool? Status { get; set; }
+        public bool? IsActive { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? Modified { get; set; }
 

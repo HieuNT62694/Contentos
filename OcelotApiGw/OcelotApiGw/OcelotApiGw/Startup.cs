@@ -27,23 +27,7 @@ namespace OcelotApiGw
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //add swagger
-            services.AddOpenApiDocument(config =>
-            {
-                config.PostProcess = document =>
-                {
-                    document.Info.Version = "v1";
-                    document.Info.Title = string.Format($"Contento Service");
-                    document.Info.Description = string.Format($"Developer Documentation Page For Contento Service");
-                };
-                config.DocumentProcessors.Add(new SecurityDefinitionAppender("Jwt Token Authentication", new OpenApiSecurityScheme
-                {
-                    Type = OpenApiSecuritySchemeType.ApiKey,
-                    Name = "Authorization",
-                    Description = "Using: Bearer + your jwt token",
-                    In = OpenApiSecurityApiKeyLocation.Header
-                }));
-            });
+         
             services.AddCors();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
