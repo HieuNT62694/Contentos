@@ -549,6 +549,8 @@ namespace AuthenticationService.Entities
 
                 entity.Property(e => e.Avatar).HasColumnName("avatar");
 
+                entity.Property(e => e.Company).HasColumnName("company");
+
                 entity.Property(e => e.Gender).HasColumnName("gender");
 
                 entity.Property(e => e.IdLocation).HasColumnName("id_location");

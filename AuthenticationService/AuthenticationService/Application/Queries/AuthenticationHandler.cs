@@ -3,6 +3,7 @@ using AuthenticationService.Entities;
 using AuthenticationService.Models;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace AuthenticationService.Application.Queries
 
         public async Task<LoginSuccessViewModel> Handle(AuthenticationRequest request, CancellationToken cancellationToken)
         {
-            var accounts = _context.Accounts.Where(x => x.Email == request.Email && x.IsActive == true).FirstOrDefault();
+            var accounts = _context.Accounts.AsNoTracking().FirstOrDefault(x => x.Email == request.Email && x.IsActive == true);
             bool checkPassword = false;
             if (accounts != null)
             {
@@ -34,7 +35,7 @@ namespace AuthenticationService.Application.Queries
                 //var user = _context.Accounts.FirstOrDefault(u => u.Email == request.Email);
                 if (checkPassword)
                 {
-                    string role = _context.Roles.FirstOrDefault(r => r.Id == accounts.IdRole).Role;
+                    string role = _context.Roles.AsNoTracking().FirstOrDefault(r => r.Id == accounts.IdRole).Role;
                     string fullname = _context.Users.Find(accounts.IdUser).Name;
                     LoginSuccessViewModel resultReturn = new LoginSuccessViewModel
                     {

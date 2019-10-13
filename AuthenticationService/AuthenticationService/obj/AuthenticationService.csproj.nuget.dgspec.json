@@ -78,6 +78,10 @@
               "target": "Package",
               "version": "[2.2.0, )"
             },
+            "Microsoft.Extensions.Identity.Core": {
+              "target": "Package",
+              "version": "[2.2.0, )"
+            },
             "Microsoft.NETCore.App": {
               "suppressParent": "All",
               "target": "Package",
@@ -107,10 +111,6 @@
             "Steeltoe.Discovery.ClientCore": {
               "target": "Package",
               "version": "[2.3.0, )"
-            },
-            "Z.EntityFramework.Plus.EFCore": {
-              "target": "Package",
-              "version": "[3.0.13, )"
             }
           },
           "imports": [

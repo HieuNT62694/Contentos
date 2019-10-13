@@ -32,6 +32,7 @@
           "Microsoft.AspNetCore.App": "2.2.0",
           "Microsoft.AspNetCore.Identity": "2.2.0",
           "Microsoft.AspNetCore.Razor.Design": "2.2.0",
+          "Microsoft.Extensions.Identity.Core": "2.2.0",
           "Microsoft.NETCore.App": "2.2.0",
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.9.5",
           "Microsoft.VisualStudio.Azure.Kubernetes.Tools.Targets": "1.0.0",

@@ -1,6 +1,7 @@
 ﻿
 using System.Threading.Tasks;
 using AuthenticationService.Application.Commands;
+using AuthenticationService.Application.Commands.CreateCustomer;
 using AuthenticationService.Application.Queries;
 using AuthenticationService.Application.Queries.GetUser;
 using AuthenticationService.Entities;
@@ -29,6 +30,13 @@ namespace AuthenticationService.Controllers
         {
             var response = await Mediator.Send(new GetUserRequest());
             return Ok(response);
+
+        }
+        [HttpPost("customer-account")]
+        public async Task<object> CreateCustomerAccounts(CreateCustomerAccountCommads command)
+        {
+            await Mediator.Send(command);
+            return Accepted("Create Successful !!");
 
         }
     }
