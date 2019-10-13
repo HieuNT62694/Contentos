@@ -62,7 +62,7 @@ namespace AuthenticationService
             services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AuthenticationValidator>());
             //services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateCampaignCommand>());
             //add ueraka
-            //services.AddDiscoveryClient(Configuration);
+            services.AddDiscoveryClient(Configuration);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options => {
                 options.SerializerSettings.ReferenceLoopHandling =
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -78,6 +78,7 @@ namespace AuthenticationService
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,12 +93,12 @@ namespace AuthenticationService
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseAuthentication();
             app.UseOpenApi();
             app.UseSwaggerUi3();
             app.UseHttpsRedirection();
             app.UseCors("MyPolicy");
-            //app.UseDiscoveryClient();
+            app.UseDiscoveryClient();
             app.UseMvc();
         }
     }

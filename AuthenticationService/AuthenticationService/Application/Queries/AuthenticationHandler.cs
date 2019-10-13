@@ -35,10 +35,11 @@ namespace AuthenticationService.Application.Queries
                 if (checkPassword)
                 {
                     string role = _context.Roles.FirstOrDefault(r => r.Id == accounts.IdRole).Role;
-
+                    string fullname = _context.Users.Find(accounts.IdUser).Name;
                     LoginSuccessViewModel resultReturn = new LoginSuccessViewModel
                     {
-                        FullName = accounts.Email,
+                        
+                        FullName = fullname,
                         Role = role,
                         Token = _helper.GenerateJwtToken(request.Email, accounts, role)
                     };
