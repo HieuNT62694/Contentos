@@ -38,7 +38,7 @@ namespace CampaignService.Application.Commands.CreateCampaign
                 {
                     IdCampaign = campaignDbContext.Campaign.LastOrDefault().Id,
                     IdTags = item,
-                    Created = DateTime.UtcNow
+                    CreatedDate = DateTime.UtcNow
                 };
                 campaignDbContext.CampaignTags.Add(newCampaignTags);
 

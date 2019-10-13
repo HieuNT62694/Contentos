@@ -25,17 +25,18 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:5002"
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
-      "environmentVariables": {},
-      "httpPort": 39989
-    },
-    "Azure Dev Spaces": {
-      "commandName": "AzureDevSpaces",
-      "launchBrowser": true
     }
+    //},
+    //"Docker": {
+    //  "commandName": "Docker",
+    //  "launchBrowser": true,
+    //  "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+    //  "environmentVariables": {},
+    //  "httpPort": 39989
+    //},
+    //"Azure Dev Spaces": {
+    //  "commandName": "AzureDevSpaces",
+    //  "launchBrowser": true
+    //}
   }
 }

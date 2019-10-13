@@ -20,7 +20,7 @@ namespace CampaignService.Entities
         public DateTime? PublishTime { get; set; }
         public int? Status { get; set; }
         public DateTime? StartedDate { get; set; }
-        public DateTime? Modified { get; set; }
+        public DateTime? ModifiedDate { get; set; }
         public int? IdWriter { get; set; }
 
         public virtual Campaign IdCampaignNavigation { get; set; }
