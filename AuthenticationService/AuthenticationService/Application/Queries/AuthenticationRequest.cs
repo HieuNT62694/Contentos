@@ -10,6 +10,7 @@ namespace AuthenticationService.Application.Queries
 {
     public class AuthenticationRequest : IRequest<LoginSuccessViewModel> 
     {
+        
         public string Email { get; set; }
         public string Password { get; set; }
     }
