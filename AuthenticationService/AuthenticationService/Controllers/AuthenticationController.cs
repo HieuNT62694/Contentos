@@ -26,7 +26,7 @@ namespace AuthenticationService.Controllers
             return Accepted("Create Successful !!");
 
         }
-        [HttpPost("List-Editor")]
+        [HttpGet("List-Editor")]
         
         public async Task<IActionResult> GetListEditor(GetUserRequest Marketer)
         {
@@ -35,7 +35,7 @@ namespace AuthenticationService.Controllers
 
         }
 
-        [HttpPost("List-Writer")]
+        [HttpGet("List-Writer")]
 
         public async Task<IActionResult> GetListWriter(GetWriterRequest Editor)
         {
@@ -44,7 +44,7 @@ namespace AuthenticationService.Controllers
 
         }
 
-         [HttpPost("List-Customer")]
+         [HttpGet("List-Customer")]
 
         public async Task<IActionResult> GetListCustomer(GetCustomerRequest Marketer)
         {
