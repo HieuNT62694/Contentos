@@ -62,6 +62,13 @@ namespace ContentProccessService
                     In = OpenApiSecurityApiKeyLocation.Header
                 }));
             });
+            //addd cors
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
 
             services.AddMediatR(typeof(Startup).Assembly);
             services.AddRouting(o => o.LowercaseUrls = true);
@@ -79,7 +86,7 @@ namespace ContentProccessService
             {
                 app.UseHsts();
             }
-
+            app.UseCors("MyPolicy");
             app.UseOpenApi();
             app.UseSwaggerUi3();
             app.UseHttpsRedirection();

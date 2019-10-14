@@ -24,14 +24,14 @@ namespace CampaignService.Controllers
             return Ok(response);
         }
 
-        [HttpGet("campaign-detail")]
+        [HttpGet("campaign-detail/{id}")]
         public async Task<IActionResult> GetCampaignDetailAsync(int id)
         {
             var response = await Mediator.Send(new GetCampaignRequest { IdCampaign = id });
             return Ok(response);
         }
 
-        [HttpGet("list-campaign-by-user-id")]
+        [HttpGet("list-campaign-by-user-id/{id}")]
         public async Task<IActionResult> GetListCampaignByUserIdAsync(int idCustomer)
         {
             var response = await Mediator.Send(new GetListCampaignByUserIdRequest {IdCustomer   = idCustomer });

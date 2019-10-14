@@ -26,7 +26,7 @@ namespace AuthenticationService.Controllers
             return Accepted("Create Successful !!");
 
         }
-        [HttpGet("List-Editor")]
+        [HttpGet("List-Editor/{id}")]
         
         public async Task<IActionResult> GetListEditor(int id)
         {
@@ -35,7 +35,7 @@ namespace AuthenticationService.Controllers
 
         }
 
-        [HttpGet("List-Writer")]
+        [HttpGet("List-Writer/{id}")]
 
         public async Task<IActionResult> GetListWriter(int id)
         {
@@ -44,7 +44,7 @@ namespace AuthenticationService.Controllers
 
         }
 
-         [HttpGet("List-Customer")]
+         [HttpGet("List-Customer/{id}")]
 
         public async Task<IActionResult> GetListCustomer(int id)
         {
