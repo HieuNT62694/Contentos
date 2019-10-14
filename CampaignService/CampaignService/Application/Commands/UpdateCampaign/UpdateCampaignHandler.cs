@@ -24,25 +24,31 @@ namespace CampaignService.Application.Commands.UpdateCampaign
             var upCampaign = campaignDbContext.Campaign.Include(x => x.CampaignTags).Single(s => s.Id == request.Id);
 
             upCampaign.EndDate = request.EndDate;
-            upCampaign.IdCustomer = request.IdCustomer;
+
+            upCampaign.IdCustomer = request.Customer.Id;
+
+            upCampaign.IdEditor = request.Editor.Id;
+
             upCampaign.Description = request.Description;
+
             upCampaign.Title = request.Title;
+
             var upTags = new List<CampaignTags>();
 
-            foreach(var item in request.IdTag)
+            foreach(var item in request.Tags)
             {
-                var tag = new CampaignTags { IdTags = item };
+                var tag = new CampaignTags { IdTags = item.Id };
                 upTags.Add(tag);
             }
 
             campaignDbContext.CampaignTags.RemoveRange(upCampaign.CampaignTags);
 
             upCampaign.CampaignTags = upTags;
+
             campaignDbContext.Campaign.Update(upCampaign);
+
             await campaignDbContext.SaveChangesAsync(cancellationToken);
-            //var upTags = campaignDbContext.CampaignTags.Where(x => x.IdCampaign == request.Id).ToList();
-    
-            //await campaignDbContext.SaveChangesAsync(cancellationToken);
+
             return Unit.Value;
         }
     }

@@ -15,8 +15,14 @@ namespace CampaignService.Models
         public string editorName { get; set; }
         public DateTime? EndDate { get; set; }
         public DateTime? StartedDate { get; set; }
-        public ICollection<string> listTag { get; set; }
+        public List<Tag> listTag { get; set; }
         public string customerName { get; set; }
         public int? IdCustomer { get; set; }
+    }
+
+    public class Tag
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -22,6 +22,7 @@ namespace CampaignService.Entities
         public int IdLocation { get; set; }
         public bool? IsActive { get; set; }
         public int IdManager { get; set; }
+        public string Company { get; set; }
 
         public virtual Locations IdLocationNavigation { get; set; }
         public virtual Occupations IdOccupationNavigation { get; set; }

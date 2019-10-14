@@ -19,31 +19,31 @@ namespace CampaignService.Application.Commands.CreateCampaign
 
         public async Task<Unit> Handle(CreateCampaignCommand request, CancellationToken cancellationToken)
         {
+            var Tags = new List<CampaignTags>();
+
+            foreach (var item in request.Tags)
+            {
+                var tag = new CampaignTags { IdTags = item.Id , CreatedDate = DateTime.UtcNow};
+                Tags.Add(tag);
+            }
+
             var newCampaign = new Campaign
             {
 
                 EndDate = request.EndDate,
-                IdCustomer = request.IdCustomer,
-                IdEditor = request.IdEditor,
+                IdCustomer = request.Customer.Id,
+                IdEditor = request.Editor.Id,
                 Description = request.Description,
                 Title = request.Title,
                 StartedDate = DateTime.UtcNow,
-                Status = 1
+                Status = 1,
+                CampaignTags = Tags
             };
-            campaignDbContext.Campaign.Add(newCampaign);
-            await campaignDbContext.SaveChangesAsync(cancellationToken);
-            foreach (var item in request.IdTag)
-            {
-                var newCampaignTags = new CampaignTags
-                {
-                    IdCampaign = campaignDbContext.Campaign.LastOrDefault().Id,
-                    IdTags = item,
-                    Created = DateTime.UtcNow
-                };
-                campaignDbContext.CampaignTags.Add(newCampaignTags);
 
-            }
+            campaignDbContext.Campaign.Add(newCampaign);
+
             await campaignDbContext.SaveChangesAsync(cancellationToken);
+
             return Unit.Value;
         }
     }

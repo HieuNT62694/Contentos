@@ -12,9 +12,27 @@ namespace CampaignService.Application.Commands.CreateCampaign
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime? EndDate { get; set; }
-        public int? IdCustomer { get; set; }
-        public int? IdEditor { get; set; }
-        public List<int> IdTag { get; set; }
-
+        public List<Tag> Tags { get; set; }
+        public Customer Customer { get; set; }
+        public Editor Editor { get; set; }
     }
+
+    public class Tag
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class Customer
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    public class Editor
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
 }

@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using CampaignService.Application.Commands.CreateCampaign;
 using CampaignService.Application.Commands.UpdateCampaign;
 using CampaignService.Application.Queries.GetCampaign;
 using CampaignService.Application.Queries.GetListCampaign;
 using CampaignService.Application.Queries.GetListCampaignByUserId;
+using CampaignService.Entities;
+using CampaignService.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 

@@ -54,8 +54,8 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Email)
@@ -68,13 +68,11 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.Password)
-                    .HasColumnName("password")
-                    .HasMaxLength(50);
+                entity.Property(e => e.Password).HasColumnName("password");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Accounts)
@@ -130,14 +128,14 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
@@ -184,16 +182,16 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IdCampaign).HasColumnName("id_campaign");
 
                 entity.Property(e => e.IdTags).HasColumnName("id_tags");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdCampaignNavigation)
@@ -215,16 +213,16 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
                 entity.Property(e => e.Link).HasColumnName("link");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
@@ -238,14 +236,14 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IdTask).HasColumnName("id_task");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
@@ -276,8 +274,8 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IdContent).HasColumnName("id_content");
@@ -286,8 +284,8 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdContentNavigation)
@@ -327,16 +325,16 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IdTag).HasColumnName("id_tag");
 
                 entity.Property(e => e.IdUser).HasColumnName("id_user");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdTagNavigation)
@@ -358,14 +356,14 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Role)
@@ -388,14 +386,14 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
@@ -419,8 +417,8 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.IdWriter).HasColumnName("id_writer");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.PublishTime)
@@ -455,16 +453,16 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IdChannel).HasColumnName("id_channel");
 
                 entity.Property(e => e.IdTask).HasColumnName("id_task");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdChannelNavigation)
@@ -488,16 +486,16 @@ namespace CampaignService.Entities
                     .HasColumnName("id")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IdTag).HasColumnName("id_tag");
 
                 entity.Property(e => e.IdTask).HasColumnName("id_task");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdTagNavigation)
@@ -517,8 +515,8 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.DeviceType)
@@ -529,8 +527,8 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Token)
@@ -550,6 +548,8 @@ namespace CampaignService.Entities
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Avatar).HasColumnName("avatar");
+
+                entity.Property(e => e.Company).HasColumnName("company");
 
                 entity.Property(e => e.Gender).HasColumnName("gender");
 
