@@ -1,5 +1,9 @@
 {
   "version": 1,
+<<<<<<< HEAD
   "dgSpecHash": "Lkzs9kwomP7CCjC1mAJnpv2iKIGm53Pf/yWIRLktV2SIbvqG67Nfp2JjbWqc27QL1EIuluKwH2+4ftbcMRUP1w==",
+=======
+  "dgSpecHash": "HqZ8YnBvYSiwuJiOJ/UIqW5IJyNc3pMC7gxA/bmO9eOGdT2fRgVFAzCMwFe5ajxDOMKZXTSWzQoftsdvv/uMUA==",
+>>>>>>> Authen-service
   "success": true
 }

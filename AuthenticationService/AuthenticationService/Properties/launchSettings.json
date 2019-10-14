@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -20,27 +20,28 @@
     "AuthenticationService": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/values",
+      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:5001;http://localhost:5000"
-    },
-    "Docker": {
-      "commandName": "Docker",
-      "launchBrowser": true,
-      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/values",
-      "environmentVariables": {
-        "ASPNETCORE_URLS": "https://+:443;http://+:80",
-        "ASPNETCORE_HTTPS_PORT": "44343"
-      },
-      "httpPort": 54316,
-      "useSSL": true,
-      "sslPort": 44343
-    },
-    "Azure Dev Spaces": {
-      "commandName": "AzureDevSpaces",
-      "launchBrowser": true
+      "applicationUrl": "https://localhost:5001;"
     }
+    //},
+    //"Docker": {
+    //  "commandName": "Docker",
+    //  "launchBrowser": true,
+    //  "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/api/values",
+    //  "environmentVariables": {
+    //    "ASPNETCORE_URLS": "https://+:443;http://+:80",
+    //    "ASPNETCORE_HTTPS_PORT": "44343"
+    //  },
+    //  "httpPort": 54316,
+    //  "useSSL": true,
+    //  "sslPort": 44343
+    //},
+    //"Azure Dev Spaces": {
+    //  "commandName": "AzureDevSpaces",
+    //  "launchBrowser": true
+    //}
   }
 }
