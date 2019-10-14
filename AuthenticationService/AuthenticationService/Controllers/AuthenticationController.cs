@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using AuthenticationService.Application.Commands;
 using AuthenticationService.Application.Commands.CreateCustomer;
 using AuthenticationService.Application.Queries;
+using AuthenticationService.Application.Queries.GetCustomer;
 using AuthenticationService.Application.Queries.GetUser;
+using AuthenticationService.Application.Queries.GetWriter;
 using AuthenticationService.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,14 +26,33 @@ namespace AuthenticationService.Controllers
             return Accepted("Create Successful !!");
 
         }
-        [HttpGet("List-Editor")]
+        [HttpPost("List-Editor")]
         
-        public async Task<IActionResult> GetListEditor()
+        public async Task<IActionResult> GetListEditor(GetUserRequest Marketer)
         {
-            var response = await Mediator.Send(new GetUserRequest());
+            var response = await Mediator.Send(Marketer);
             return Ok(response);
 
         }
+
+        [HttpPost("List-Writer")]
+
+        public async Task<IActionResult> GetListWriter(GetWriterRequest Editor)
+        {
+            var response = await Mediator.Send(Editor);
+            return Ok(response);
+
+        }
+
+         [HttpPost("List-Customer")]
+
+        public async Task<IActionResult> GetListCustomer(GetCustomerRequest Marketer)
+        {
+            var response = await Mediator.Send(Marketer);
+            return Ok(response);
+
+        }
+
         [HttpPost("customer-account")]
         public async Task<object> CreateCustomerAccounts(CreateCustomerAccountCommads command)
         {

@@ -35,10 +35,10 @@ namespace AuthenticationService.Models
         public string ImagePath { get; set; }
         public string Role { get; set; }
     }
-    public class ListEditorModel
+    public class ListUserModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
     }
-
+  
 }

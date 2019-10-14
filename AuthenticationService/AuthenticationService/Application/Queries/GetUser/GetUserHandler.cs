@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Application.Queries.GetUser
 {
-    public class GetUserHandler : IRequestHandler<GetUserRequest, List<ListEditorModel>>
+    public class GetUserHandler : IRequestHandler<GetUserRequest, List<ListUserModel>>
     {
         private readonly ContentoContext _context;
 
@@ -20,15 +20,15 @@ namespace AuthenticationService.Application.Queries.GetUser
 
             _context = context;
         }
-        public async Task<List<ListEditorModel>> Handle(GetUserRequest request, CancellationToken cancellationToken)
+        public async Task<List<ListUserModel>> Handle(GetUserRequest request, CancellationToken cancellationToken)
         {
-            var lstUser = _context.Users.Include(x => x.Accounts).Where(x=>x.Accounts.Any(i=>i.IdRole == 2)).ToList();
-            var lstEditor = new List<ListEditorModel>();
+            var lstUser = _context.Users.Include(x => x.Accounts).Where(x=>x.Accounts.Any(i=>i.IdRole == 2)).Where(u => u.IdManager == request.IdMarketer).ToList();
+            var lstEditor = new List<ListUserModel>();
             foreach (var item in lstUser)
             {
-                var edtUser = new ListEditorModel
+                var edtUser = new ListUserModel
                 {
-                    Id = item.Accounts.Select(x => x.Id).FirstOrDefault(),
+                    Id = item.Id,
                     Name = item.Name
                 };
                 lstEditor.Add(edtUser);

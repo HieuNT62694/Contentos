@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Application.Queries.GetUser
 {
-    public class GetUserRequest : IRequest<List<ListEditorModel>>
+    public class GetUserRequest : IRequest<List<ListUserModel>>
     {
+        public int IdMarketer { get; set; }
     }
 }
