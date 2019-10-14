@@ -8,8 +8,8 @@ namespace ContentProccessService.Entities
         public int Id { get; set; }
         public int IdUser { get; set; }
         public int IdTag { get; set; }
-        public DateTime? Created { get; set; }
-        public DateTime? Modified { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
         public virtual Tags IdTagNavigation { get; set; }
         public virtual Users IdUserNavigation { get; set; }

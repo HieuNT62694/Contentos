@@ -12,7 +12,7 @@ namespace ContentProccessService.Application.Commands.CreateTag
         public CreateTagValidator()
         {
             RuleFor(x => x.Name).NotEmpty();
-            RuleFor(x => x.Status).NotEmpty();
+            RuleFor(x => x.IsActive).NotEmpty();
         }
     }
 }

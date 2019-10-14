@@ -7,6 +7,8 @@ using ContentProccessService.Application.Queries.GetTags;
 using Microsoft.AspNetCore.Mvc;
 using ContentProccessService.Application.Commands.CreateTag;
 using ContentProccessService.Application.Queries.GetTagsByCampaignId;
+using ContentProccessService.Application.Queries.GetListTaksByCampaignId;
+using ContentProccessService.Application.Queries.GetTaskDetail;
 
 namespace ContentProccessService.Controllers
 {
@@ -31,6 +33,18 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> GetTagsByCampaignId(int id)
         {
             var response = await Mediator.Send(new GetTagsByCampaignIdRequest {campaignId = id});
+            return Ok(response);
+        }
+        [HttpGet("task/campaign/{id}")]
+        public async Task<IActionResult> GetTasksByCampaignId(int id)
+        {
+            var response = await Mediator.Send(new GetListTasksByCampaignIdRequest { IdCampaign = id });
+            return Ok(response);
+        }
+        [HttpGet("task-detail/campaign/{id}")]
+        public async Task<IActionResult> GetTasksDetail(int id)
+        {
+            var response = await Mediator.Send(new GetTaskDetailRequest { IdTask = id });
             return Ok(response);
         }
     }

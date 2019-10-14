@@ -39,6 +39,7 @@ namespace ContentProccessService.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=34.87.31.23;Database=Contento;User ID=sa;Password=Hieunguyen1@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
             }
         }
@@ -53,8 +54,8 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Email)
@@ -67,13 +68,11 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.Password)
-                    .HasColumnName("password")
-                    .HasMaxLength(50);
+                entity.Property(e => e.Password).HasColumnName("password");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Accounts)
@@ -129,14 +128,14 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
@@ -149,10 +148,6 @@ namespace ContentProccessService.Entities
                 entity.ToTable("campaign");
 
                 entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
-                    .HasColumnType("datetime");
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
@@ -170,6 +165,10 @@ namespace ContentProccessService.Entities
                     .HasColumnName("modified")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.StartedDate)
+                    .HasColumnName("started_date")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.Title)
@@ -183,16 +182,16 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IdCampaign).HasColumnName("id_campaign");
 
                 entity.Property(e => e.IdTags).HasColumnName("id_tags");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdCampaignNavigation)
@@ -214,16 +213,16 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
                 entity.Property(e => e.Link).HasColumnName("link");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
@@ -237,14 +236,14 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IdTask).HasColumnName("id_task");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
@@ -275,8 +274,8 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IdContent).HasColumnName("id_content");
@@ -285,8 +284,8 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdContentNavigation)
@@ -326,16 +325,16 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IdTag).HasColumnName("id_tag");
 
                 entity.Property(e => e.IdUser).HasColumnName("id_user");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdTagNavigation)
@@ -357,14 +356,14 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Role)
@@ -387,14 +386,14 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
@@ -408,10 +407,6 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
-                    .HasColumnType("datetime");
-
                 entity.Property(e => e.Deadline)
                     .HasColumnName("deadline")
                     .HasColumnType("datetime");
@@ -422,15 +417,19 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.IdWriter).HasColumnName("id_writer");
 
-                entity.Property(e => e.IsActive).HasColumnName("is_active");
-
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.PublishTime)
                     .HasColumnName("publish_time")
                     .HasColumnType("datetime");
+
+                entity.Property(e => e.StartedDate)
+                    .HasColumnName("started_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.Title)
                     .HasColumnName("title")
@@ -442,14 +441,9 @@ namespace ContentProccessService.Entities
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tasks_campaign");
 
-                entity.HasOne(d => d.IdWriterNavigation)
+                entity.HasOne(d => d.StatusNavigation)
                     .WithMany(p => p.Tasks)
-                    .HasForeignKey(d => d.IdWriter)
-                    .HasConstraintName("FK_tasks_users");
-
-                entity.HasOne(d => d.IsActiveNavigation)
-                    .WithMany(p => p.Tasks)
-                    .HasForeignKey(d => d.IsActive)
+                    .HasForeignKey(d => d.Status)
                     .HasConstraintName("FK_tasks_status");
             });
 
@@ -459,16 +453,16 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IdChannel).HasColumnName("id_channel");
 
                 entity.Property(e => e.IdTask).HasColumnName("id_task");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdChannelNavigation)
@@ -492,16 +486,16 @@ namespace ContentProccessService.Entities
                     .HasColumnName("id")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.IdTag).HasColumnName("id_tag");
 
                 entity.Property(e => e.IdTask).HasColumnName("id_task");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.HasOne(d => d.IdTagNavigation)
@@ -521,8 +515,8 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Created)
-                    .HasColumnName("created")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.DeviceType)
@@ -533,8 +527,8 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Token)
@@ -554,6 +548,8 @@ namespace ContentProccessService.Entities
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Avatar).HasColumnName("avatar");
+
+                entity.Property(e => e.Company).HasColumnName("company");
 
                 entity.Property(e => e.Gender).HasColumnName("gender");
 

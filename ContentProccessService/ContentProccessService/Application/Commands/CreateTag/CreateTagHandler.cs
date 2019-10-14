@@ -18,7 +18,7 @@ namespace ContentProccessService.Application.Commands.CreateTag
         }
         public async Task<Unit> Handle(CreateTagRequest request, CancellationToken cancellationToken)
         {
-            var tag = new Tags {Name = request.dto.Name, IsActive = request.dto.IsActive, Created = DateTime.Now};
+            var tag = new Tags {Name = request.dto.Name, IsActive = request.dto.IsActive, CreatedDate = DateTime.Now};
             contentodbContext.Tags.Add(tag);
             await contentodbContext.SaveChangesAsync();
             return Unit.Value;
