@@ -21,23 +21,27 @@ namespace CampaignService.Application.Queries.GetCampaign
 
         public async Task<CampaignData> Handle(GetCampaignRequest request, CancellationToken cancellationToken)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>());
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>().ForMember(x => x.Status, opt => opt.Ignore()));
             var mapper = config.CreateMapper();
 
             var entity = contentodbContext.Campaign.Include(i => i.CampaignTags).First(x => x.Id == request.IdCampaign);
 
             CampaignData model = mapper.Map<CampaignData>(entity);
 
-            //Get Editor Name
-            model.editorName = contentodbContext.Users.Find(entity.IdEditor).Name;
+            //Get Editor Name & Id
+            model.Editor = new Models.Editor();
+            model.Editor.Id = entity.IdEditor;
+            model.Editor.Name = contentodbContext.Users.Find(entity.IdEditor).Name;
 
-            //Get Customer Name
-            model.customerName = contentodbContext.Users.Find(entity.IdCustomer).Name;
+            //Get Customer Name & Id
+            model.Customer = new Models.Customer();
+            model.Customer.Id = entity.IdCustomer;
+            model.Customer.Name = contentodbContext.Users.Find(entity.IdCustomer).Name;
 
-            //Get Status Name
-            model.Status = contentodbContext.Status.Find(entity.Status).Name;
-
-            model.idStatus = entity.Status;
+            //Get Status Name & Id
+            model.Status = new Models.Status();
+            model.Status.Id = entity.Status;
+            model.Status.Name = contentodbContext.Status.Find(entity.Status).Name;
 
             //Get ListTag
             List<Tag> ls = new List<Tag>();
