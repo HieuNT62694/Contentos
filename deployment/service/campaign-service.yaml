@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: campaign-c965bbb85-lsxwz
+  name: campaign-59845855cd-2sr9c
 spec:
   type: ClusterIP
   selector:

@@ -28,27 +28,27 @@ namespace AuthenticationService.Controllers
         }
         [HttpGet("List-Editor")]
         
-        public async Task<IActionResult> GetListEditor(GetUserRequest Marketer)
+        public async Task<IActionResult> GetListEditor(int id)
         {
-            var response = await Mediator.Send(Marketer);
+            var response = await Mediator.Send(new GetUserRequest { IdMarketer = id }) ;
             return Ok(response);
 
         }
 
         [HttpGet("List-Writer")]
 
-        public async Task<IActionResult> GetListWriter(GetWriterRequest Editor)
+        public async Task<IActionResult> GetListWriter(int id)
         {
-            var response = await Mediator.Send(Editor);
+            var response = await Mediator.Send(new GetUserRequest {IdMarketer = id });
             return Ok(response);
 
         }
 
          [HttpGet("List-Customer")]
 
-        public async Task<IActionResult> GetListCustomer(GetCustomerRequest Marketer)
+        public async Task<IActionResult> GetListCustomer(int id)
         {
-            var response = await Mediator.Send(Marketer);
+            var response = await Mediator.Send(new GetCustomerRequest { MarketerId = id });
             return Ok(response);
 
         }
