@@ -15,8 +15,8 @@ namespace ContentProccessService.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public bool? IsActive { get; set; }
-        public DateTime? Created { get; set; }
-        public DateTime? Modified { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
         public virtual ICollection<CampaignTags> CampaignTags { get; set; }
         public virtual ICollection<Persionalizations> Persionalizations { get; set; }

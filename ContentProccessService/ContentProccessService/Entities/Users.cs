@@ -10,7 +10,6 @@ namespace ContentProccessService.Entities
             Accounts = new HashSet<Accounts>();
             FavoritesContents = new HashSet<FavoritesContents>();
             Persionalizations = new HashSet<Persionalizations>();
-            Tasks = new HashSet<Tasks>();
             Tokens = new HashSet<Tokens>();
         }
 
@@ -23,13 +22,13 @@ namespace ContentProccessService.Entities
         public int IdLocation { get; set; }
         public bool? IsActive { get; set; }
         public int IdManager { get; set; }
+        public string Company { get; set; }
 
         public virtual Locations IdLocationNavigation { get; set; }
         public virtual Occupations IdOccupationNavigation { get; set; }
         public virtual ICollection<Accounts> Accounts { get; set; }
         public virtual ICollection<FavoritesContents> FavoritesContents { get; set; }
         public virtual ICollection<Persionalizations> Persionalizations { get; set; }
-        public virtual ICollection<Tasks> Tasks { get; set; }
         public virtual ICollection<Tokens> Tokens { get; set; }
     }
 }

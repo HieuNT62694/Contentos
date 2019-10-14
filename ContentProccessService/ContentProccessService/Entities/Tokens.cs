@@ -10,8 +10,8 @@ namespace ContentProccessService.Entities
         public string Token { get; set; }
         public string DeviceType { get; set; }
         public bool? IsActive { get; set; }
-        public DateTime? Created { get; set; }
-        public DateTime? Modified { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
         public virtual Users IdUserNavigation { get; set; }
     }

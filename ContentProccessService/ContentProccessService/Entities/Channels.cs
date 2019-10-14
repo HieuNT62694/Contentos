@@ -14,8 +14,8 @@ namespace ContentProccessService.Entities
         public string Name { get; set; }
         public string Link { get; set; }
         public bool? IsActive { get; set; }
-        public DateTime? Created { get; set; }
-        public DateTime? Modified { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
         public virtual ICollection<TasksChannels> TasksChannels { get; set; }
     }

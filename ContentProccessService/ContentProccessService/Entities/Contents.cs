@@ -17,8 +17,8 @@ namespace ContentProccessService.Entities
         public string TheContent { get; set; }
         public int? Version { get; set; }
         public int? Status { get; set; }
-        public DateTime? Created { get; set; }
-        public DateTime? Modified { get; set; }
+        public DateTime? CreatedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
         public virtual Tasks IdTaskNavigation { get; set; }
         public virtual Status StatusNavigation { get; set; }
