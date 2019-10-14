@@ -65,7 +65,7 @@ namespace ContentProccessService
 
             services.AddMediatR(typeof(Startup).Assembly);
             services.AddRouting(o => o.LowercaseUrls = true);
-            //services.AddDiscoveryClient(Configuration);
+            services.AddDiscoveryClient(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,7 +83,7 @@ namespace ContentProccessService
             app.UseOpenApi();
             app.UseSwaggerUi3();
             app.UseHttpsRedirection();
-            //app.UseDiscoveryClient();
+            app.UseDiscoveryClient();
             app.UseMvc();
         }
     }

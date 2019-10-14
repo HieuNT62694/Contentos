@@ -13,7 +13,6 @@ D:\Capstone\Doan\Contento\CampaignService\CampaignService\obj\Debug\netcoreapp2.
 D:\Capstone\Doan\Contento\CampaignService\CampaignService\obj\Debug\netcoreapp2.2\CampaignService.RazorTargetAssemblyInfo.cache
 D:\Capstone\Doan\Contento\CampaignService\CampaignService\obj\Debug\netcoreapp2.2\CampaignService.dll
 D:\Capstone\Doan\Contento\CampaignService\CampaignService\obj\Debug\netcoreapp2.2\CampaignService.pdb
-D:\Capstone\Doan\Contento\CampaignService\CampaignService\obj\Debug\netcoreapp2.2\CampaignService.csprojAssemblyReference.cache
 D:\Study\Capstone\BE\Contentos\CampaignService\CampaignService\bin\Debug\netcoreapp2.2\appsettings.Development.json
 D:\Study\Capstone\BE\Contentos\CampaignService\CampaignService\bin\Debug\netcoreapp2.2\appsettings.json
 D:\Study\Capstone\BE\Contentos\CampaignService\CampaignService\bin\Debug\netcoreapp2.2\Properties\launchSettings.json

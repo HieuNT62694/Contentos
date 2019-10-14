@@ -41,20 +41,6 @@ namespace CampaignService.Application.Commands.CreateCampaign
             };
 
             campaignDbContext.Campaign.Add(newCampaign);
-<<<<<<< HEAD
-=======
-            await campaignDbContext.SaveChangesAsync(cancellationToken);
-            foreach (var item in request.IdTag)
-            {
-                var newCampaignTags = new CampaignTags
-                {
-                    IdCampaign = campaignDbContext.Campaign.LastOrDefault().Id,
-                    IdTags = item,
-                    CreatedDate = DateTime.UtcNow
-                };
-                campaignDbContext.CampaignTags.Add(newCampaignTags);
->>>>>>> Authen-service
-
             await campaignDbContext.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
