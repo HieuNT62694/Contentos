@@ -41,7 +41,7 @@ namespace AuthenticationService.Application.Queries
                     string fullname = _context.Users.Find(accounts.IdUser).Name;
                     LoginSuccessViewModel resultReturn = new LoginSuccessViewModel
                     {
-                        
+                        Id = accounts.IdUser,
                         FullName = fullname,
                         Role = role,
                         Token = _helper.GenerateJwtToken(request.Email, accounts, role)

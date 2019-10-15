@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AuthenticationService.Application.Commands;
 using AuthenticationService.Application.Commands.CreateCustomer;
+using AuthenticationService.Application.Commands.UpdateCustomer;
 using AuthenticationService.Application.Queries;
 using AuthenticationService.Application.Queries.GetCustomer;
 using AuthenticationService.Application.Queries.GetUser;
@@ -57,6 +58,17 @@ namespace AuthenticationService.Controllers
         public async Task<IActionResult> CreateCustomerAccounts(CreateCustomerAccountCommads command)
         {
             var result = await Mediator.Send(command);
+            return Accepted(result);
+
+        }
+        [HttpPut("customer-account")]
+        public async Task<IActionResult> UpdateCustomerAccounts(UpdateCustomerAccountCommads command)
+        {
+            var result = await Mediator.Send(command);
+            if (result == null)
+            {
+                return BadRequest();
+            }
             return Accepted(result);
 
         }
