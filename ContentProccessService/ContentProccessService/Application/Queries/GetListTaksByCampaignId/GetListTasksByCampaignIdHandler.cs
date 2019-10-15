@@ -27,13 +27,14 @@ namespace ContentProccessService.Application.Queries.GetListTaksByCampaignId
             {
                 var Writter = new UsersModels
                 {
-                    IdUser = item.IdWriter,
+                    Id = item.IdWriter,
                     Name = _context.Users.FirstOrDefault(x => x.Id == item.IdWriter).Name
                 };
                 var Status = new StatusModels
                 {
-                    IdStatus = item.Status,
-                    Name = _context.StatusTasks.FirstOrDefault(x => x.Id == item.Status).Name
+                    Id = item.Status,
+                    Name = _context.StatusTasks.FirstOrDefault(x => x.Id == item.Status).Name,
+                    Color = _context.StatusTasks.FirstOrDefault(x => x.Id == item.Status).Color,
                 };
                 var taskView = new TasksViewModel()
                 {

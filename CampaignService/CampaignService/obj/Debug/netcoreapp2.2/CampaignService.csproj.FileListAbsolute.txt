@@ -29,3 +29,4 @@ D:\Study\Capstone\BE\Contentos\CampaignService\CampaignService\obj\Debug\netcore
 D:\Study\Capstone\BE\Contentos\CampaignService\CampaignService\obj\Debug\netcoreapp2.2\CampaignService.RazorTargetAssemblyInfo.cache
 D:\Study\Capstone\BE\Contentos\CampaignService\CampaignService\obj\Debug\netcoreapp2.2\CampaignService.dll
 D:\Study\Capstone\BE\Contentos\CampaignService\CampaignService\obj\Debug\netcoreapp2.2\CampaignService.pdb
+D:\Capstone\Doan\Contento\CampaignService\CampaignService\obj\Debug\netcoreapp2.2\CampaignService.csprojAssemblyReference.cache

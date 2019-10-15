@@ -19,33 +19,44 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
         }
         public async Task<TasksViewModel> Handle(GetTaskDetailRequest request, CancellationToken cancellationToken)
         {
-            var task = _context.Tasks.AsNoTracking()
+            var task = _context.Tasks.AsNoTracking().Include(i=>i.Contents).Where(n=>n.Contents.Any(z=>z.IsActive == true))
                 .FirstOrDefault(x => x.Id == request.IdTask);
-
-                var Writter = new UsersModels
-                {
-                    IdUser = task.IdWriter,
-                    Name = _context.Users.FirstOrDefault(x => x.Id == task.IdWriter).Name
-                };
-                var Status = new StatusModels
-                {
-                    IdStatus = task.Status,
-                    Name = _context.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Name
-                };
-                var taskView = new TasksViewModel()
-                {
-                    Title = task.Title,
-                    Deadline = task.Deadline,
-                    PublishTime = task.PublishTime,
-                    Writer = Writter,
-                    Description = task.Description,
-                    Status = Status,
-                    StartedDate = task.StartedDate,
-                    Id = task.Id
-                };
-
-
+            var edtId = _context.Campaign.Find(task.IdCampaign).IdEditor;
+            var Writter = new UsersModels
+            {
+                Id = task.IdWriter,
+                Name = _context.Users.FirstOrDefault(x => x.Id == task.IdWriter).Name
+            };
+            var Status = new StatusModels
+            {
+                Id = task.Status,
+                Name = _context.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Name,
+                Color = _context.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Color
+            };
+            var Editor = new UsersModels
+            {
+                Id = edtId,
+                Name = _context.Users.FirstOrDefault(x => x.Id == edtId).Name
+            };
+               var taskView = new TasksViewModel()
+               {
+                   Title = task.Title,
+                   Deadline = task.Deadline,
+                   PublishTime = task.PublishTime,
+                   Writer = Writter,
+                   Description = task.Description,
+                   Status = Status,
+                   StartedDate = task.StartedDate,
+                   Editor = Editor,
+                   Content = task.Contents.FirstOrDefault().TheContent,
+                   Id = task.Id
+               };
             return taskView;
         }
+     
     }
+                          
+
 }
+    
+

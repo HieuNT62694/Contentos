@@ -51,8 +51,8 @@ namespace ContentProccessService
                 config.PostProcess = document =>
                 {
                     document.Info.Version = "v1";
-                    document.Info.Title = string.Format($"Campaign Service");
-                    document.Info.Description = string.Format($"Developer Documentation Page For Campaign Service");
+                    document.Info.Title = string.Format($"ContentProccess Service");
+                    document.Info.Description = string.Format($"Developer Documentation Page For ContentProccess Service");
                 };
                 config.DocumentProcessors.Add(new SecurityDefinitionAppender("Jwt Token Authentication", new OpenApiSecurityScheme
                 {

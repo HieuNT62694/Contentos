@@ -7,6 +7,7 @@ namespace AuthenticationService.Entities
     {
         public Tasks()
         {
+            Contents = new HashSet<Contents>();
             TasksChannels = new HashSet<TasksChannels>();
             TasksTags = new HashSet<TasksTags>();
         }
@@ -22,6 +23,7 @@ namespace AuthenticationService.Entities
         public DateTime? ModifiedDate { get; set; }
         public int? IdWriter { get; set; }
 
+        public virtual ICollection<Contents> Contents { get; set; }
         public virtual ICollection<TasksChannels> TasksChannels { get; set; }
         public virtual ICollection<TasksTags> TasksTags { get; set; }
     }

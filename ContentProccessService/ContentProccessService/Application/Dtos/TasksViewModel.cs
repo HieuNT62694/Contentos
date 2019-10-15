@@ -17,18 +17,21 @@ namespace ContentProccessService.Application.Dtos
         public DateTime? StartedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
         public UsersModels Writer { get; set; }
+        public UsersModels Editor { get; set; }
         public StatusModels Status { get; set; }
+        public string Content { get; set; }
     }
     public class UsersModels
     {
-        public int? IdUser { get; set; }
+        public int? Id { get; set; }
         public string Name { get; set; }
 
     }
     public class StatusModels
     {
-        public int? IdStatus { get; set; }
+        public int? Id { get; set; }
         public string Name { get; set; }
+        public string Color { get; set; }
 
     }
 }

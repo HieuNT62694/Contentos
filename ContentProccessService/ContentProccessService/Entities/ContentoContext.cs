@@ -41,6 +41,7 @@ namespace ContentProccessService.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=34.87.31.23;Database=Contento;User ID=sa;Password=Hieunguyen1@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
             }
         }
@@ -278,6 +279,12 @@ namespace ContentProccessService.Entities
                 entity.Property(e => e.TheContent).HasColumnName("the_content");
 
                 entity.Property(e => e.Version).HasColumnName("version");
+
+                entity.HasOne(d => d.IdTaskNavigation)
+                    .WithMany(p => p.Contents)
+                    .HasForeignKey(d => d.IdTask)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_contents_tasks");
             });
 
             modelBuilder.Entity<FavoritesContents>(entity =>
