@@ -21,13 +21,15 @@ namespace ContentProccessService.Entities
         public virtual DbSet<Campaign> Campaign { get; set; }
         public virtual DbSet<CampaignTags> CampaignTags { get; set; }
         public virtual DbSet<Channels> Channels { get; set; }
+        public virtual DbSet<Comments> Comments { get; set; }
         public virtual DbSet<Contents> Contents { get; set; }
         public virtual DbSet<FavoritesContents> FavoritesContents { get; set; }
         public virtual DbSet<Locations> Locations { get; set; }
         public virtual DbSet<Occupations> Occupations { get; set; }
         public virtual DbSet<Persionalizations> Persionalizations { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
-        public virtual DbSet<Status> Status { get; set; }
+        public virtual DbSet<StatusCampaign> StatusCampaign { get; set; }
+        public virtual DbSet<StatusTasks> StatusTasks { get; set; }
         public virtual DbSet<Tags> Tags { get; set; }
         public virtual DbSet<Tasks> Tasks { get; set; }
         public virtual DbSet<TasksChannels> TasksChannels { get; set; }
@@ -39,7 +41,6 @@ namespace ContentProccessService.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=34.87.31.23;Database=Contento;User ID=sa;Password=Hieunguyen1@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
             }
         }
@@ -73,6 +74,12 @@ namespace ContentProccessService.Entities
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Password).HasColumnName("password");
+
+                entity.HasOne(d => d.IdRoleNavigation)
+                    .WithMany(p => p.Accounts)
+                    .HasForeignKey(d => d.IdRole)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_accounts_roles");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Accounts)
@@ -178,17 +185,18 @@ namespace ContentProccessService.Entities
 
             modelBuilder.Entity<CampaignTags>(entity =>
             {
+                entity.HasKey(e => new { e.IdCampaign, e.IdTags })
+                    .HasName("PK_campaign_tags_1");
+
                 entity.ToTable("campaign_tags");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnName("created_date")
-                    .HasColumnType("datetime");
 
                 entity.Property(e => e.IdCampaign).HasColumnName("id_campaign");
 
                 entity.Property(e => e.IdTags).HasColumnName("id_tags");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
@@ -230,6 +238,19 @@ namespace ContentProccessService.Entities
                     .HasMaxLength(100);
             });
 
+            modelBuilder.Entity<Comments>(entity =>
+            {
+                entity.ToTable("comments");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Comment).HasColumnName("comment");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnName("create_date")
+                    .HasColumnType("datetime");
+            });
+
             modelBuilder.Entity<Contents>(entity =>
             {
                 entity.ToTable("contents");
@@ -240,7 +261,11 @@ namespace ContentProccessService.Entities
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.IdComment).HasColumnName("id_comment");
+
                 entity.Property(e => e.IdTask).HasColumnName("id_task");
+
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
 
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
@@ -250,37 +275,25 @@ namespace ContentProccessService.Entities
                     .HasColumnName("name")
                     .HasMaxLength(100);
 
-                entity.Property(e => e.Status).HasColumnName("status");
-
                 entity.Property(e => e.TheContent).HasColumnName("the_content");
 
                 entity.Property(e => e.Version).HasColumnName("version");
-
-                entity.HasOne(d => d.IdTaskNavigation)
-                    .WithMany(p => p.Contents)
-                    .HasForeignKey(d => d.IdTask)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_contents_tasks");
-
-                entity.HasOne(d => d.StatusNavigation)
-                    .WithMany(p => p.Contents)
-                    .HasForeignKey(d => d.Status)
-                    .HasConstraintName("FK_contents_status");
             });
 
             modelBuilder.Entity<FavoritesContents>(entity =>
             {
+                entity.HasKey(e => new { e.IdContent, e.IdUser })
+                    .HasName("PK_favorites _contents_1");
+
                 entity.ToTable("favorites _contents");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnName("created_date")
-                    .HasColumnType("datetime");
 
                 entity.Property(e => e.IdContent).HasColumnName("id_content");
 
                 entity.Property(e => e.IdUser).HasColumnName("id_user");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
@@ -371,11 +384,30 @@ namespace ContentProccessService.Entities
                     .HasMaxLength(50);
             });
 
-            modelBuilder.Entity<Status>(entity =>
+            modelBuilder.Entity<StatusCampaign>(entity =>
             {
-                entity.ToTable("status");
+                entity.ToTable("status_campaign");
 
                 entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Color)
+                    .HasColumnName("color")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasMaxLength(100);
+            });
+
+            modelBuilder.Entity<StatusTasks>(entity =>
+            {
+                entity.ToTable("status_tasks");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Color)
+                    .HasColumnName("color")
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.Name).HasColumnName("name");
             });
@@ -434,17 +466,6 @@ namespace ContentProccessService.Entities
                 entity.Property(e => e.Title)
                     .HasColumnName("title")
                     .HasMaxLength(200);
-
-                entity.HasOne(d => d.IdCampaignNavigation)
-                    .WithMany(p => p.Tasks)
-                    .HasForeignKey(d => d.IdCampaign)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tasks_campaign");
-
-                entity.HasOne(d => d.StatusNavigation)
-                    .WithMany(p => p.Tasks)
-                    .HasForeignKey(d => d.Status)
-                    .HasConstraintName("FK_tasks_status");
             });
 
             modelBuilder.Entity<TasksChannels>(entity =>
@@ -480,19 +501,18 @@ namespace ContentProccessService.Entities
 
             modelBuilder.Entity<TasksTags>(entity =>
             {
+                entity.HasKey(e => new { e.IdTask, e.IdTag })
+                    .HasName("PK_tasks_tags_1");
+
                 entity.ToTable("tasks_tags");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.IdTask).HasColumnName("id_task");
+
+                entity.Property(e => e.IdTag).HasColumnName("id_tag");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
-
-                entity.Property(e => e.IdTag).HasColumnName("id_tag");
-
-                entity.Property(e => e.IdTask).HasColumnName("id_task");
 
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
@@ -501,11 +521,13 @@ namespace ContentProccessService.Entities
                 entity.HasOne(d => d.IdTagNavigation)
                     .WithMany(p => p.TasksTags)
                     .HasForeignKey(d => d.IdTag)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tasks_tags_tags");
 
                 entity.HasOne(d => d.IdTaskNavigation)
                     .WithMany(p => p.TasksTags)
                     .HasForeignKey(d => d.IdTask)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_tasks_tags_tasks");
             });
 

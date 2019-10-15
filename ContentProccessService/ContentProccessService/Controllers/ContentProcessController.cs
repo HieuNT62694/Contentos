@@ -32,7 +32,7 @@ namespace ContentProccessService.Controllers
         [HttpGet("tags/campaign/{id}")]
         public async Task<IActionResult> GetTagsByCampaignId(int id)
         {
-            var response = await Mediator.Send(new GetTagsByCampaignIdRequest {campaignId = id});
+            var response = await Mediator.Send(new GetTagsByCampaignIdRequest {CampaignId = id});
             return Ok(response);
         }
         [HttpGet("task/campaign/{id}")]

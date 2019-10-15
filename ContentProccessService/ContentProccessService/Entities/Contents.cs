@@ -12,16 +12,15 @@ namespace ContentProccessService.Entities
         }
 
         public int Id { get; set; }
+        public int? IdComment { get; set; }
         public int IdTask { get; set; }
         public string Name { get; set; }
         public string TheContent { get; set; }
         public int? Version { get; set; }
-        public int? Status { get; set; }
+        public bool? IsActive { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
-        public virtual Tasks IdTaskNavigation { get; set; }
-        public virtual Status StatusNavigation { get; set; }
         public virtual ICollection<Activations> Activations { get; set; }
         public virtual ICollection<FavoritesContents> FavoritesContents { get; set; }
     }

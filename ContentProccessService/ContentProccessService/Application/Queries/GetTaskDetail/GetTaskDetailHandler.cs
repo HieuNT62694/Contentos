@@ -1,6 +1,7 @@
 ﻿using ContentProccessService.Application.Dtos;
 using ContentProccessService.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,24 +12,25 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
 {
     public class GetTaskDetailHandler : IRequestHandler<GetTaskDetailRequest, TasksViewModel>
     {
-        private readonly ContentoContext contentodbContext;
+        private readonly ContentoContext _context;
         public GetTaskDetailHandler(ContentoContext contentodbContext)
         {
-            this.contentodbContext = contentodbContext;
+            _context = contentodbContext;
         }
         public async Task<TasksViewModel> Handle(GetTaskDetailRequest request, CancellationToken cancellationToken)
         {
-            var task = contentodbContext.Tasks.FirstOrDefault(x => x.Id == request.IdTask);
+            var task = _context.Tasks.AsNoTracking()
+                .FirstOrDefault(x => x.Id == request.IdTask);
 
                 var Writter = new UsersModels
                 {
                     IdUser = task.IdWriter,
-                    Name = contentodbContext.Users.FirstOrDefault(x => x.Id == task.IdWriter).Name
+                    Name = _context.Users.FirstOrDefault(x => x.Id == task.IdWriter).Name
                 };
                 var Status = new StatusModels
                 {
                     IdStatus = task.Status,
-                    Name = contentodbContext.Status.FirstOrDefault(x => x.Id == task.Status).Name
+                    Name = _context.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Name
                 };
                 var taskView = new TasksViewModel()
                 {

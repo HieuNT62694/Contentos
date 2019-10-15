@@ -1,4 +1,5 @@
 ﻿using ContentProccessService.Entities;
+using ContentProccessService.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -9,17 +10,25 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Queries.GetTags
 {
-    public class GetTagHandler : IRequestHandler<GetTagRequest, IEnumerable<Tags>>
+    public class GetTagHandler : IRequestHandler<GetTagRequest, IEnumerable<TagViewModel>>
     {
-        private readonly ContentoContext contentodbContext;
+        private readonly ContentoContext _context;
         public GetTagHandler(ContentoContext contentodbContext)
         {
-            this.contentodbContext = contentodbContext;
+            _context = contentodbContext;
         }
 
-        public async Task<IEnumerable<Tags>> Handle(GetTagRequest request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<TagViewModel>> Handle(GetTagRequest request, CancellationToken cancellationToken)
         {
-            return await contentodbContext.Tags.Include(t => t.TasksTags).ToListAsync<Tags>();
+            var tags = _context.Tags.AsNoTracking().ToList();
+            List<TagViewModel> list = new List<TagViewModel>();
+
+            foreach(var item in tags)
+            {
+                list.Add( new TagViewModel { id = item.Id, name = item.Name });
+            }
+
+            return list;
         }
     }
 }
