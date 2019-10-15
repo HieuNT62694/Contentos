@@ -5,7 +5,6 @@ namespace CampaignService.Entities
 {
     public partial class FavoritesContents
     {
-        public int Id { get; set; }
         public int IdContent { get; set; }
         public int IdUser { get; set; }
         public bool? IsActive { get; set; }

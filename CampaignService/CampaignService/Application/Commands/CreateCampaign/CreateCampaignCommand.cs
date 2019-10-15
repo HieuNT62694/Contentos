@@ -1,4 +1,5 @@
 ﻿using CampaignService.Entities;
+using CampaignService.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CampaignService.Application.Commands.CreateCampaign
 {
-    public class CreateCampaignCommand : IRequest
+    public class CreateCampaignCommand : IRequest<CampaignData>
     {
         public string Title { get; set; }
         public string Description { get; set; }

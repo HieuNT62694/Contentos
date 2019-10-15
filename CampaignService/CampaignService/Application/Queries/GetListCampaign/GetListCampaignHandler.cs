@@ -27,7 +27,9 @@ namespace CampaignService.Application.Queries.GetListCampaign
 
             var returnResult = new List<CampaignData>();
  
-            var listCampaign = contentodbContext.Campaign.Include(i => i.CampaignTags).ToList<Campaign>();
+            var listCampaign = contentodbContext.Campaign.AsNoTracking()
+                .Include(i => i.CampaignTags).ToList<Campaign>();
+
             foreach (var item in listCampaign)
             {
                 CampaignData model = mapper.Map<CampaignData>(item);
@@ -47,7 +49,7 @@ namespace CampaignService.Application.Queries.GetListCampaign
                 //Get Status Name & Id
                 model.Status = new Models.Status();
                 model.Status.Id = item.Status;
-                model.Status.Name = contentodbContext.Status.Find(item.Status).Name;
+                model.Status.Name = contentodbContext.StatusCampaign.Find(item.Status).Name;
 
                 //Get ListTag
                 List<Tag> ls = new List<Tag>();

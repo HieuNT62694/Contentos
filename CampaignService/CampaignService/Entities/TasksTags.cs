@@ -5,9 +5,8 @@ namespace CampaignService.Entities
 {
     public partial class TasksTags
     {
-        public int Id { get; set; }
-        public int? IdTask { get; set; }
-        public int? IdTag { get; set; }
+        public int IdTask { get; set; }
+        public int IdTag { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
 

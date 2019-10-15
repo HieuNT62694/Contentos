@@ -24,32 +24,32 @@ namespace CampaignService.Controllers
             return Ok(response);
         }
 
-        [HttpGet("campaign-detail/{id}")]
+        [HttpGet("campaigns/{id}")]
         public async Task<IActionResult> GetCampaignDetailAsync(int id)
         {
             var response = await Mediator.Send(new GetCampaignRequest { IdCampaign = id });
             return Ok(response);
         }
 
-        [HttpGet("list-campaign-by-user-id/{id}")]
-        public async Task<IActionResult> GetListCampaignByUserIdAsync(int idCustomer)
+        [HttpGet("campaigns/customers/{id}")]
+        public async Task<IActionResult> GetListCampaignByUserIdAsync(int id)
         {
-            var response = await Mediator.Send(new GetListCampaignByUserIdRequest {IdCustomer   = idCustomer });
+            var response = await Mediator.Send(new GetListCampaignByUserIdRequest {IdCustomer   = id });
             return Ok(response);
         }
 
         [HttpPost("campaign")]
         public async Task<IActionResult> PostCampaignAsync(CreateCampaignCommand command)
         {
-            await Mediator.Send(command);
-            return Accepted("Create Successful !!");
+            var response= await Mediator.Send(command);
+            return Accepted(response);
         }
 
         [HttpPut("campaign")]
         public async Task<IActionResult> PostCampaignAsync(UpdateCampaignCommand command)
         {
-            await Mediator.Send(command);
-            return Accepted("Update Successful !!");
+            var response = await Mediator.Send(command);
+            return Accepted(response);
         }
     }
 }

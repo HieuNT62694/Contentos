@@ -24,7 +24,8 @@ namespace CampaignService.Application.Queries.GetListCampaignByUserId
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>().ForMember(x => x.Status, opt => opt.Ignore()));
             var mapper = config.CreateMapper();
 
-            var entity = contentodbContext.Campaign.Include(i => i.CampaignTags).Where(w => w.IdCustomer == request.IdCustomer).ToList();
+            var entity = contentodbContext.Campaign.AsNoTracking()
+                .Include(i => i.CampaignTags).Where(w => w.IdCustomer == request.IdCustomer).ToList();
             
             //Map from entity to model
             List<CampaignData> models = new List<CampaignData>();
@@ -46,7 +47,7 @@ namespace CampaignService.Application.Queries.GetListCampaignByUserId
                 //Get Status Name & Id
                 model.Status = new Models.Status();
                 model.Status.Id = item.Status;
-                model.Status.Name = contentodbContext.Status.Find(item.Status).Name;
+                model.Status.Name = contentodbContext.StatusCampaign.Find(item.Status).Name;
 
                 //Get ListTag
                 List<Tag> ls = new List<Tag>();

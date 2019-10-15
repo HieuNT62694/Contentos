@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using CampaignService.Models;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CampaignService.Application.Commands.UpdateCampaign
 {
-    public class UpdateCampaignCommand : IRequest
+    public class UpdateCampaignCommand : IRequest<CampaignData>
     {
         public int Id { get; set; }
         public string Title { get; set; }

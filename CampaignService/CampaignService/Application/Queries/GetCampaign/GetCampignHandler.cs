@@ -21,10 +21,12 @@ namespace CampaignService.Application.Queries.GetCampaign
 
         public async Task<CampaignData> Handle(GetCampaignRequest request, CancellationToken cancellationToken)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>().ForMember(x => x.Status, opt => opt.Ignore()));
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>()
+            .ForMember(x => x.Status, opt => opt.Ignore()));
             var mapper = config.CreateMapper();
 
-            var entity = contentodbContext.Campaign.Include(i => i.CampaignTags).First(x => x.Id == request.IdCampaign);
+            var entity = contentodbContext.Campaign.AsNoTracking()
+                .Include(i => i.CampaignTags).First(x => x.Id == request.IdCampaign);
 
             CampaignData model = mapper.Map<CampaignData>(entity);
 
@@ -41,7 +43,7 @@ namespace CampaignService.Application.Queries.GetCampaign
             //Get Status Name & Id
             model.Status = new Models.Status();
             model.Status.Id = entity.Status;
-            model.Status.Name = contentodbContext.Status.Find(entity.Status).Name;
+            model.Status.Name = contentodbContext.StatusCampaign.Find(entity.Status).Name;
 
             //Get ListTag
             List<Tag> ls = new List<Tag>();

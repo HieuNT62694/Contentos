@@ -1,5 +1,8 @@
-﻿using CampaignService.Entities;
+﻿using AutoMapper;
+using CampaignService.Entities;
+using CampaignService.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace CampaignService.Application.Commands.CreateCampaign
 {
-    public class CreateCampaignHandler : IRequestHandler<CreateCampaignCommand>
+    public class CreateCampaignHandler : IRequestHandler<CreateCampaignCommand, CampaignData>
     {
-        private readonly ContentoContext campaignDbContext;
+        private readonly ContentoContext _context;
 
         public CreateCampaignHandler(ContentoContext campaignDbContext)
         {
-            this.campaignDbContext = campaignDbContext;
+            _context = campaignDbContext;
         }
 
-        public async Task<Unit> Handle(CreateCampaignCommand request, CancellationToken cancellationToken)
+        public async Task<CampaignData> Handle(CreateCampaignCommand request, CancellationToken cancellationToken)
         {
             var Tags = new List<CampaignTags>();
 
@@ -40,10 +43,42 @@ namespace CampaignService.Application.Commands.CreateCampaign
                 CampaignTags = Tags
             };
 
-            campaignDbContext.Campaign.Add(newCampaign);
-            await campaignDbContext.SaveChangesAsync(cancellationToken);
+            _context.Campaign.Add(newCampaign);
 
-            return Unit.Value;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>()
+            .ForMember(x => x.Status, opt => opt.Ignore()));
+            var mapper = config.CreateMapper();
+
+            CampaignData model = mapper.Map<CampaignData>(newCampaign);
+
+            //Get Editor Name & Id
+            model.Editor = new Models.Editor();
+            model.Editor.Id = newCampaign.IdEditor;
+            model.Editor.Name = _context.Users.Find(newCampaign.IdEditor).Name;
+
+            //Get Customer Name & Id
+            model.Customer = new Models.Customer();
+            model.Customer.Id = newCampaign.IdCustomer;
+            model.Customer.Name = _context.Users.Find(newCampaign.IdCustomer).Name;
+
+            //Get Status Name & Id
+            model.Status = new Models.Status();
+            model.Status.Id = newCampaign.Status;
+            model.Status.Name = _context.StatusCampaign.Find(newCampaign.Status).Name;
+
+            //Get ListTag
+            List<Models.Tag> ls = new List<Models.Tag>();
+            foreach (var tag in newCampaign.CampaignTags)
+            {
+                var cTag = new Models.Tag { Id = tag.IdTags, Name = _context.Tags.Find(tag.IdTags).Name };
+                ls.Add(cTag);
+            }
+
+            model.listTag = ls;
+
+            return model;
         }
     }
 }
