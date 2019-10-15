@@ -13,10 +13,10 @@ namespace CampaignService.Application.Queries.GetListCampaignByUserId
 {
     public class GetCampaignByUserIdHandler : IRequestHandler<GetListCampaignByUserIdRequest, List<CampaignData>>
     {
-        private readonly ContentoContext contentodbContext;
+        private readonly ContentoContext _context;
         public GetCampaignByUserIdHandler(ContentoContext contentodbContext)
         {
-            this.contentodbContext = contentodbContext;
+            _context = contentodbContext;
         }
 
         public async Task<List<CampaignData>> Handle(GetListCampaignByUserIdRequest request, CancellationToken cancellationToken)
@@ -24,7 +24,7 @@ namespace CampaignService.Application.Queries.GetListCampaignByUserId
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>().ForMember(x => x.Status, opt => opt.Ignore()));
             var mapper = config.CreateMapper();
 
-            var entity = contentodbContext.Campaign.AsNoTracking()
+            var entity = _context.Campaign.AsNoTracking()
                 .Include(i => i.CampaignTags).Where(w => w.IdCustomer == request.IdCustomer).ToList();
             
             //Map from entity to model
@@ -37,23 +37,23 @@ namespace CampaignService.Application.Queries.GetListCampaignByUserId
                 //Get Editor Name & Id
                 model.Editor = new Models.Editor();
                 model.Editor.Id = item.IdEditor;
-                model.Editor.Name = contentodbContext.Users.Find(item.IdEditor).Name;
+                model.Editor.Name = _context.Users.Find(item.IdEditor).Name;
 
                 //Get Customer Name & Id
                 model.Customer = new Models.Customer();
                 model.Customer.Id = item.IdCustomer;
-                model.Customer.Name = contentodbContext.Users.Find(item.IdCustomer).Name;
+                model.Customer.Name = _context.Users.Find(item.IdCustomer).Name;
 
                 //Get Status Name & Id
                 model.Status = new Models.Status();
                 model.Status.Id = item.Status;
-                model.Status.Name = contentodbContext.StatusCampaign.Find(item.Status).Name;
+                model.Status.Name = _context.StatusCampaign.Find(item.Status).Name;
 
                 //Get ListTag
                 List<Tag> ls = new List<Tag>();
                 foreach (var tag in item.CampaignTags)
                 {
-                    var cTag = new Tag { Id = tag.IdTags, Name = contentodbContext.Tags.Find(tag.IdTags).Name };
+                    var cTag = new Tag { Id = tag.IdTags, Name = _context.Tags.Find(tag.IdTags).Name };
                     ls.Add(cTag);
                 }
 

@@ -9,32 +9,30 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace CampaignService.Application.Queries.GetListCampaign
+namespace CampaignService.Application.Queries.GetListCampaignByMarketerId
 {
-    public class GetListCampaignHandler : IRequestHandler<GetListCampaignRequest,IEnumerable<CampaignData>>
+    public class GetCampaignByMarketerIdHandler : IRequestHandler<GetCampaignByMarketerIdRequest, List<CampaignData>>
     {
         private readonly ContentoContext _context;
-    
-        public GetListCampaignHandler(ContentoContext contentodbContext)
+        public GetCampaignByMarketerIdHandler(ContentoContext contentodbContext)
         {
             _context = contentodbContext;
         }
 
-        public async Task<IEnumerable<CampaignData>> Handle(GetListCampaignRequest request,CancellationToken cancellationToken)
+        public async Task<List<CampaignData>> Handle(GetCampaignByMarketerIdRequest request, CancellationToken cancellationToken)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>().ForMember(x => x.Status , opt => opt.Ignore()));
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>().ForMember(x => x.Status, opt => opt.Ignore()));
             var mapper = config.CreateMapper();
 
-            var returnResult = new List<CampaignData>();
- 
-            var listCampaign = _context.Campaign.AsNoTracking()
-                .Include(i => i.CampaignTags).ToList<Campaign>();
+            var entity = _context.Campaign.AsNoTracking()
+                .Include(i => i.CampaignTags).Where(w => w.IdMarketer == request.IdMarketer).ToList();
 
-            foreach (var item in listCampaign)
+            //Map from entity to model
+            List<CampaignData> models = new List<CampaignData>();
+
+            foreach (var item in entity)
             {
                 CampaignData model = mapper.Map<CampaignData>(item);
-
-                var listTag = new List<string>();
 
                 //Get Editor Name & Id
                 model.Editor = new Models.Editor();
@@ -61,12 +59,11 @@ namespace CampaignService.Application.Queries.GetListCampaign
 
                 model.listTag = ls;
 
-                returnResult.Add(model);
+                models.Add(model);
             }
 
-            return  returnResult;
+            return models;
         }
     }
-}
-        
 
+}

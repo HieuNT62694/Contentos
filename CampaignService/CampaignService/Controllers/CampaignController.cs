@@ -7,6 +7,7 @@ using CampaignService.Application.Commands.CreateCampaign;
 using CampaignService.Application.Commands.UpdateCampaign;
 using CampaignService.Application.Queries.GetCampaign;
 using CampaignService.Application.Queries.GetListCampaign;
+using CampaignService.Application.Queries.GetListCampaignByMarketerId;
 using CampaignService.Application.Queries.GetListCampaignByUserId;
 using CampaignService.Entities;
 using CampaignService.Models;
@@ -35,6 +36,13 @@ namespace CampaignService.Controllers
         public async Task<IActionResult> GetListCampaignByUserIdAsync(int id)
         {
             var response = await Mediator.Send(new GetListCampaignByUserIdRequest {IdCustomer   = id });
+            return Ok(response);
+        }
+
+        [HttpGet("campaigns/marketers/{id}")]
+        public async Task<IActionResult> GetListCampaignByMarketerIdAsync(int id)
+        {
+            var response = await Mediator.Send(new GetCampaignByMarketerIdRequest { IdMarketer = id });
             return Ok(response);
         }
 
