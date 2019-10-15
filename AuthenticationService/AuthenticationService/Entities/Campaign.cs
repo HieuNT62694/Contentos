@@ -8,7 +8,6 @@ namespace AuthenticationService.Entities
         public Campaign()
         {
             CampaignTags = new HashSet<CampaignTags>();
-            Tasks = new HashSet<Tasks>();
         }
 
         public int Id { get; set; }
@@ -23,6 +22,5 @@ namespace AuthenticationService.Entities
         public int? IdEditor { get; set; }
 
         public virtual ICollection<CampaignTags> CampaignTags { get; set; }
-        public virtual ICollection<Tasks> Tasks { get; set; }
     }
 }

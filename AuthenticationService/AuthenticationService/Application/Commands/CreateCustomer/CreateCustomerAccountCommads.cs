@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Application.Commands.CreateCustomer
 {
-    public class CreateCustomerAccountCommads : IRequest<ListUserModel>
+    public class CreateCustomerAccountCommads : IRequest<CreateUserModel>
     {
         [Required]
         [EmailAddress]

@@ -19,6 +19,7 @@ namespace AuthenticationService.Entities
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
+        public virtual Roles IdRoleNavigation { get; set; }
         public virtual Users IdUserNavigation { get; set; }
         public virtual ICollection<Activations> Activations { get; set; }
     }

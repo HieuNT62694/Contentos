@@ -39,7 +39,7 @@ namespace AuthenticationService.Controllers
 
         public async Task<IActionResult> GetListWriter(int id)
         {
-            var response = await Mediator.Send(new GetUserRequest {IdMarketer = id });
+            var response = await Mediator.Send(new GetWriterRequest {EditorId = id });
             return Ok(response);
 
         }

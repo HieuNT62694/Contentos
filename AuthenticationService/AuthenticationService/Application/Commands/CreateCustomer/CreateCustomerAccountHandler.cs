@@ -9,10 +9,11 @@ using Microsoft.AspNetCore.Identity;
 using System.Text.RegularExpressions;
 using AuthenticationService.Common;
 using AuthenticationService.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuthenticationService.Application.Commands.CreateCustomer
 {
-    public class CreateCustomerAccountHandler : IRequestHandler<CreateCustomerAccountCommads, ListUserModel>
+    public class CreateCustomerAccountHandler : IRequestHandler<CreateCustomerAccountCommads, CreateUserModel>
     {
         private readonly ContentoContext _context;
         private readonly IHelperFunction _helper;
@@ -23,11 +24,13 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
             _context = context;
             _helper = helper;
         }
-        public async Task<ListUserModel> Handle(CreateCustomerAccountCommads request, CancellationToken cancellationToken)
+        public async Task<CreateUserModel> Handle(CreateCustomerAccountCommads request, CancellationToken cancellationToken)
         {
+            string newPassword = "";
+
             if (!IsEmailUnique(request.Email))
             {
-                string newPassword = _helper.GenerateRandomPassword();            
+                newPassword = _helper.GenerateRandomPassword();            
                 var newAccount = new Accounts
                 {
                     Email = request.Email,
@@ -54,7 +57,14 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
 
             await _context.SaveChangesAsync();
 
-            return new ListUserModel { Id = _context.Users.OrderByDescending(x=>x.Id).First().Id, Name = request.FullName};
+            return new CreateUserModel
+            {
+                Id = _context.Users.AsNoTracking().OrderByDescending(x => x.Id).First().Id,
+                FullName = request.FullName,
+                Email = request.Email,
+                CompanyName = request.CompanyName,
+                Password = newPassword
+            };
         }
         public bool IsEmailUnique(string Email)
         {
