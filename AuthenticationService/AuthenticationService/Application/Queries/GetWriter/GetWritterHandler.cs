@@ -21,7 +21,10 @@ namespace AuthenticationService.Application.Queries.GetWriter
 
         public async Task<List<ListUserModel>> Handle(GetWriterRequest request, CancellationToken cancellationToken)
         {
-            var list = _context.Users.Include(x => x.Accounts).Where(x => x.Accounts.Any(i => i.IdRole == 3)).Where(u => u.IdManager == request.EditorId).ToList();
+            var list = await _context.Users.AsNoTracking()
+                .Include(x => x.Accounts)
+                .Where(x => x.Accounts.Any(i => i.IdRole == 3))
+                .Where(u => u.IdManager == request.EditorId).ToListAsync();
 
             var lstWriter = new List<ListUserModel>();
             foreach (var item in list)

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AuthenticationService.Models;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Application.Commands.CreateCustomer
 {
-    public class CreateCustomerAccountCommads : IRequest
+    public class CreateCustomerAccountCommads : IRequest<ListUserModel>
     {
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+        [Required]
+        public int IdMarketer { get; set; }
         [Required]
         public string FullName { get; set; }
         [Required]

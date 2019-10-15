@@ -54,10 +54,10 @@ namespace AuthenticationService.Controllers
         }
 
         [HttpPost("customer-account")]
-        public async Task<object> CreateCustomerAccounts(CreateCustomerAccountCommads command)
+        public async Task<IActionResult> CreateCustomerAccounts(CreateCustomerAccountCommads command)
         {
-            await Mediator.Send(command);
-            return Accepted("Create Successful !!");
+            var result = await Mediator.Send(command);
+            return Accepted(result);
 
         }
     }

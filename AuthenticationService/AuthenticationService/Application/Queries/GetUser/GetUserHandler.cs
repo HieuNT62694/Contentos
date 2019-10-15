@@ -22,7 +22,11 @@ namespace AuthenticationService.Application.Queries.GetUser
         }
         public async Task<List<ListUserModel>> Handle(GetUserRequest request, CancellationToken cancellationToken)
         {
-            var lstUser = _context.Users.Include(x => x.Accounts).Where(x=>x.Accounts.Any(i=>i.IdRole == 2)).Where(u => u.IdManager == request.IdMarketer).ToList();
+            var lstUser = await _context.Users.AsNoTracking()
+                .Include(x => x.Accounts)
+                .Where(x=>x.Accounts.Any(i=>i.IdRole == 2))
+                .Where(u => u.IdManager == request.IdMarketer).ToListAsync();
+            
             var lstEditor = new List<ListUserModel>();
             foreach (var item in lstUser)
             {

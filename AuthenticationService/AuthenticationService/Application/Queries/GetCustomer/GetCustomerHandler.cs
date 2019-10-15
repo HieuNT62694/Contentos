@@ -22,7 +22,11 @@ namespace AuthenticationService.Application.Queries.GetCustomer
 
         public async Task<List<ListUserModel>> Handle(GetCustomerRequest request, CancellationToken cancellationToken)
         {
-            var list = _context.Users.Include(x => x.Accounts).Where(x => x.Accounts.Any(i => i.IdRole == 5)).Where(u => u.IdManager == request.MarketerId).ToList();
+            var list = await _context.Users.AsNoTracking()
+                .Include(x => x.Accounts)
+                .Where(x => x.Accounts.Any(i => i.IdRole == 5))
+                .Where(u => u.IdManager == request.MarketerId).ToListAsync();
+            
             var lstWriter = new List<ListUserModel>();
             foreach (var item in list)
             {
@@ -33,6 +37,7 @@ namespace AuthenticationService.Application.Queries.GetCustomer
                 };
                 lstWriter.Add(User);
             }
+
             return lstWriter;
         }
         
