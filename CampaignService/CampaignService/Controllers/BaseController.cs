@@ -11,7 +11,7 @@ namespace CampaignService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[EnableCors("MyPolicy")]
+    [EnableCors("MyPolicy")]
     public class BaseController : ControllerBase
     {
         private IMediator mediator;
