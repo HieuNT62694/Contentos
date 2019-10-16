@@ -1,4 +1,4 @@
-﻿using ContentProccessService.Application.Dtos;
+﻿using ContentProccessService.Application.Models;
 using ContentProccessService.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

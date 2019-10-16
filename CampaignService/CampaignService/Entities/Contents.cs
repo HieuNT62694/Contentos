@@ -21,6 +21,7 @@ namespace CampaignService.Entities
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
+        public virtual Comments IdCommentNavigation { get; set; }
         public virtual Tasks IdTaskNavigation { get; set; }
         public virtual ICollection<Activations> Activations { get; set; }
         public virtual ICollection<FavoritesContents> FavoritesContents { get; set; }

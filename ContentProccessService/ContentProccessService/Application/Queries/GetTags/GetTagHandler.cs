@@ -22,7 +22,6 @@ namespace ContentProccessService.Application.Queries.GetTags
         {
             var tags = await _context.Tags.AsNoTracking().ToListAsync();
             List<TagViewModel> list = new List<TagViewModel>();
-
             foreach(var item in tags)
             {
                 list.Add( new TagViewModel { id = item.Id, name = item.Name });

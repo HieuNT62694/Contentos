@@ -33,7 +33,7 @@ namespace ContentProccessService.Application.Queries.GetContentByEditorId
                     ContentViewModel model = new ContentViewModel();
                     model.Id = contents.Id;
                     model.Name = contents.Name;
-                    model.Task = new Models.Task { Id = contents.IdTask, Title = task.Title };
+                    model.Task = new ContentProccessService.Models.Task { Id = contents.IdTask, Title = task.Title };
                     model.TheContent = contents.TheContent;
                     model.Version = contents.Version;
                     list.Add(model);

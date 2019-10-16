@@ -182,6 +182,11 @@ namespace ContentProccessService.Entities
                 entity.Property(e => e.Title)
                     .HasColumnName("title")
                     .HasMaxLength(200);
+
+                entity.HasOne(d => d.StatusNavigation)
+                    .WithMany(p => p.Campaign)
+                    .HasForeignKey(d => d.Status)
+                    .HasConstraintName("FK_StatusCampaign");
             });
 
             modelBuilder.Entity<CampaignTags>(entity =>
@@ -279,6 +284,11 @@ namespace ContentProccessService.Entities
                 entity.Property(e => e.TheContent).HasColumnName("the_content");
 
                 entity.Property(e => e.Version).HasColumnName("version");
+
+                entity.HasOne(d => d.IdCommentNavigation)
+                    .WithMany(p => p.Contents)
+                    .HasForeignKey(d => d.IdComment)
+                    .HasConstraintName("FK_CommentContent");
 
                 entity.HasOne(d => d.IdTaskNavigation)
                     .WithMany(p => p.Contents)
@@ -473,6 +483,17 @@ namespace ContentProccessService.Entities
                 entity.Property(e => e.Title)
                     .HasColumnName("title")
                     .HasMaxLength(200);
+
+                entity.HasOne(d => d.IdCampaignNavigation)
+                    .WithMany(p => p.Tasks)
+                    .HasForeignKey(d => d.IdCampaign)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TaskCampaign");
+
+                entity.HasOne(d => d.StatusNavigation)
+                    .WithMany(p => p.Tasks)
+                    .HasForeignKey(d => d.Status)
+                    .HasConstraintName("FK_StatusTask");
             });
 
             modelBuilder.Entity<TasksChannels>(entity =>
