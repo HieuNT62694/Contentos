@@ -9,6 +9,7 @@ using ContentProccessService.Application.Commands.CreateTag;
 using ContentProccessService.Application.Queries.GetTagsByCampaignId;
 using ContentProccessService.Application.Queries.GetListTaksByCampaignId;
 using ContentProccessService.Application.Queries.GetTaskDetail;
+using ContentProccessService.Application.Queries.GetContentByEditorId;
 
 namespace ContentProccessService.Controllers
 {
@@ -45,6 +46,12 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> GetTasksDetail(int id)
         {
             var response = await Mediator.Send(new GetTaskDetailRequest { IdTask = id });
+            return Ok(response);
+        }
+        [HttpGet("contents/editors/{id}")]
+        public async Task<IActionResult> GetContentByEditorId(int id)
+        {
+            var response = await Mediator.Send(new GetListContentByEditorIdRequest { Id = id });
             return Ok(response);
         }
     }
