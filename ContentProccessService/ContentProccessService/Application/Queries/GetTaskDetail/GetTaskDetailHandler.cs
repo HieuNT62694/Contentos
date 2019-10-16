@@ -17,8 +17,8 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
         }
         public async Task<TasksViewModel> Handle(GetTaskDetailRequest request, CancellationToken cancellationToken)
         {
-            var task = _context.Tasks.AsNoTracking()
-                .FirstOrDefault(x => x.Id == request.IdTask);
+            var task = await _context.Tasks.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == request.IdTask);
 
                 var Writter = new UsersModels
                 {

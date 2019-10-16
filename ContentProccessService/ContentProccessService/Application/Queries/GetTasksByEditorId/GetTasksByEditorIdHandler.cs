@@ -21,7 +21,7 @@ namespace ContentProccessService.Application.Queries.GetTasksByEditorId
         public async Task<List<TasksViewByEditorModel>> Handle(GetTasksByEditorIdRequest request, CancellationToken cancellationToken)
         {
             List<TasksViewByEditorModel> Tasks = new List<TasksViewByEditorModel>();
-            var ls = Context.Tasks.AsNoTracking().Include(t => t.IdCampaignNavigation).Where(t => t.IdCampaignNavigation.IdEditor == request.IdEditor).Where(t => t.Status == 3).ToList();
+            var ls = await Context.Tasks.AsNoTracking().Include(t => t.IdCampaignNavigation).Where(t => t.IdCampaignNavigation.IdEditor == request.IdEditor).Where(t => t.Status == 3).ToListAsync();
             
             foreach (var item in ls)
             {

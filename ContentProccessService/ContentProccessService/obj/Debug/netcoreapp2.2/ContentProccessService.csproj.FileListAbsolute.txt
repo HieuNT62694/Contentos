@@ -3,7 +3,6 @@ D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\bin\Debu
 D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\bin\Debug\netcoreapp2.2\Properties\launchSettings.json
 D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\obj\Debug\netcoreapp2.2\ContentProccessService.AssemblyInfoInputs.cache
 D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\obj\Debug\netcoreapp2.2\ContentProccessService.AssemblyInfo.cs
-D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\obj\Debug\netcoreapp2.2\ContentProccessService.csprojAssemblyReference.cache
 D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\obj\Debug\netcoreapp2.2\ContentProccessService.RazorAssemblyInfo.cache
 D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\obj\Debug\netcoreapp2.2\ContentProccessService.RazorAssemblyInfo.cs
 D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\bin\Debug\netcoreapp2.2\ContentProccessService.deps.json

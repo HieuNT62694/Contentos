@@ -87,7 +87,7 @@ namespace ContentProccessService.Controllers
         [HttpPost("task")]
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskModel taskchannel)
         {
-            var response = await Mediator.Send(new CreateTaskRequest { task = taskchannel });
+            var response = await Mediator.Send(new CreateTaskRequest { Task = taskchannel });
             return Ok(response);
         }
     }

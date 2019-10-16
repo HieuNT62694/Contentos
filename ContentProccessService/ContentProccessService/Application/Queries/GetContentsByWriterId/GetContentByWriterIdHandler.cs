@@ -21,8 +21,8 @@ namespace ContentProccessService.Application.Queries.GetContentsByWriterId
 
         public async Task<List<ContentsViewModel>> Handle(GetContentsByWriterIdRequest request, CancellationToken cancellationToken)
         {
-            var list =  context.Contents.AsNoTracking().Include(c => c.IdTaskNavigation).Where(t => t.IdTaskNavigation.IdWriter == request.IdWriter
-            ).Where(c => c.Version == 1).Where(c => c.IsActive == true).ToList();
+            var list =  await context.Contents.AsNoTracking().Include(c => c.IdTaskNavigation).Where(t => t.IdTaskNavigation.IdWriter == request.IdWriter
+            ).Where(c => c.Version == 1).Where(c => c.IsActive == true).ToListAsync();
             List<ContentsViewModel> Contents = new List<ContentsViewModel>();
             foreach (var item in list)
             {

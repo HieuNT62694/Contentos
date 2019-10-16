@@ -10,6 +10,6 @@ namespace ContentProccessService.Application.Commands.CreateTask
 {
     public class CreateTaskRequest :IRequest<Tasks>
     {
-        public CreateTaskModel task { get; set; }
+        public CreateTaskModel Task { get; set; }
     }
 }
