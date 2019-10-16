@@ -1,9 +1,7 @@
-﻿using ContentProccessService.Application.Dtos;
+﻿using ContentProccessService.Application.Models;
 using ContentProccessService.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;

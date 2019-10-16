@@ -1,4 +1,4 @@
-﻿using ContentProccessService.Application.Dtos;
+﻿using ContentProccessService.Application.Models;
 using ContentProccessService.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +19,7 @@ namespace ContentProccessService.Application.Queries.GetListTaksByCampaignId
         }
         public async Task<List<TasksViewModel>> Handle(GetListTasksByCampaignIdRequest request, CancellationToken cancellationToken)
         {
-            var task = _context.Tasks.AsNoTracking()
+            var task =  _context.Tasks.AsNoTracking()
                 .Where(x => x.IdCampaign == request.IdCampaign).ToList();
 
             var lstTask = new List<TasksViewModel>();

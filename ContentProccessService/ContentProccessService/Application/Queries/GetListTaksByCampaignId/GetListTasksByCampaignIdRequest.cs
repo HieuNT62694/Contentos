@@ -1,4 +1,4 @@
-﻿using ContentProccessService.Application.Dtos;
+﻿using ContentProccessService.Application.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;

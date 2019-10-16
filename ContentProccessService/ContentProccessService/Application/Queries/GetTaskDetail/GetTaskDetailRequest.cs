@@ -1,9 +1,5 @@
-﻿using ContentProccessService.Application.Dtos;
+﻿using ContentProccessService.Application.Models;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Queries.GetTaskDetail
 {
