@@ -66,7 +66,9 @@ namespace CampaignService.Application.Commands.CreateCampaign
             //Get Status Name & Id
             model.Status = new Models.Status();
             model.Status.Id = newCampaign.Status;
-            model.Status.Name = _context.StatusCampaign.Find(newCampaign.Status).Name;
+            var stat = _context.StatusCampaign.Find(newCampaign.Status);
+            model.Status.Name = stat.Name;
+            model.Status.Color = stat.Color;
 
             //Get ListTag
             List<Models.Tag> ls = new List<Models.Tag>();
