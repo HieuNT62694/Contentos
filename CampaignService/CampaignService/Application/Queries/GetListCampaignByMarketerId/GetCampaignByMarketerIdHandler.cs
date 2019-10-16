@@ -47,7 +47,9 @@ namespace CampaignService.Application.Queries.GetListCampaignByMarketerId
                 //Get Status Name & Id
                 model.Status = new Models.Status();
                 model.Status.Id = item.Status;
-                model.Status.Name = _context.StatusCampaign.Find(item.Status).Name;
+                var stat = _context.StatusCampaign.Find(item.Status);
+                model.Status.Name = stat.Name;
+                model.Status.Color = stat.Color;
 
                 //Get ListTag
                 List<Tag> ls = new List<Tag>();
