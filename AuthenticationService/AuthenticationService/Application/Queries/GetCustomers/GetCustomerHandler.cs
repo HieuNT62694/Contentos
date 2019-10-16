@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AuthenticationService.Application.Queries.GetCustomer
 {
-    public class GetCustomerHandler : IRequestHandler<GetCustomerRequest, List<ListUserModel>>
+    public class GetCustomerHandler : IRequestHandler<GetCustomerRequest, List<CreateUserModel>>
     {
         private readonly ContentoContext _context;
 
@@ -20,25 +20,28 @@ namespace AuthenticationService.Application.Queries.GetCustomer
             _context = context;
         }
 
-        public async Task<List<ListUserModel>> Handle(GetCustomerRequest request, CancellationToken cancellationToken)
+        public async Task<List<CreateUserModel>> Handle(GetCustomerRequest request, CancellationToken cancellationToken)
         {
             var list = await _context.Users.AsNoTracking()
                 .Include(x => x.Accounts)
                 .Where(x => x.Accounts.Any(i => i.IdRole == 5))
                 .Where(u => u.IdManager == request.MarketerId).ToListAsync();
             
-            var lstWriter = new List<ListUserModel>();
+            var lstCustomer = new List<CreateUserModel>();
             foreach (var item in list)
             {
-                var User = new ListUserModel()
+                var User = new CreateUserModel()
                 {
                     Id = item.Id,
-                    Name = item.Name
+                    FullName = item.Name,
+                    Email = item.Accounts.First().Email,
+                    CompanyName = item.Company,
+                    Phone = ""
                 };
-                lstWriter.Add(User);
+                lstCustomer.Add(User);
             }
 
-            return lstWriter;
+            return lstCustomer;
         }
         
 

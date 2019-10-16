@@ -31,7 +31,7 @@ namespace AuthenticationService.Controllers
             return Accepted("Create Successful !!");
 
         }
-        [HttpGet("List-Editor/{id}")]
+        [HttpGet("Editors/Marketers/{id}")]
         
         public async Task<IActionResult> GetListEditor(int id)
         {
@@ -44,7 +44,7 @@ namespace AuthenticationService.Controllers
 
         }
 
-        [HttpGet("List-Writer/{id}")]
+        [HttpGet("Writers/Editors/{id}")]
 
         public async Task<IActionResult> GetListWriter(int id)
         {
@@ -54,10 +54,17 @@ namespace AuthenticationService.Controllers
                 return BadRequest("Don't have Writter For Marketer");
             }
             return Ok(response);
-
         }
 
-         [HttpGet("List-Customer/{id}")]
+         [HttpGet("Customers/Marketers-Basic/{id}/")]
+
+        public async Task<IActionResult> GetListCustomerBasic(int id)
+        {
+            var response = await Mediator.Send(new GetCustomerBasicRequest { MarketerId = id });
+            return Ok(response);
+        }
+
+        [HttpGet("Customers/Marketers/{id}")]
 
         public async Task<IActionResult> GetListCustomer(int id)
         {
@@ -67,17 +74,16 @@ namespace AuthenticationService.Controllers
                 return BadRequest("Don't have Customer For Marketer");
             }
             return Ok(response);
-
         }
 
-        [HttpPost("customer-account")]
+        [HttpPost("Customers")]
         public async Task<IActionResult> CreateCustomerAccounts(CreateCustomerAccountCommads command)
         {
             var result = await Mediator.Send(command);
             return Accepted(result);
 
         }
-        [HttpPut("customer-account")]
+        [HttpPut("Customers")]
         public async Task<IActionResult> UpdateCustomerAccounts(UpdateCustomerAccountCommads command)
         {
             var result = await Mediator.Send(command);
@@ -86,7 +92,6 @@ namespace AuthenticationService.Controllers
                 return BadRequest();
             }
             return Accepted(result);
-
         }
     }
 }
