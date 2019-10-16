@@ -44,14 +44,21 @@ namespace AuthenticationService.Controllers
             return Ok(response);
         }
 
-         [HttpGet("Customers/Marketers/{id}")]
+         [HttpGet("Customers/Marketers-Basic/{id}/")]
+
+        public async Task<IActionResult> GetListCustomerBasic(int id)
+        {
+            var response = await Mediator.Send(new GetCustomerBasicRequest { MarketerId = id });
+            return Ok(response);
+        }
+
+        [HttpGet("Customers/Marketers/{id}")]
 
         public async Task<IActionResult> GetListCustomer(int id)
         {
             var response = await Mediator.Send(new GetCustomerRequest { MarketerId = id });
             return Ok(response);
         }
-
 
         [HttpPost("Customers")]
         public async Task<IActionResult> CreateCustomerAccounts(CreateCustomerAccountCommads command)

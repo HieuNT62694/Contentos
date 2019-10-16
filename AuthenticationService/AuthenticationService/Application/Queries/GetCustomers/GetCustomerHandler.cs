@@ -33,8 +33,8 @@ namespace AuthenticationService.Application.Queries.GetCustomer
                 var User = new CreateUserModel()
                 {
                     Id = item.Id,
-                    Email = item.Accounts.First().Email,
                     FullName = item.Name,
+                    Email = item.Accounts.First().Email,
                     CompanyName = item.Company,
                     Phone = ""
                 };

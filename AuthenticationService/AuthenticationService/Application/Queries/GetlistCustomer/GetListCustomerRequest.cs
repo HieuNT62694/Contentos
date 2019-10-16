@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Application.Queries.GetlistCustomer
 {
-    public class GetListCustomerRequest : IRequest<List<ListCustomerModels>>
+    public class GetListCustomerRequest : IRequest
     {
         public string Id { get; set; }
     }

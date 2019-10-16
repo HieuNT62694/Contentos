@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Application.Queries.GetCustomer
 {
-    public class GetCustomerValidator : AbstractValidator<GetCustomerRequest>
+    public class GetCustomerBasicValidator : AbstractValidator<GetCustomerBasicRequest>
     {
-        public GetCustomerValidator()
+        public GetCustomerBasicValidator()
         {
             RuleFor(x => x.MarketerId).NotEmpty().WithMessage("MarketerId is Required");
         }
