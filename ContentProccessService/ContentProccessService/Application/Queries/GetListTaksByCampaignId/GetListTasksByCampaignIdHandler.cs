@@ -19,8 +19,8 @@ namespace ContentProccessService.Application.Queries.GetListTaksByCampaignId
         }
         public async Task<List<TasksViewModel>> Handle(GetListTasksByCampaignIdRequest request, CancellationToken cancellationToken)
         {
-            var task = _context.Tasks.AsNoTracking()
-                .Where(x => x.IdCampaign == request.IdCampaign).ToList();
+            var task = await _context.Tasks.AsNoTracking()
+                .Where(x => x.IdCampaign == request.IdCampaign).ToListAsync();
 
             var lstTask = new List<TasksViewModel>();
             foreach (var item in task)

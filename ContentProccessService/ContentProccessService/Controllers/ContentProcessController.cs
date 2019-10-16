@@ -22,6 +22,10 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> GetListTagAsync()
         {
             var response = await Mediator.Send(new GetTagRequest());
+            if (response.Count() == 0)
+            {
+                return BadRequest("Don't have tags");
+            }
             return Ok(response);
         }
 

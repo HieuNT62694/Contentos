@@ -7,6 +7,7 @@ using CampaignService.Application.Commands.CreateCampaign;
 using CampaignService.Application.Commands.UpdateCampaign;
 using CampaignService.Application.Queries.GetCampaign;
 using CampaignService.Application.Queries.GetListCampaign;
+using CampaignService.Application.Queries.GetListCampaignByEditorId;
 using CampaignService.Application.Queries.GetListCampaignByMarketerId;
 using CampaignService.Application.Queries.GetListCampaignByUserId;
 using CampaignService.Entities;
@@ -22,6 +23,10 @@ namespace CampaignService.Controllers
         public async Task<IActionResult> GetListCampaign()
         {
             var response = await Mediator.Send(new GetListCampaignRequest());
+            if (response.Count() == 0)
+            {
+                return BadRequest("Don't have Campaign");
+            }
             return Ok(response);
         }
 
@@ -36,6 +41,10 @@ namespace CampaignService.Controllers
         public async Task<IActionResult> GetListCampaignByUserIdAsync(int id)
         {
             var response = await Mediator.Send(new GetListCampaignByUserIdRequest {IdCustomer   = id });
+            if (response.Count() == 0)
+            {
+                return BadRequest("Don't have Campaign for Customer");
+            }
             return Ok(response);
         }
 
@@ -43,6 +52,10 @@ namespace CampaignService.Controllers
         public async Task<IActionResult> GetListCampaignByMarketerIdAsync(int id)
         {
             var response = await Mediator.Send(new GetCampaignByMarketerIdRequest { IdMarketer = id });
+            if (response.Count() == 0)
+            {
+                return BadRequest("Don't have Campaign for Marketer");
+            }
             return Ok(response);
         }
 
@@ -58,6 +71,13 @@ namespace CampaignService.Controllers
         {
             var response = await Mediator.Send(command);
             return Accepted(response);
+        }
+
+        [HttpGet("campaigns/editor/{id}")]
+        public async Task<IActionResult> GetListCampaignByEditorIdAsync(int id)
+        {
+            var response = await Mediator.Send(new GetCampaignByEditorIdRequest { IdEditor = id });
+            return Ok(response);
         }
     }
 }

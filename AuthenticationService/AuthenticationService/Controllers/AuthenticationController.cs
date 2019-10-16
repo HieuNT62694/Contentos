@@ -18,6 +18,10 @@ namespace AuthenticationService.Controllers
         public async Task<IActionResult> Login(AuthenticationRequest queries)
         {
             var response = await Mediator.Send(queries);
+            if (response == null)
+            {
+                return BadRequest("Invalid User Name of Password");
+            }
             return Ok(response);
         }
         [HttpPost("Register")]
@@ -32,6 +36,10 @@ namespace AuthenticationService.Controllers
         public async Task<IActionResult> GetListEditor(int id)
         {
             var response = await Mediator.Send(new GetUserRequest { IdMarketer = id }) ;
+            if (response.Count == 0)
+            {
+                return BadRequest("Don't have Editor For Marketer");
+            }
             return Ok(response);
 
         }
@@ -41,6 +49,10 @@ namespace AuthenticationService.Controllers
         public async Task<IActionResult> GetListWriter(int id)
         {
             var response = await Mediator.Send(new GetWriterRequest {EditorId = id });
+            if (response.Count == 0)
+            {
+                return BadRequest("Don't have Writter For Marketer");
+            }
             return Ok(response);
 
         }
@@ -50,6 +62,10 @@ namespace AuthenticationService.Controllers
         public async Task<IActionResult> GetListCustomer(int id)
         {
             var response = await Mediator.Send(new GetCustomerRequest { MarketerId = id });
+            if (response.Count == 0)
+            {
+                return BadRequest("Don't have Customer For Marketer");
+            }
             return Ok(response);
 
         }

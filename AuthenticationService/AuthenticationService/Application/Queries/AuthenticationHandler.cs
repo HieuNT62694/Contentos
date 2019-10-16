@@ -26,8 +26,8 @@ namespace AuthenticationService.Application.Queries
 
         public async Task<LoginSuccessViewModel> Handle(AuthenticationRequest request, CancellationToken cancellationToken)
         {
-            var accounts = _context.Accounts.AsNoTracking()
-                .FirstOrDefault(x => x.Email == request.Email && x.IsActive == true);
+            var accounts = await _context.Accounts.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Email == request.Email && x.IsActive == true);
            
             bool checkPassword = false;
             if (accounts != null)

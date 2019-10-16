@@ -27,8 +27,8 @@ namespace CampaignService.Application.Queries.GetListCampaign
 
             var returnResult = new List<CampaignData>();
  
-            var listCampaign = _context.Campaign.AsNoTracking()
-                .Include(i => i.CampaignTags).ToList<Campaign>();
+            var listCampaign = await _context.Campaign.AsNoTracking()
+                .Include(i => i.CampaignTags).ToListAsync<Campaign>();
 
             foreach (var item in listCampaign)
             {

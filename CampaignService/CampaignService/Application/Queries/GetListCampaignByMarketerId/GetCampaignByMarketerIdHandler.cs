@@ -24,8 +24,8 @@ namespace CampaignService.Application.Queries.GetListCampaignByMarketerId
             var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>().ForMember(x => x.Status, opt => opt.Ignore()));
             var mapper = config.CreateMapper();
 
-            var entity = _context.Campaign.AsNoTracking()
-                .Include(i => i.CampaignTags).Where(w => w.IdMarketer == request.IdMarketer).ToList();
+            var entity = await _context.Campaign.AsNoTracking()
+                .Include(i => i.CampaignTags).Where(w => w.IdMarketer == request.IdMarketer).ToListAsync();
 
             //Map from entity to model
             List<CampaignData> models = new List<CampaignData>();

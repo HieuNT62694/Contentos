@@ -20,7 +20,7 @@ namespace ContentProccessService.Application.Queries.GetTags
 
         public async Task<IEnumerable<TagViewModel>> Handle(GetTagRequest request, CancellationToken cancellationToken)
         {
-            var tags = _context.Tags.AsNoTracking().ToList();
+            var tags = await _context.Tags.AsNoTracking().ToListAsync();
             List<TagViewModel> list = new List<TagViewModel>();
 
             foreach(var item in tags)

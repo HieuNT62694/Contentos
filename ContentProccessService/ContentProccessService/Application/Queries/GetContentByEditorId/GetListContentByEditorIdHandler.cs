@@ -19,7 +19,7 @@ namespace ContentProccessService.Application.Queries.GetContentByEditorId
         }
         public async Task<List<ContentViewModel>> Handle(GetListContentByEditorIdRequest request, CancellationToken cancellationToken)
         {
-            var campaigns = _context.Campaign.AsNoTracking().Where(c => c.IdEditor == request.Id).ToList();
+            var campaigns = await _context.Campaign.AsNoTracking().Where(c => c.IdEditor == request.Id).ToListAsync();
 
             List<ContentViewModel> list = new List<ContentViewModel>();
 

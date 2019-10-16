@@ -19,8 +19,8 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
         }
         public async Task<TasksViewModel> Handle(GetTaskDetailRequest request, CancellationToken cancellationToken)
         {
-            var task = _context.Tasks.AsNoTracking().Include(i=>i.Contents).Where(n=>n.Contents.Any(z=>z.IsActive == true))
-                .FirstOrDefault(x => x.Id == request.IdTask);
+            var task = await _context.Tasks.AsNoTracking().Include(i=>i.Contents).Where(n=>n.Contents.Any(z=>z.IsActive == true))
+                .FirstOrDefaultAsync(x => x.Id == request.IdTask);
             var edtId = _context.Campaign.Find(task.IdCampaign).IdEditor;
             var Writter = new UsersModels
             {

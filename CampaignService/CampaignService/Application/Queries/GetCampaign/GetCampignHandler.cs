@@ -25,8 +25,8 @@ namespace CampaignService.Application.Queries.GetCampaign
             .ForMember(x => x.Status, opt => opt.Ignore()));
             var mapper = config.CreateMapper();
 
-            var entity = _context.Campaign.AsNoTracking()
-                .Include(i => i.CampaignTags).First(x => x.Id == request.IdCampaign);
+            var entity = await _context.Campaign.AsNoTracking()
+                .Include(i => i.CampaignTags).FirstAsync(x => x.Id == request.IdCampaign);
 
             CampaignData model = mapper.Map<CampaignData>(entity);
 
