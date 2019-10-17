@@ -10,4 +10,12 @@ namespace ContentProccessService.Models
         public int IdTask { get; set; }
         public int IdChannel { get; set; }
     }
+
+    public class TaskChannelModelRespone
+    {
+        public int id { get; set; }
+        public int IdTask { get; set; }
+        public int IdChannel { get; set; }
+    }
+
 }

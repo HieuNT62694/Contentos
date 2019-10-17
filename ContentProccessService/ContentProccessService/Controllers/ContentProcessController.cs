@@ -18,7 +18,8 @@ using ContentProccessService.Application.Queries.GetTasksByEditorId;
 using ContentProccessService.Application.Queries.GetContentsByWriterId;
 using ContentProccessService.Models;
 using ContentProccessService.Application.Models;
-
+using ContentProccessService.Application.Commands.CreateTasks;
+using ContentProccessService.Application.Commands.CreateListTaskChannel;
 
 namespace ContentProccessService.Controllers
 {
@@ -106,6 +107,12 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskModel taskchannel)
         {
             var response = await Mediator.Send(new CreateTaskRequest { Task = taskchannel });
+            return Ok(response);
+        }
+        [HttpPost("tasks")]
+        public async Task<IActionResult> CreateTasks([FromBody] List<CreateTaskModel> taskchannel)
+        {
+            var response = await Mediator.Send(new CreateTasksRequest { tasks = taskchannel });
             return Ok(response);
         }
     }
