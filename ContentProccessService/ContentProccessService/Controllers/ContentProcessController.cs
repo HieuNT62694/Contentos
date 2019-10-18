@@ -20,6 +20,8 @@ using ContentProccessService.Models;
 using ContentProccessService.Application.Models;
 using ContentProccessService.Application.Commands.CreateTasks;
 using ContentProccessService.Application.Commands.CreateListTaskChannel;
+using ContentProccessService.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ContentProccessService.Controllers
 {
@@ -27,6 +29,7 @@ namespace ContentProccessService.Controllers
     {
 
         [HttpGet("tags")]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> GetListTagAsync()
         {
             var response = await Mediator.Send(new GetTagRequest());
@@ -38,6 +41,7 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpPost("tags")]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> CreateTag([FromBody]TagsDto dto)
         {
             var response = await Mediator.Send(new CreateTagRequest { dto = dto });
@@ -45,24 +49,28 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpGet("tags/campaign/{id}")]
+        [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetTagsByCampaignId(int id)
         {
             var response = await Mediator.Send(new GetTagsByCampaignIdRequest {CampaignId = id});
             return Ok(response);
         }
         [HttpGet("task/campaign/{id}")]
+        [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetTasksByCampaignId(int id)
         {
             var response = await Mediator.Send(new GetListTasksByCampaignIdRequest { IdCampaign = id });
             return Ok(response);
         }
         [HttpGet("task-detail/campaign/{id}")]
+        [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetTasksDetail(int id)
         {
             var response = await Mediator.Send(new GetTaskDetailRequest { IdTask = id });
             return Ok(response);
         }
         [HttpGet("task/marketer/{id}")]
+        [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetTasksByMarketerId(int id)
         {
             var response = await Mediator.Send(new GetListTaskByIdMarketerRequest { IdMartketer = id });
@@ -70,6 +78,7 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpGet("contents/editors/{id}")]
+        [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetContentByEditorId(int id)
         {
             var response = await Mediator.Send(new GetListContentByEditorIdRequest { Id = id });
@@ -77,6 +86,7 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpGet("task/editor/{id}")]
+        [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetTasksByEditorId(int id)
         {
             var response = await Mediator.Send(new GetTasksByEditorIdRequest { IdEditor = id });
@@ -84,6 +94,7 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpGet("content/writter/{id}")]
+        [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetContentsByWriterId(int id)
         {
             var response = await Mediator.Send(new GetContentsByWriterIdRequest { IdWriter = id });
@@ -91,6 +102,7 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpPost("taskschannels")]
+        [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> CreateTaskChannel([FromBody]TaskChannelModel taskchannel)
         {
             var response = await Mediator.Send(new CreateTaskChannelRequest { IdTask = taskchannel.IdTask, IdChannel = taskchannel.IdChannel });
@@ -98,18 +110,21 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpDelete("taskschannels/{id}")]
+        [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> UpdateTaskChannel(int id)
         {
             var response = await Mediator.Send(new UpdateTaskChannelRequest { IdTaskChannel = id });
             return Ok(response);
         }
         [HttpPost("task")]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskModel taskchannel)
         {
             var response = await Mediator.Send(new CreateTaskRequest { Task = taskchannel });
             return Ok(response);
         }
         [HttpPost("tasks")]
+        [Authorize(Roles = "Editor")]
         public async Task<IActionResult> CreateTasks([FromBody] List<CreateTaskModel> taskchannel)
         {
             var response = await Mediator.Send(new CreateTasksRequest { tasks = taskchannel });

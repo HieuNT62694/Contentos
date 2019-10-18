@@ -17,6 +17,10 @@ using MediatR;
 using Steeltoe.Discovery.Client;
 using FluentValidation.AspNetCore;
 using ContentProccessService.Entities;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ContentProccessService
 {
@@ -54,13 +58,23 @@ namespace ContentProccessService
                     document.Info.Title = string.Format($"ContentProccess Service");
                     document.Info.Description = string.Format($"Developer Documentation Page For ContentProccess Service");
                 };
-                config.DocumentProcessors.Add(new SecurityDefinitionAppender("Jwt Token Authentication", new OpenApiSecurityScheme
+                config.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
                 {
                     Type = OpenApiSecuritySchemeType.ApiKey,
                     Name = "Authorization",
-                    Description = "Using: Bearer + your jwt token",
-                    In = OpenApiSecurityApiKeyLocation.Header
-                }));
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "Using: Bearer + your jwt token"
+                });
+
+                config.OperationProcessors.Add(
+                        new AspNetCoreOperationSecurityScopeProcessor("JWT"));
+                //config.DocumentProcessors.Add(new SecurityDefinitionAppender("Jwt Token Authentication", new OpenApiSecurityScheme
+                //{
+                //    Type = OpenApiSecuritySchemeType.ApiKey,
+                //    Name = "Authorization",
+                //    Description = "Using: Bearer + your jwt token",
+                //    In = OpenApiSecurityApiKeyLocation.Header
+                //}));
             });
             //addd cors
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
@@ -73,6 +87,29 @@ namespace ContentProccessService
             services.AddMediatR(typeof(Startup).Assembly);
             services.AddRouting(o => o.LowercaseUrls = true);
             services.AddDiscoveryClient(Configuration);
+            // ===== Add Jwt Authentication ========
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                })
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = Configuration["JwtIssuer"],
+                        ValidAudience = Configuration["JwtIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
+                        ClockSkew = TimeSpan.Zero // remove delay of token when expire
+                    };
+                });
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,6 +123,7 @@ namespace ContentProccessService
             {
                 app.UseHsts();
             }
+            app.UseAuthentication();
             app.UseCors("MyPolicy");
             app.UseOpenApi();
             app.UseSwaggerUi3();

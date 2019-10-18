@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using CampaignService.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,16 +8,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using NSwag.Generation.Processors.Security;
 using NSwag;
 using MediatR;
 using FluentValidation.AspNetCore;
-using CampaignService.Application.Queries;
 using CampaignService.Application.Queries.GetCampaign;
 using Steeltoe.Discovery.Client;
-using CampaignService.Application.Commands.CreateCampaign;
+using Microsoft.Extensions.Hosting;
+using CampaignService.RabbitMQ;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Linq;
 
 namespace CampaignService
 {
@@ -38,6 +40,8 @@ namespace CampaignService
             {
                 options.UseSqlServer(Configuration.GetConnectionString("CampaignDb"));
             });
+            //RabbitMQ
+            services.AddSingleton<IHostedService>(provider => new Consumer("AccountCreate"));
             //add swagger
             services.AddOpenApiDocument(config =>
             {
@@ -46,17 +50,33 @@ namespace CampaignService
                     document.Info.Version = "v1";
                     document.Info.Title = string.Format($"Campaign Service");
                     document.Info.Description = string.Format($"Developer Documentation Page For Campaign Service");
+
+
                 };
-                config.DocumentProcessors.Add(new SecurityDefinitionAppender("Jwt Token Authentication", new OpenApiSecurityScheme
+
+                config.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
                 {
                     Type = OpenApiSecuritySchemeType.ApiKey,
                     Name = "Authorization",
-                    Description = "Using: Bearer + your jwt token",
-                    In = OpenApiSecurityApiKeyLocation.Header
-                }));
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "Using: Bearer + your jwt token"
+                });
+
+                config.OperationProcessors.Add(
+                        new AspNetCoreOperationSecurityScopeProcessor("JWT"));
             });
-            //MediatR and flutentvalidator
-            services.AddMediatR(typeof(GetCampaignRequest).Assembly);
+                    //      new OperationSecurityScopeProcessor("JWT"));
+
+                //config.DocumentProcessors.Add(new SecurityDefinitionAppender("Jwt Token Authentication", new OpenApiSecurityScheme
+                //{
+                //    Type = OpenApiSecuritySchemeType.ApiKey,
+                //    Name = "Authorization",
+                //    Description = "Using: Bearer + your jwt token",
+                //    In = OpenApiSecurityApiKeyLocation.Header
+                //}));
+
+                //MediatR and flutentvalidator
+                services.AddMediatR(typeof(GetCampaignRequest).Assembly);
             services.AddRouting(o => o.LowercaseUrls = true);
             services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<GetCampaignValidator>());
             //services.AddMvc().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateCampaignCommand>());
@@ -73,16 +93,40 @@ namespace CampaignService
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+            // ===== Add Jwt Authentication ========
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // => remove default claims
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+                })
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidIssuer = Configuration["JwtIssuer"],
+                        ValidAudience = Configuration["JwtIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtKey"])),
+                        ClockSkew = TimeSpan.Zero // remove delay of token when expire
+                    };
+                });
+            services.AddAuthorization();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             //add swagger
+            app.UseAuthentication();
             app.UseOpenApi();
             app.UseSwaggerUi3();
             app.UseHttpsRedirection();
