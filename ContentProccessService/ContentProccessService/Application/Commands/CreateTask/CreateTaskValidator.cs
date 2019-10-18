@@ -7,9 +7,9 @@ namespace ContentProccessService.Application.Commands.CreateTask
     {
         public CreateTaskValidator()
         {
-            RuleFor(x => x.task.Description).NotEmpty().WithMessage("Desciption is not empty");
-            RuleFor(x => x.task.IdCampaign).NotEmpty().WithMessage("Id Campaign is missing");
-            RuleFor(x => x.task.IdWriter).NotEmpty().WithMessage("Id writer is missing");
+            RuleFor(x => x.Task.Description).NotEmpty().WithMessage("Desciption is not empty");
+            RuleFor(x => x.Task.IdCampaign).NotEmpty().WithMessage("Id Campaign is missing");
+            RuleFor(x => x.Task.IdWriter).NotEmpty().WithMessage("Id writer is missing");
         }
     }
 }

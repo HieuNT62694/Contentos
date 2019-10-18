@@ -20,12 +20,12 @@ namespace ContentProccessService.Application.Commands.CreateTask
         {
             var task = new Tasks
             {
-                IdCampaign = request.task.IdCampaign,
-                IdWriter = request.task.IdWriter,
-                Description = request.task.Description,
-                Deadline = request.task.Deadline,
-                PublishTime = request.task.PublishTime,
-                Title = request.task.Title,
+                IdCampaign = request.Task.IdCampaign,
+                IdWriter = request.Task.IdWriter,
+                Description = request.Task.Description,
+                Deadline = request.Task.Deadline,
+                PublishTime = request.Task.PublishTime,
+                Title = request.Task.Title,
                 StartedDate = DateTime.Now,
                 ModifiedDate = DateTime.Now,
                 Status = 1

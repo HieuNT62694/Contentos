@@ -22,6 +22,9 @@ namespace CampaignService.Entities
         public int? IdMarketer { get; set; }
         public int? IdEditor { get; set; }
 
+        public virtual Users IdCustomerNavigation { get; set; }
+        public virtual Users IdEditorNavigation { get; set; }
+        public virtual Users IdMarketerNavigation { get; set; }
         public virtual StatusCampaign StatusNavigation { get; set; }
         public virtual ICollection<CampaignTags> CampaignTags { get; set; }
         public virtual ICollection<Tasks> Tasks { get; set; }

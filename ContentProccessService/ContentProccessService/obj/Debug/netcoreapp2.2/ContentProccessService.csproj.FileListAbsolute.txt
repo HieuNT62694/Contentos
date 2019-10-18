@@ -13,3 +13,4 @@ D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\bin\Debu
 D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\obj\Debug\netcoreapp2.2\ContentProccessService.RazorTargetAssemblyInfo.cache
 D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\obj\Debug\netcoreapp2.2\ContentProccessService.dll
 D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\obj\Debug\netcoreapp2.2\ContentProccessService.pdb
+D:\Capstone\Doan\Contento\ContentProccessService\ContentProccessService\obj\Debug\netcoreapp2.2\ContentProccessService.csprojAssemblyReference.cache

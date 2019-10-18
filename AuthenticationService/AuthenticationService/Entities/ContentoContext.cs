@@ -183,6 +183,21 @@ namespace AuthenticationService.Entities
                     .HasColumnName("title")
                     .HasMaxLength(200);
 
+                entity.HasOne(d => d.IdCustomerNavigation)
+                    .WithMany(p => p.CampaignIdCustomerNavigation)
+                    .HasForeignKey(d => d.IdCustomer)
+                    .HasConstraintName("FK_Customer");
+
+                entity.HasOne(d => d.IdEditorNavigation)
+                    .WithMany(p => p.CampaignIdEditorNavigation)
+                    .HasForeignKey(d => d.IdEditor)
+                    .HasConstraintName("FK_Editor");
+
+                entity.HasOne(d => d.IdMarketerNavigation)
+                    .WithMany(p => p.CampaignIdMarketerNavigation)
+                    .HasForeignKey(d => d.IdMarketer)
+                    .HasConstraintName("FK_Marketer");
+
                 entity.HasOne(d => d.StatusNavigation)
                     .WithMany(p => p.Campaign)
                     .HasForeignKey(d => d.Status)
@@ -499,6 +514,10 @@ namespace AuthenticationService.Entities
             modelBuilder.Entity<TasksChannels>(entity =>
             {
                 entity.ToTable("tasks_channels");
+
+                entity.HasIndex(e => new { e.IdTask, e.IdChannel })
+                    .HasName("uq_task_channel")
+                    .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("id");
 

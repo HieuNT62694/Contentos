@@ -8,6 +8,9 @@ namespace CampaignService.Entities
         public Users()
         {
             Accounts = new HashSet<Accounts>();
+            CampaignIdCustomerNavigation = new HashSet<Campaign>();
+            CampaignIdEditorNavigation = new HashSet<Campaign>();
+            CampaignIdMarketerNavigation = new HashSet<Campaign>();
             FavoritesContents = new HashSet<FavoritesContents>();
             Persionalizations = new HashSet<Persionalizations>();
             Tokens = new HashSet<Tokens>();
@@ -27,6 +30,9 @@ namespace CampaignService.Entities
         public virtual Locations IdLocationNavigation { get; set; }
         public virtual Occupations IdOccupationNavigation { get; set; }
         public virtual ICollection<Accounts> Accounts { get; set; }
+        public virtual ICollection<Campaign> CampaignIdCustomerNavigation { get; set; }
+        public virtual ICollection<Campaign> CampaignIdEditorNavigation { get; set; }
+        public virtual ICollection<Campaign> CampaignIdMarketerNavigation { get; set; }
         public virtual ICollection<FavoritesContents> FavoritesContents { get; set; }
         public virtual ICollection<Persionalizations> Persionalizations { get; set; }
         public virtual ICollection<Tokens> Tokens { get; set; }
