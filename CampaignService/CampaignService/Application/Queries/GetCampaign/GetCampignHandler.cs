@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace CampaignService.Application.Queries.GetCampaign
 {
-    public class GetCampaignHandler : IRequestHandler<GetCampaignRequest, CampaignData>
+    public class GetCampaignHandler : IRequestHandler<GetCampaignRequest, CampaignTaskDetail>
     {
         private readonly ContentoContext _context;
         public GetCampaignHandler(ContentoContext contentodbContext)
@@ -19,16 +19,16 @@ namespace CampaignService.Application.Queries.GetCampaign
             _context = contentodbContext;
         }
 
-        public async Task<CampaignData> Handle(GetCampaignRequest request, CancellationToken cancellationToken)
+        public async Task<CampaignTaskDetail> Handle(GetCampaignRequest request, CancellationToken cancellationToken)
         {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>()
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignTaskDetail>()
             .ForMember(x => x.Status, opt => opt.Ignore()));
             var mapper = config.CreateMapper();
 
             var entity = await _context.Campaign.AsNoTracking()
                 .Include(i => i.CampaignTags).FirstAsync(x => x.Id == request.IdCampaign);
 
-            CampaignData model = mapper.Map<CampaignData>(entity);
+            CampaignTaskDetail model = mapper.Map<CampaignTaskDetail>(entity);
 
             //Get Editor Name & Id
             model.Editor = new Models.Editor();

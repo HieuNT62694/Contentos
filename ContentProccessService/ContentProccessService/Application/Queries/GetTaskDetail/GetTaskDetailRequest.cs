@@ -1,4 +1,4 @@
-﻿using ContentProccessService.Application.Models;
+﻿using ContentProccessService.Models;
 using MediatR;
 
 namespace ContentProccessService.Application.Queries.GetTaskDetail

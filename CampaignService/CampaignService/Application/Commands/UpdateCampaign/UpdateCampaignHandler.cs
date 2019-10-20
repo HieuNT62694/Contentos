@@ -23,70 +23,81 @@ namespace CampaignService.Application.Commands.UpdateCampaign
 
         public async Task<CampaignData> Handle(UpdateCampaignCommand request, CancellationToken cancellationToken)
         {
-            var upCampaign = _context.Campaign.Include(x => x.CampaignTags).Single(s => s.Id == request.Id);
-
-            upCampaign.EndDate = request.EndDate;
-
-            upCampaign.IdCustomer = request.Customer.Id;
-
-            upCampaign.IdEditor = request.Editor.Id;
-
-            upCampaign.Description = request.Description;
-
-            upCampaign.Title = request.Title;
-
-            var upTags = new List<CampaignTags>();
-
-            foreach(var item in request.Tags)
+            var transaction = _context.Database.BeginTransaction();
+            try
             {
-                var tag = new CampaignTags { IdTags = item.Id };
-                upTags.Add(tag);
+                var upCampaign = _context.Campaign.Include(x => x.CampaignTags).Single(s => s.Id == request.Id);
+
+                upCampaign.EndDate = request.EndDate;
+
+                upCampaign.IdCustomer = request.Customer.Id;
+
+                upCampaign.IdEditor = request.Editor.Id;
+
+                upCampaign.Description = request.Description;
+
+                upCampaign.Title = request.Title;
+                upCampaign.Modified = DateTime.UtcNow;
+
+                var upTags = new List<CampaignTags>();
+
+                foreach (var item in request.Tags)
+                {
+                    var tag = new CampaignTags { IdTags = item.Id };
+                    upTags.Add(tag);
+                }
+
+                _context.CampaignTags.RemoveRange(upCampaign.CampaignTags);
+
+                upCampaign.CampaignTags = upTags;
+
+                _context.Entry(upCampaign).State = EntityState.Modified;
+
+                //_context.Campaign.Update(upCampaign);
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>()
+                .ForMember(x => x.Status, opt => opt.Ignore()));
+                var mapper = config.CreateMapper();
+
+                CampaignData model = mapper.Map<CampaignData>(upCampaign);
+
+                ////Get Editor Name & Id
+                //model.Editor = new Models.Editor();
+                //model.Editor.Id = upCampaign.IdEditor;
+                //model.Editor.Name = _context.Users.Find(upCampaign.IdEditor).Name;
+
+                //Get Customer Name & Id
+                model.Customer = new Models.Customer();
+                model.Customer.Id = upCampaign.IdCustomer;
+                model.Customer.Name = _context.Users.Find(upCampaign.IdCustomer).Name;
+
+                //Get Status Name & Id
+                model.Status = new Models.Status();
+                model.Status.Id = upCampaign.Status;
+                var stat = _context.StatusCampaign.Find(upCampaign.Status);
+                model.Status.Name = stat.Name;
+                model.Status.Color = stat.Color;
+
+                //Get ListTag
+                List<Models.Tag> ls = new List<Models.Tag>();
+                foreach (var tag in upCampaign.CampaignTags)
+                {
+                    var cTag = new Models.Tag { Id = tag.IdTags, Name = _context.Tags.Find(tag.IdTags).Name };
+                    ls.Add(cTag);
+                }
+
+                model.listTag = ls;
+                transaction.Commit();
+                return model;
+            }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                return null;
             }
 
-            _context.CampaignTags.RemoveRange(upCampaign.CampaignTags);
-
-            upCampaign.CampaignTags = upTags;
-
-            _context.Entry(upCampaign).State = EntityState.Modified;
-
-            //_context.Campaign.Update(upCampaign);
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>()
-            .ForMember(x => x.Status, opt => opt.Ignore()));
-            var mapper = config.CreateMapper();
-
-            CampaignData model = mapper.Map<CampaignData>(upCampaign);
-
-            //Get Editor Name & Id
-            model.Editor = new Models.Editor();
-            model.Editor.Id = upCampaign.IdEditor;
-            model.Editor.Name = _context.Users.Find(upCampaign.IdEditor).Name;
-
-            //Get Customer Name & Id
-            model.Customer = new Models.Customer();
-            model.Customer.Id = upCampaign.IdCustomer;
-            model.Customer.Name = _context.Users.Find(upCampaign.IdCustomer).Name;
-
-            //Get Status Name & Id
-            model.Status = new Models.Status();
-            model.Status.Id = upCampaign.Status;
-            var stat = _context.StatusCampaign.Find(upCampaign.Status);
-            model.Status.Name = stat.Name;
-            model.Status.Color = stat.Color;
-
-            //Get ListTag
-            List<Models.Tag> ls = new List<Models.Tag>();
-            foreach (var tag in upCampaign.CampaignTags)
-            {
-                var cTag = new Models.Tag { Id = tag.IdTags, Name = _context.Tags.Find(tag.IdTags).Name };
-                ls.Add(cTag);
-            }
-
-            model.listTag = ls;
-
-            return model;
         }
     }
 }

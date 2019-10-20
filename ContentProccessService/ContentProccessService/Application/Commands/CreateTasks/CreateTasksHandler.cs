@@ -1,11 +1,12 @@
-﻿using ContentProccessService.Application.Models;
-using ContentProccessService.Entities;
+﻿using ContentProccessService.Entities;
+using ContentProccessService.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace ContentProccessService.Application.Commands.CreateTasks
 {
@@ -18,37 +19,62 @@ namespace ContentProccessService.Application.Commands.CreateTasks
         }
         public async Task<List<TasksViewModel>> Handle(CreateTasksRequest request, CancellationToken cancellationToken)
         {
-            List<TasksViewModel> tasks = new List<TasksViewModel>();
-
-            foreach (var item in request.tasks)
+            // Start a local transaction.
+            var transaction = contentodbContext.Database.BeginTransaction();
+            try
             {
-                var task = new Tasks
+                List<TasksViewModel> tasks = new List<TasksViewModel>();
+
+                foreach (var item in request.tasks)
                 {
-                    IdCampaign = item.IdCampaign,
-                    IdWriter = item.IdWriter,
-                    Deadline = item.Deadline,
-                    Description = item.Description,
-                    PublishTime = item.PublishTime,
-                    Title = item.Title,
-                    StartedDate = DateTime.Now,
-                    ModifiedDate = DateTime.Now,
-                    Status = 1
-                };
-                contentodbContext.Attach(task);
-                contentodbContext.Tasks.Add(task);
-                await contentodbContext.SaveChangesAsync(cancellationToken);
-                var taskModel = new TasksViewModel
+                    var task = new Tasks
+                    {
+                        IdCampaign = item.IdCampaign,
+                        IdWriter = item.IdWriter,
+                        Deadline = item.Deadline,
+                        Description = item.Description,
+                        PublishTime = item.PublishTime,
+                        Title = item.Title,
+                        StartedDate = DateTime.UtcNow,
+                        ModifiedDate = DateTime.UtcNow,
+                        Status = 1
+                    };
+                    contentodbContext.Attach(task);
+                    contentodbContext.Tasks.Add(task);
+                    await contentodbContext.SaveChangesAsync(cancellationToken);
+                    var taskModel = new TasksViewModel
+                    {
+                        Deadline = task.Deadline,
+                        Id = task.Id,
+                        Description = task.Description,
+                        StartedDate = task.StartedDate,
+                        PublishTime = task.PublishTime,
+                        Title = task.Title,
+                    };
+                    tasks.Add(taskModel);
+                }
+                var upStatus = contentodbContext.Campaign.FirstOrDefault(y => y.Id == request.tasks.FirstOrDefault().IdCampaign);
+                if (upStatus.Status == 1)
                 {
-                    Deadline = task.Deadline,
-                    Id = task.Id,
-                    Description = task.Description,
-                    StartedDate = task.StartedDate,
-                    PublishTime = task.PublishTime,
-                    Title = task.Title,
-                };
-                tasks.Add(taskModel);
+                    upStatus.Status = 2;
+                    contentodbContext.Attach(upStatus);
+                    contentodbContext.Entry(upStatus).Property(x => x.Status).IsModified = true;
+                    await contentodbContext.SaveChangesAsync(cancellationToken);
+                }
+                transaction.Commit();
+                return tasks;
             }
-            return tasks;
+            catch(Exception e)
+            {
+                transaction.Rollback();
+                return null;
+            }
+           
+            
+
+           
+
+           
         }
     }
 }

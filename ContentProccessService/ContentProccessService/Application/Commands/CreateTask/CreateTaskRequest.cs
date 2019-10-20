@@ -1,5 +1,5 @@
-﻿using ContentProccessService.Application.Models;
-using ContentProccessService.Entities;
+﻿using ContentProccessService.Entities;
+using ContentProccessService.Models;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Commands.CreateTask
 {
-    public class CreateTaskRequest :IRequest<Tasks>
+    public class CreateTaskRequest :IRequest<TasksViewModel>
     {
         public CreateTaskModel Task { get; set; }
     }

@@ -34,10 +34,10 @@ namespace CampaignService.Application.Queries.GetListCampaignByEditorId
             {
                 CampaignData model = mapper.Map<CampaignData>(item);
 
-                //Get Editor Name & Id
-                model.Editor = new Models.Editor();
-                model.Editor.Id = item.IdEditor;
-                model.Editor.Name = _context.Users.Find(item.IdEditor).Name;
+                ////Get Editor Name & Id
+                //model.Editor = new Models.Editor();
+                //model.Editor.Id = item.IdEditor;
+                //model.Editor.Name = _context.Users.Find(item.IdEditor).Name;
 
                 //Get Customer Name & Id
                 model.Customer = new Models.Customer();

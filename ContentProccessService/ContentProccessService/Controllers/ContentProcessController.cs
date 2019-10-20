@@ -17,11 +17,14 @@ using ContentProccessService.Application.Queries.GetContentByEditorId;
 using ContentProccessService.Application.Queries.GetTasksByEditorId;
 using ContentProccessService.Application.Queries.GetContentsByWriterId;
 using ContentProccessService.Models;
-using ContentProccessService.Application.Models;
 using ContentProccessService.Application.Commands.CreateTasks;
 using ContentProccessService.Application.Commands.CreateListTaskChannel;
 using ContentProccessService.Entities;
 using Microsoft.AspNetCore.Authorization;
+using ContentProccessService.Application.Commands.ApproveRejectContent;
+using ContentProccessService.Application.Commands.UpdatetTaskEditor;
+using ContentProccessService.Application.Queries.GetTaskDetailUpdate;
+using ContentProccessService.Application.Commands.DeleteTask;
 
 namespace ContentProccessService.Controllers
 {
@@ -29,7 +32,7 @@ namespace ContentProccessService.Controllers
     {
 
         [HttpGet("tags")]
-        [Authorize(Roles = "Editor")]
+        //[Authorize(Roles = "Editor")]
         public async Task<IActionResult> GetListTagAsync()
         {
             var response = await Mediator.Send(new GetTagRequest());
@@ -41,7 +44,7 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpPost("tags")]
-        [Authorize(Roles = "Editor")]
+        //[Authorize(Roles = "Editor")]
         public async Task<IActionResult> CreateTag([FromBody]TagsDto dto)
         {
             var response = await Mediator.Send(new CreateTagRequest { dto = dto });
@@ -49,28 +52,28 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpGet("tags/campaign/{id}")]
-        [Authorize(Roles = "Marketer,Editor")]
+        //[Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetTagsByCampaignId(int id)
         {
             var response = await Mediator.Send(new GetTagsByCampaignIdRequest {CampaignId = id});
             return Ok(response);
         }
         [HttpGet("task/campaign/{id}")]
-        [Authorize(Roles = "Marketer,Editor")]
+        //[Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetTasksByCampaignId(int id)
         {
             var response = await Mediator.Send(new GetListTasksByCampaignIdRequest { IdCampaign = id });
             return Ok(response);
         }
         [HttpGet("task-detail/campaign/{id}")]
-        [Authorize(Roles = "Marketer,Editor")]
+        //[Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetTasksDetail(int id)
         {
             var response = await Mediator.Send(new GetTaskDetailRequest { IdTask = id });
             return Ok(response);
         }
         [HttpGet("task/marketer/{id}")]
-        [Authorize(Roles = "Marketer,Editor")]
+        //[Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetTasksByMarketerId(int id)
         {
             var response = await Mediator.Send(new GetListTaskByIdMarketerRequest { IdMartketer = id });
@@ -78,7 +81,7 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpGet("contents/editors/{id}")]
-        [Authorize(Roles = "Marketer,Editor")]
+        //[Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetContentByEditorId(int id)
         {
             var response = await Mediator.Send(new GetListContentByEditorIdRequest { Id = id });
@@ -86,7 +89,7 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpGet("task/editor/{id}")]
-        [Authorize(Roles = "Marketer,Editor")]
+        //[Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetTasksByEditorId(int id)
         {
             var response = await Mediator.Send(new GetTasksByEditorIdRequest { IdEditor = id });
@@ -94,7 +97,7 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpGet("content/writter/{id}")]
-        [Authorize(Roles = "Marketer,Editor")]
+        //[Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetContentsByWriterId(int id)
         {
             var response = await Mediator.Send(new GetContentsByWriterIdRequest { IdWriter = id });
@@ -102,7 +105,7 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpPost("taskschannels")]
-        [Authorize(Roles = "Marketer,Editor")]
+        //[Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> CreateTaskChannel([FromBody]TaskChannelModel taskchannel)
         {
             var response = await Mediator.Send(new CreateTaskChannelRequest { IdTask = taskchannel.IdTask, IdChannel = taskchannel.IdChannel });
@@ -110,24 +113,56 @@ namespace ContentProccessService.Controllers
         }
 
         [HttpDelete("taskschannels/{id}")]
-        [Authorize(Roles = "Marketer,Editor")]
+        //[Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> UpdateTaskChannel(int id)
         {
             var response = await Mediator.Send(new UpdateTaskChannelRequest { IdTaskChannel = id });
             return Ok(response);
         }
         [HttpPost("task")]
-        [Authorize(Roles = "Editor")]
+        //[Authorize(Roles = "Editor")]
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskModel taskchannel)
         {
             var response = await Mediator.Send(new CreateTaskRequest { Task = taskchannel });
-            return Ok(response);
+            return Accepted(response);
         }
         [HttpPost("tasks")]
-        [Authorize(Roles = "Editor")]
+        //[Authorize(Roles = "Editor")]
         public async Task<IActionResult> CreateTasks([FromBody] List<CreateTaskModel> taskchannel)
         {
             var response = await Mediator.Send(new CreateTasksRequest { tasks = taskchannel });
+            return Ok(response);
+        }
+        [HttpPost("approvals")]
+        //[Authorize(Roles = "Editor")]
+        public async Task<IActionResult> ApprovalsContent(ApproveRejectContentRequest command)
+        {
+            await Mediator.Send(command);
+            return Accepted("Successful!!");
+        }
+        [HttpPut("task")]
+        //[Authorize(Roles = "Editor")]
+        public async Task<IActionResult> UpdateTaskEditor(UpdateTaskEditorCommand command)
+        {
+            var response = await Mediator.Send(command);
+            if (response == null)
+            {
+                return Conflict("Update Fail");
+            }
+            return Accepted(response);
+        }
+        [HttpGet("task-detail-update/campaign/{id}")]
+        //[Authorize(Roles = "Marketer,Editor")]
+        public async Task<IActionResult> GetTaskUpdateDetail(int id)
+        {
+            var response = await Mediator.Send(new GetTaskDetailUpdateRequest { IdTask = id });
+            return Ok(response);
+        }
+        [HttpDelete("task/campaign/{id}")]
+        //[Authorize(Roles = "Marketer,Editor")]
+        public async Task<IActionResult> DeleteTask(int id)
+        {
+            var response = await Mediator.Send(new DeleteTaskRequest {IdTask = id });
             return Ok(response);
         }
     }

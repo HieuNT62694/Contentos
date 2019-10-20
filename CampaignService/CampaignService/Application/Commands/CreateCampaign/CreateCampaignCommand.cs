@@ -16,6 +16,7 @@ namespace CampaignService.Application.Commands.CreateCampaign
         public List<Tag> Tags { get; set; }
         public Customer Customer { get; set; }
         public Editor Editor { get; set; }
+        public int IdMarketer { get; set; }
     }
 
     public class Tag

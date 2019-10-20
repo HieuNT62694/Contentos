@@ -1,7 +1,8 @@
-﻿using ContentProccessService.Application.Models;
-using ContentProccessService.Entities;
+﻿using ContentProccessService.Entities;
+using ContentProccessService.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,6 +21,15 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
             var task = await _context.Tasks.AsNoTracking().Include(i=>i.Contents).Where(n=>n.Contents.Any(z=>z.IsActive == true))
                 .FirstOrDefaultAsync(x => x.Id == request.IdTask);
             var edtId = _context.Campaign.Find(task.IdCampaign).IdEditor;
+            var lstTag = new List<TagsViewModel>();
+            var lstTags = _context.TasksTags.Where(x=>x.IdTask == request.IdTask).ToList();
+            foreach (var item in lstTags)
+            {
+                var tag = new TagsViewModel();
+                tag.Name = _context.Tags.FirstOrDefault(x => x.Id == item.IdTag).Name;
+                tag.Id = item.IdTag;
+                lstTag.Add(tag);
+            }
             var Writter = new UsersModels
             {
                 Id = task.IdWriter,
@@ -36,6 +46,12 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                 Id = edtId,
                 Name = _context.Users.FirstOrDefault(x => x.Id == edtId).Name
             };
+            var Content = new ContentModels
+            {
+                Id = task.Contents.FirstOrDefault().Id,
+                Content = task.Contents.FirstOrDefault().TheContent,
+                Name = task.Contents.FirstOrDefault().Name
+            };
                var taskView = new TasksViewModel()
                {
                    Title = task.Title,
@@ -46,8 +62,9 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                    Status = Status,
                    StartedDate = task.StartedDate,
                    Editor = Editor,
-                   Content = task.Contents.FirstOrDefault().TheContent,
-                   Id = task.Id
+                   Content = Content,
+                   Id = task.Id,
+                   Tags = lstTag
                };
 
             return taskView;

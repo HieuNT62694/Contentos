@@ -43,7 +43,7 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdMarketer
                         Deadline = itemtask.Deadline,
                         PublishTime = itemtask.PublishTime,
                         Writer = Writter,
-                        Description = itemtask.Description,
+                        //Description = itemtask.Description,
                         Status = Status,
                         StartedDate = itemtask.StartedDate,
                         Id = itemtask.Id

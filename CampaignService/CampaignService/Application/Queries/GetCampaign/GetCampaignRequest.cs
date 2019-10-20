@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CampaignService.Application.Queries.GetCampaign
 {
-    public class GetCampaignRequest : IRequest<CampaignData>
+    public class GetCampaignRequest : IRequest<CampaignTaskDetail>
     {
         public int IdCampaign { get; set; }
     }

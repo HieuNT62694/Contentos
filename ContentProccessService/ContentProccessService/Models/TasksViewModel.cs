@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ContentProccessService.Application.Models
+namespace ContentProccessService.Models
 {
     public class TasksViewModel
     {
@@ -18,21 +18,31 @@ namespace ContentProccessService.Application.Models
         public DateTime? ModifiedDate { get; set; }
         public UsersModels Writer { get; set; }
         public UsersModels Editor { get; set; }
-        public string Content { get; set; }
+        public ContentModels Content { get; set; }
         public StatusModels Status { get; set; }
+        public List<TagsViewModel> Tags { get; set; }
     }
-
+    public class ContentModels
+    {
+        public int Id { get; set; }
+        public string Content { get; set; }
+        public string Name { get; set; }
+    }
     public class TasksViewByEditorModel
     {
         public int Id { get; set; }
+        public string Campaign { get; set; }
         public string Title { get; set; }
-        public string Description { get; set; }
-        public StatusTasks status { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? PublishTime { get; set; }
+        public StatusTaskModels Status { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public DateTime? Deadline { get; set; }
 
     }
-
+    public class TagsViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
     public class StatusTaskModels
     {
         public int Id { get; set; }
@@ -70,7 +80,10 @@ namespace ContentProccessService.Application.Models
         public int? IdWriter { get; set; }
 
     }
-
+    public class Tag
+    {
+        public int Id { get; set; }
+    }
     public class CreateTaskModel
     {
         public int IdCampaign { get; set; }
@@ -79,16 +92,25 @@ namespace ContentProccessService.Application.Models
         public string Description { get; set; }
         public DateTime? Deadline { get; set; }
         public DateTime? PublishTime { get; set; }
-
-        public CreateTaskModel(int idCampaign, int idWriter, string title, string description, DateTime? deadline, DateTime? publishTime)
-        {
-            IdCampaign = idCampaign;
-            IdWriter = idWriter;
-            Title = title;
-            Description = description;
-            Deadline = deadline;
-            PublishTime = publishTime;
-
-        }
+        public List<Tag> Tags { get; set; }
     }
+    public class UpdateTaskModel
+    {
+        public UsersModels Writer { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public DateTime? Deadline { get; set; }
+        public DateTime? PublishTime { get; set; }
+        public List<TasksTags> Tags { get; set; }
+    }
+    //public class TaskDetailModel
+    //{
+        
+    //    public UsersModels IdWriter { get; set; }
+    //    public string Title { get; set; }
+    //    public string Description { get; set; }
+    //    public DateTime? Deadline { get; set; }
+    //    public DateTime? PublishTime { get; set; }
+    //    public List<TasksTags> Tags { get; set; }
+    //}
 }

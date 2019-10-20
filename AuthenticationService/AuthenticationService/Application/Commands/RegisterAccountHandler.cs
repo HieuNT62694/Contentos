@@ -19,35 +19,46 @@ namespace AuthenticationService.Application.Commands
 
         public async Task<Unit> Handle(RegisterAccountCommands request, CancellationToken cancellationToken)
         {
-
-            if (!IsEmailUnique(request.Email))
+            var transaction = _context.Database.BeginTransaction();
+            try
             {
-
-                var newAccount = new Accounts
+                if (!IsEmailUnique(request.Email))
                 {
-                    Email = request.Email,
-                    Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                    IdRole = 4,
-                    IsActive = true,
-                    CreatedDate = DateTime.UtcNow
 
-                };
-                var lstAcc = new List<Accounts>();
-                lstAcc.Add(newAccount);
-                var newUser = new Users
-                {
-                    IsActive = true,
-                    Name = request.FullName,
-                    IdOccupation = 1,
-                    IdLocation = 1,
-                    IdManager = 1,
-                    Accounts = lstAcc
-                };
-                _context.Users.Add(newUser);
-                //await _context.SaveChangesAsync(cancellationToken);
+                    var newAccount = new Accounts
+                    {
+                        Email = request.Email,
+                        Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                        IdRole = 4,
+                        IsActive = true,
+                        CreatedDate = DateTime.UtcNow
+
+                    };
+                    var lstAcc = new List<Accounts>();
+                    lstAcc.Add(newAccount);
+                    var newUser = new Users
+                    {
+                        IsActive = true,
+                        Name = request.FullName,
+                        IdOccupation = 1,
+                        IdLocation = 1,
+                        IdManager = 1,
+                        Accounts = lstAcc
+                    };
+                    _context.Users.Add(newUser);
+                    //await _context.SaveChangesAsync(cancellationToken);
+                }
+                await _context.SaveChangesAsync(cancellationToken);
+                transaction.Commit();
+                return Unit.Value;
             }
-            await _context.SaveChangesAsync(cancellationToken);
-            return Unit.Value;
+            catch(Exception e)
+            {
+                transaction.Rollback();
+                return Unit.Value;
+
+            }
+         
         }
         public bool IsEmailUnique(string Email)
         {

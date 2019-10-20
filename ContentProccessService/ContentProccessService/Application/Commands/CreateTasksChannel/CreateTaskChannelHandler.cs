@@ -22,8 +22,8 @@ namespace ContentProccessService.Application.Commands.CreateTasksChannel
             {
                 IdChannel = request.IdChannel,
                 IdTask = request.IdTask,
-                ModifiedDate = DateTime.Now,
-                CreatedDate = DateTime.Now,
+                ModifiedDate = DateTime.UtcNow,
+                CreatedDate = DateTime.UtcNow,
             };
 
             contentodbContext.TasksChannels.Add(taskchannel);

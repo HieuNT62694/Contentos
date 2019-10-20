@@ -1,5 +1,5 @@
-﻿using ContentProccessService.Application.Models;
-using ContentProccessService.Entities;
+﻿using ContentProccessService.Entities;
+using ContentProccessService.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -42,7 +42,7 @@ namespace ContentProccessService.Application.Queries.GetListTaksByCampaignId
                     Deadline = item.Deadline,
                     PublishTime = item.PublishTime,
                     Writer = Writter,
-                    Description = item.Description,
+                    //Description = item.Description,
                     Status = Status,
                     StartedDate = item.StartedDate,
                     Id = item.Id

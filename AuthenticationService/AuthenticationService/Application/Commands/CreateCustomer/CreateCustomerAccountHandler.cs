@@ -26,45 +26,55 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
         }
         public async Task<CreateUserModel> Handle(CreateCustomerAccountCommads request, CancellationToken cancellationToken)
         {
-            string newPassword = "";
-
-            if (!IsEmailUnique(request.Email))
+            var transaction = _context.Database.BeginTransaction();
+            try
             {
-                newPassword = _helper.GenerateRandomPassword();            
-                var newAccount = new Accounts
+                string newPassword = "";
+
+                if (!IsEmailUnique(request.Email))
                 {
+                    newPassword = _helper.GenerateRandomPassword();
+                    var newAccount = new Accounts
+                    {
+                        Email = request.Email,
+                        Password = BCrypt.Net.BCrypt.HashPassword(newPassword),
+                        IdRole = 5,
+                        IsActive = true,
+                        CreatedDate = DateTime.UtcNow
+
+                    };
+                    var lstAcc = new List<Accounts>();
+                    lstAcc.Add(newAccount);
+                    var newUser = new Users
+                    {
+                        IsActive = true,
+                        Name = request.FullName,
+                        IdOccupation = 1,
+                        IdLocation = 1,
+                        IdManager = request.IdMarketer,
+                        Company = request.CompanyName,
+                        Accounts = lstAcc
+                    };
+                    _context.Users.Add(newUser);
+                }
+
+                await _context.SaveChangesAsync();
+                transaction.Commit();
+                return new CreateUserModel
+                {
+                    Id = _context.Users.AsNoTracking().OrderByDescending(x => x.Id).First().Id,
+                    FullName = request.FullName,
                     Email = request.Email,
-                    Password = BCrypt.Net.BCrypt.HashPassword(newPassword),
-                    IdRole = 5,
-                    IsActive = true,
-                    CreatedDate = DateTime.UtcNow
-
+                    CompanyName = request.CompanyName,
+                    Password = newPassword
                 };
-                var lstAcc = new List<Accounts>();
-                lstAcc.Add(newAccount);
-                var newUser = new Users
-                {
-                    IsActive = true,
-                    Name = request.FullName,
-                    IdOccupation = 1,
-                    IdLocation = 1,
-                    IdManager = request.IdMarketer,
-                    Company = request.CompanyName,
-                    Accounts = lstAcc
-                };
-                _context.Users.Add(newUser);
             }
-
-            await _context.SaveChangesAsync();
-
-            return new CreateUserModel
+            catch(Exception e)
             {
-                Id = _context.Users.AsNoTracking().OrderByDescending(x => x.Id).First().Id,
-                FullName = request.FullName,
-                Email = request.Email,
-                CompanyName = request.CompanyName,
-                Password = newPassword
-            };
+                transaction.Rollback();
+                return null;
+            }
+         
         }
         public bool IsEmailUnique(string Email)
         {
