@@ -1,5 +1,0 @@
-D:\Capstone\Doan\Contento\BackgroundService\BackgroundService\bin\Debug\netcoreapp2.2\appsettings.Development.json
-D:\Capstone\Doan\Contento\BackgroundService\BackgroundService\bin\Debug\netcoreapp2.2\appsettings.json
-D:\Capstone\Doan\Contento\BackgroundService\BackgroundService\bin\Debug\netcoreapp2.2\Properties\launchSettings.json
-D:\Capstone\Doan\Contento\BackgroundService\BackgroundService\obj\Debug\netcoreapp2.2\BackgroundService.AssemblyInfoInputs.cache
-D:\Capstone\Doan\Contento\BackgroundService\BackgroundService\obj\Debug\netcoreapp2.2\BackgroundService.AssemblyInfo.cs

@@ -8,8 +8,11 @@ using AuthenticationService.Application.Queries.GetCustomer;
 using AuthenticationService.Application.Queries.GetUser;
 using AuthenticationService.Application.Queries.GetWriter;
 using AuthenticationService.Entities;
+using AuthenticationService.Models;
+using AuthenticationService.RabbitMQ;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace AuthenticationService.Controllers
 {
@@ -83,6 +86,10 @@ namespace AuthenticationService.Controllers
         public async Task<IActionResult> CreateCustomerAccounts(CreateCustomerAccountCommads command)
         {
             var result = await Mediator.Send(command);
+            Producer producer = new Producer();
+            MessageAccountDTO messageDTO = new MessageAccountDTO{
+               FullName = result.FullName,Password = result.Password,Email = result.Email };
+            producer.PublishMessage(message: JsonConvert.SerializeObject(messageDTO), "AccountToEmail");
             return Accepted(result);
 
         }
