@@ -1,0 +1,5 @@
+D:\Capstone\Doan\Contento\NotificationService\NotificationService\bin\Debug\netcoreapp2.2\appsettings.Development.json
+D:\Capstone\Doan\Contento\NotificationService\NotificationService\bin\Debug\netcoreapp2.2\appsettings.json
+D:\Capstone\Doan\Contento\NotificationService\NotificationService\bin\Debug\netcoreapp2.2\Properties\launchSettings.json
+D:\Capstone\Doan\Contento\NotificationService\NotificationService\obj\Debug\netcoreapp2.2\NotificationService.AssemblyInfoInputs.cache
+D:\Capstone\Doan\Contento\NotificationService\NotificationService\obj\Debug\netcoreapp2.2\NotificationService.AssemblyInfo.cs
