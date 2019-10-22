@@ -37,6 +37,10 @@
       "httpPort": 58223,
       "useSSL": true,
       "sslPort": 44366
+    },
+    "Azure Dev Spaces": {
+      "commandName": "AzureDevSpaces",
+      "launchBrowser": true
     }
   }
 }
