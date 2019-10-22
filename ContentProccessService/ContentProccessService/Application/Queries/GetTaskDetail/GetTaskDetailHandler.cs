@@ -18,9 +18,10 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
         }
         public async Task<TasksViewModel> Handle(GetTaskDetailRequest request, CancellationToken cancellationToken)
         {
-            var task = await _context.Tasks.AsNoTracking().Include(i=>i.Contents).Where(n=>n.Contents.Any(z=>z.IsActive == true))
+            var task = await _context.Tasks.AsNoTracking().Include(i=>i.Contents).Where(i=>i.Contents.Any(z=>z.IsActive == true ))
                 .FirstOrDefaultAsync(x => x.Id == request.IdTask);
             var edtId = _context.Campaign.Find(task.IdCampaign).IdEditor;
+            var campaign = _context.Campaign.Find(task.IdCampaign).Title;
             var lstTag = new List<TagsViewModel>();
             var lstTags = _context.TasksTags.Where(x=>x.IdTask == request.IdTask).ToList();
             foreach (var item in lstTags)
@@ -48,10 +49,16 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
             };
             var Content = new ContentModels
             {
-                Id = task.Contents.FirstOrDefault().Id,
-                Content = task.Contents.FirstOrDefault().TheContent,
-                Name = task.Contents.FirstOrDefault().Name
+                Id = task.Contents.FirstOrDefault(x=>x.IsActive == true).Id,
+                Content = task.Contents.FirstOrDefault(x => x.IsActive == true).TheContent,
+                Name = task.Contents.FirstOrDefault(x => x.IsActive == true).Name
             };
+            var Comment = new Comments();
+            if (task.Contents.FirstOrDefault(x => x.IsActive == true).IdComment != null)
+            {
+                Comment.Comment = _context.Comments.FirstOrDefault(x => x.Id == task.Contents.FirstOrDefault(z => z.IsActive == true).IdComment).Comment;
+            }
+           
                var taskView = new TasksViewModel()
                {
                    Title = task.Title,
@@ -63,8 +70,10 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                    StartedDate = task.StartedDate,
                    Editor = Editor,
                    Content = Content,
+                   Comment = Comment,
                    Id = task.Id,
-                   Tags = lstTag
+                   Tags = lstTag,
+                   Campaign = campaign
                };
 
             return taskView;

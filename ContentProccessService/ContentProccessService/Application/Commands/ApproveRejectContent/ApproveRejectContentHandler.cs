@@ -52,10 +52,15 @@ namespace ContentProccessService.Application.Commands.ApproveRejectContent
                     contentodbContext.Attach(upContent);
                     contentodbContext.Entry(upContent).Property(x => x.IdComment).IsModified = true;
                     ////insert new content
-                    //var addContent = contentodbContext.Contents.FirstOrDefault(y => y.Id == request.IdContent);
-                    //addContent.IdComment = addComment.Id;
-                    //addContent.Version += 1;
-                    //contentodbContext.Add
+                    var addContent = new Contents();
+                    addContent.IdTask = upContent.IdTask;
+                    addContent.IsActive = true;
+                    addContent.CreatedDate = DateTime.UtcNow;
+                    addContent.IdComment = addComment.Id;
+                    addContent.Version = upContent.Version + 1;
+                    addContent.TheContent = upContent.TheContent;
+                    addContent.Name = upContent.Name;
+                    contentodbContext.Contents.Add(addContent);
                 }
                 await contentodbContext.SaveChangesAsync(cancellationToken);
                 transaction.Commit();

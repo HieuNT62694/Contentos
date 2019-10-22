@@ -64,17 +64,11 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                     return resultReturn;
                 }
                 //update with status !=1
-                upTask.Title = request.Title;
-                upTask.Description = request.Description;
                 upTask.Deadline = request.Deadline;
-                upTask.PublishTime = request.PublishTime;
                 contentodbContext.Attach(upTask);
                 contentodbContext.Entry(upTask).State = EntityState.Modified;
                 await contentodbContext.SaveChangesAsync(cancellationToken);
-                resultReturn.Title = upTask.Title;
-                resultReturn.Description = upTask.Description;
                 resultReturn.Deadline = upTask.Deadline;
-                resultReturn.PublishTime = upTask.PublishTime;
                 transaction.Commit();
                 return resultReturn;
 
