@@ -22,11 +22,11 @@ namespace MailService.RabbitMQ
         private IConnection connection;
         private IModel channel;
         private string queueName;
-   
 
         public Consumer(string exch)
         {
-            InitRabbitMQ(exch);          
+            InitRabbitMQ(exch);
+
         }
         private void InitRabbitMQ(string exch)
         {
@@ -46,13 +46,13 @@ namespace MailService.RabbitMQ
         {
             stoppingToken.ThrowIfCancellationRequested();
             var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += (model, ea) =>
+            consumer.Received += async (model, ea) =>
             {
                 var body = ea.Body;
                 var message = Encoding.UTF8.GetString(body);
                 var messageAccountDTO = JsonConvert.DeserializeObject<MessageAccountDTO>(message);
-                
-               
+                var email = new EmailSender();
+                await email.SendEmailAsync(messageAccountDTO.Email, "Welcome To Contento System", "Username: " + messageAccountDTO.FullName + ", Password: " + messageAccountDTO.Password);
             };
             channel.BasicConsume(queue: queueName,
                                  autoAck: false,

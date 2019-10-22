@@ -86,6 +86,7 @@ namespace AuthenticationService.Controllers
         public async Task<IActionResult> CreateCustomerAccounts(CreateCustomerAccountCommads command)
         {
             var result = await Mediator.Send(command);
+            //Create exchange
             Producer producer = new Producer();
             MessageAccountDTO messageDTO = new MessageAccountDTO{
                FullName = result.FullName,Password = result.Password,Email = result.Email };

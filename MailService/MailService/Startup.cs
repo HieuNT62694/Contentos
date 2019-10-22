@@ -72,7 +72,6 @@ namespace MailService
             }));
 
             //addservice
-            services.AddScoped<IEmailSender, EmailSender>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
