@@ -30,6 +30,12 @@ namespace ContentProccessService.Application.Commands.ApproveRejectContent
                     upStatus.Status = 5;
                     contentodbContext.Attach(upStatus);
                     contentodbContext.Entry(upStatus).Property(x => x.Status).IsModified = true;
+                    var upContent = contentodbContext.Contents.FirstOrDefault(y => y.Id == request.IdContent);
+                    upContent.TheContent = request.Comments;
+                    upContent.Name = request.Name;
+                    upContent.ModifiedDate = DateTime.UtcNow;
+                    contentodbContext.Attach(upContent);
+                    contentodbContext.Entry(upContent).State = EntityState.Modified;
                 }
                 else
                 {
@@ -59,7 +65,7 @@ namespace ContentProccessService.Application.Commands.ApproveRejectContent
                     addContent.IdComment = addComment.Id;
                     addContent.Version = upContent.Version + 1;
                     addContent.TheContent = upContent.TheContent;
-                    addContent.Name = upContent.Name;
+                    addContent.Name = request.Name;
                     contentodbContext.Contents.Add(addContent);
                 }
                 await contentodbContext.SaveChangesAsync(cancellationToken);

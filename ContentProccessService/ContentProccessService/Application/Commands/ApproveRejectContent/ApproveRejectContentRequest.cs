@@ -14,7 +14,7 @@ namespace ContentProccessService.Application.Commands.ApproveRejectContent
         public int IdContent { get; set; }
         public string Comments { get; set; }
         public bool Button { get; set; }
-
+        public string Name { get; set; }
     }
    
 }
