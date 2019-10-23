@@ -4,10 +4,12 @@ using BatchjobService.HangFireService;
 using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace BatchjobService
 {
@@ -48,6 +50,13 @@ namespace BatchjobService
                 app.UseHsts();
             }
             app.UseHangfireDashboard();
+            //RecurringJob.AddOrUpdate("UpdateStatusDeadline", () => service.UpdateStatus(), "0 10 * * *", TimeZoneInfo.Utc);
+            RecurringJob.AddOrUpdate<IUpdateStatusService>("UpdateStatusDeadline", context => context.UpdateStatus(), "* 17 * * *", TimeZoneInfo.Utc);
+            //RecurringJob.AddOrUpdate<IUpdateStatusService>("UpdateStatusDeadline", context => context.UpdateStatus(), Cron.Daily,TimeZoneInfo.Utc );
+            //app.Run(async (context) =>
+            //{
+            //    await context.Response.WriteAsync("Hello World!");
+            //});
             app.UseHttpsRedirection();
             app.UseMvc();
         }

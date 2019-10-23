@@ -60,6 +60,7 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                     resultReturn.Deadline = upTask.Deadline;
                     resultReturn.PublishTime = upTask.PublishTime;
                     resultReturn.Tags = Tags;
+                    resultReturn.Id = request.IdTask;
                     transaction.Commit();
                     return resultReturn;
                 }

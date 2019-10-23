@@ -98,6 +98,7 @@ namespace ContentProccessService.Models
     }
     public class UpdateTaskModel
     {
+        public int Id { get; set; }
         public UsersModels Writer { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
