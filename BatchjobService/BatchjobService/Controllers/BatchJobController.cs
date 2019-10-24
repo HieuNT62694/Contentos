@@ -13,13 +13,16 @@ namespace BatchjobService.Controllers
     public class BatchJobController : BaseController
     {
         private readonly IPublishFBService _context;
-        public BatchJobController(IPublishFBService contentodbContext)
+        private readonly IUpdateBeforePublishingService _ubfPublish;
+        public BatchJobController(IPublishFBService contentodbContext,IUpdateBeforePublishingService ubfPublish)
         {
             _context = contentodbContext;
+            _ubfPublish = ubfPublish;
         }
         [HttpPost("Publish")]
         public IActionResult Index(PublishModels models)
         {
+            _ubfPublish.UpdateStatusBeforePublishing(models.id, models.time);
             var jobId = BackgroundJob.Schedule(
                 () => _context.PublishToFB(models.id),
                 models.time);

@@ -68,7 +68,7 @@ namespace ContentProccessService.Application.Commands.CreateTask
                 }
                 var status = new StatusModels();
 
-                status.Id = task.Id;
+                status.Id = task.Status;
                 status.Name = contentodbContext.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Name;
                 status.Color = contentodbContext.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Color;
 

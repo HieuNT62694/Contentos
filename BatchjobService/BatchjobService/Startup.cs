@@ -37,6 +37,7 @@ namespace BatchjobService
             services.AddHangfireServer();
             services.AddScoped<IUpdateStatusService, UpdateStatusService>();
             services.AddScoped<IPublishFBService, PublishFB>();
+            services.AddScoped<IUpdateBeforePublishingService, UpdateBeforePublishingService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
@@ -52,8 +53,8 @@ namespace BatchjobService
                 config.PostProcess = document =>
                 {
                     document.Info.Version = "v1";
-                    document.Info.Title = string.Format($"Authen Service");
-                    document.Info.Description = string.Format($"Developer Documentation Page For Authen Service");
+                    document.Info.Title = string.Format($"Publish Service");
+                    document.Info.Description = string.Format($"Developer Documentation Page For Publish Service");
                 };
                 config.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
                 {
