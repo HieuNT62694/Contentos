@@ -21,7 +21,7 @@ namespace BatchjobService.Controllers
         public IActionResult Index(PublishModels models)
         {
             var jobId = BackgroundJob.Schedule(
-                () => _context.PublishToFB(20),
+                () => _context.PublishToFB(models.id),
                 models.time);
 
             return Accepted();
