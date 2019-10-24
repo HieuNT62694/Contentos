@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 using System;
+using System.Linq;
 
 namespace BatchjobService
 {
@@ -33,8 +36,43 @@ namespace BatchjobService
             services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("HangfireDb")));
             services.AddHangfireServer();
             services.AddScoped<IUpdateStatusService, UpdateStatusService>();
+            services.AddScoped<IPublishFBService, PublishFB>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
             //Add timer service
+
+            services.AddOpenApiDocument(config =>
+            {
+                config.PostProcess = document =>
+                {
+                    document.Info.Version = "v1";
+                    document.Info.Title = string.Format($"Authen Service");
+                    document.Info.Description = string.Format($"Developer Documentation Page For Authen Service");
+                };
+                config.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "Using: Bearer + your jwt token"
+                });
+
+                config.OperationProcessors.Add(
+                        new AspNetCoreOperationSecurityScopeProcessor("JWT"));
+                //config.DocumentProcessors.Add(new SecurityDefinitionAppender("Jwt Token Authentication", new OpenApiSecurityScheme
+                //{
+                //    Type = OpenApiSecuritySchemeType.ApiKey,
+                //    Name = "Authorization",
+                //    Description = "Using: Bearer + your jwt token",
+                //    In = OpenApiSecurityApiKeyLocation.Header
+                //}));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +97,8 @@ namespace BatchjobService
             //});
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
         }
     }
 }
