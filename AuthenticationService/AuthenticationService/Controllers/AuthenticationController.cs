@@ -94,6 +94,10 @@ namespace AuthenticationService.Controllers
             {
                 return BadRequest();
             }
+		
+		[HttpPost("send-notify")]
+        public async Task<IActionResult> Notify (NotifyCommands Command)
+            var result = await Mediator.Send(Command);
             return Accepted(result);
         }
     }
