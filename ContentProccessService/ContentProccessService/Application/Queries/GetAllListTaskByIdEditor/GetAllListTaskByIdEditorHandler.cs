@@ -2,27 +2,29 @@
 using ContentProccessService.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ContentProccessService.Application.Queries.GetTasksByEditorId
+namespace ContentProccessService.Application.Queries.GetAllListTaskByIdEditor
 {
-    public class GetTasksByEditorIdHandler : IRequestHandler<GetTasksByEditorIdRequest, List<TasksViewByEditorModel>>
+
+    public class GetAllListTaskByIdEditorHandler : IRequestHandler<GetAllListTaskByIdEditorRequest, List<TasksViewByEditorModel>>
     {
         private readonly ContentoContext Context;
 
-        public GetTasksByEditorIdHandler(ContentoContext context)
+        public GetAllListTaskByIdEditorHandler(ContentoContext context)
         {
             Context = context;
         }
 
-        public async Task<List<TasksViewByEditorModel>> Handle(GetTasksByEditorIdRequest request, CancellationToken cancellationToken)
+        public async Task<List<TasksViewByEditorModel>> Handle(GetAllListTaskByIdEditorRequest request, CancellationToken cancellationToken)
         {
             List<TasksViewByEditorModel> Tasks = new List<TasksViewByEditorModel>();
-            var ls = await Context.Tasks.AsNoTracking().Include(t => t.IdCampaignNavigation).Include(g=>g.StatusNavigation).Include(f => f.Contents).Where(t => t.IdCampaignNavigation.IdEditor == request.IdEditor).Where(t => t.Status == 3).ToListAsync();
-            
+            var ls = await Context.Tasks.AsNoTracking().Include(t => t.IdCampaignNavigation).Include(g => g.StatusNavigation).Include(f => f.Contents).Where(t => t.IdCampaignNavigation.IdEditor == request.IdEditor).ToListAsync();
+
             foreach (var item in ls)
             {
                 var Status = new StatusTaskModels
@@ -36,7 +38,7 @@ namespace ContentProccessService.Application.Queries.GetTasksByEditorId
                     Id = item.Id,
                     //Description = item.Description,
                     Campaign = item.IdCampaignNavigation.Title,
-                    ModifiedDate = item.Contents.FirstOrDefault(x=>x.IsActive == true).ModifiedDate,
+                    ModifiedDate = item.Contents.Count == 0 ? null : item.Contents.FirstOrDefault(x=>x.IsActive == true).ModifiedDate,
                     Deadline = item.Deadline,
                     Title = item.Title,
                     Status = Status
@@ -48,4 +50,3 @@ namespace ContentProccessService.Application.Queries.GetTasksByEditorId
 
     }
 }
-

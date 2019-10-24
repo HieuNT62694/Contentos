@@ -28,6 +28,8 @@ using ContentProccessService.Application.Commands.DeleteTask;
 using ContentProccessService.Application.Commands.SaveContent;
 using ContentProccessService.Application.Commands.SubmitContent;
 using ContentProccessService.Application.Commands.StartTask;
+using ContentProccessService.Application.Queries.GetListTaskByIdWriter;
+using ContentProccessService.Application.Queries.GetAllListTaskByIdEditor;
 
 namespace ContentProccessService.Controllers
 {
@@ -69,7 +71,7 @@ namespace ContentProccessService.Controllers
             return Ok(response);
         }
         [HttpGet("task-detail/campaign/{id}")]
-        [Authorize(Roles = "Marketer,Editor")]
+        [Authorize(Roles = "Marketer,Editor,Writer")]
         public async Task<IActionResult> GetTasksDetail(int id)
         {
             var response = await Mediator.Send(new GetTaskDetailRequest { IdTask = id });
@@ -99,7 +101,7 @@ namespace ContentProccessService.Controllers
             return Ok(response);
         }
 
-        [HttpGet("content/writter/{id}")]
+        [HttpGet("content/Writer/{id}")]
         [Authorize(Roles = "Writer")]
         public async Task<IActionResult> GetContentsByWriterId(int id)
         {
@@ -169,7 +171,7 @@ namespace ContentProccessService.Controllers
             return Ok(response);
         }
         [HttpPut("content/task/campaign")]
-        [Authorize(Roles = "Writter")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> SaveContent(SaveContentCommand command)
         {
             var response = await Mediator.Send(command);
@@ -180,18 +182,32 @@ namespace ContentProccessService.Controllers
             return Ok(response);
         }
         [HttpPut("content/task/campaign/submit")]
-        [Authorize(Roles = "Writter")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> SubmitContent(SubmitContentCommand command)
         {
             await Mediator.Send(command);
             return Accepted("Successfull!!");
         }
         [HttpPut("content/task/campaign/start")]
-        [Authorize(Roles = "Writter")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> StartTask(StartTaskCommand command)
         {
             var response = await Mediator.Send(command);
             return Accepted(response);
+        }
+        [HttpGet("task/writer/{id}")]
+        [Authorize(Roles = "Writer")]
+        public async Task<IActionResult> GetTasksByWriterId(int id)
+        {
+            var response = await Mediator.Send(new GetListTaskByIdWriterRequest { IdWriter = id });
+            return Ok(response);
+        }
+        [HttpGet("all-task/editor/{id}")]
+        [Authorize(Roles = "Editor")]
+        public async Task<IActionResult> GetAllTasksByEditorId(int id)
+        {
+            var response = await Mediator.Send(new GetAllListTaskByIdEditorRequest { IdEditor = id });
+            return Ok(response);
         }
     }
 }

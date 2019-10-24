@@ -18,9 +18,10 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
         }
         public async Task<TasksViewModel> Handle(GetTaskDetailRequest request, CancellationToken cancellationToken)
         {
-            var task = await _context.Tasks.AsNoTracking().Include(i=>i.Contents).Where(i=>i.Contents.Any(z=>z.IsActive == true ))
+            var task = await _context.Tasks.AsNoTracking().Include(i=>i.Contents)
                 .FirstOrDefaultAsync(x => x.Id == request.IdTask);
             var edtId = _context.Campaign.Find(task.IdCampaign).IdEditor;
+            var content = task.Contents.Where(x => x.IsActive == true).FirstOrDefault();
             var campaign = _context.Campaign.Find(task.IdCampaign).Title;
             var lstTag = new List<TagsViewModel>();
             var lstTags = _context.TasksTags.Where(x=>x.IdTask == request.IdTask).ToList();
@@ -49,14 +50,14 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
             };
             var Content = new ContentModels
             {
-                Id = task.Contents.FirstOrDefault(x=>x.IsActive == true).Id,
-                Content = task.Contents.FirstOrDefault(x => x.IsActive == true).TheContent,
-                Name = task.Contents.FirstOrDefault(x => x.IsActive == true).Name
+                Id = content.Id,
+                Content = content.TheContent,
+                Name = content.Name
             };
             var Comment = new Comments();
             if (task.Contents.FirstOrDefault(x => x.IsActive == true).IdComment != null)
             {
-                Comment.Comment = _context.Comments.FirstOrDefault(x => x.Id == task.Contents.FirstOrDefault(z => z.IsActive == true).IdComment).Comment;
+                Comment.Comment = _context.Comments.FirstOrDefault(x => x.Id == content.IdComment).Comment;
             }
            
                var taskView = new TasksViewModel()

@@ -37,9 +37,10 @@ namespace ContentProccessService.Application.Commands.StartTask
                 _context.Entry(upTask).State = EntityState.Modified;
                 await _context.SaveChangesAsync(cancellationToken);
                 // get detail task
-                var task = await _context.Tasks.AsNoTracking().Include(i => i.Contents).Where(n => n.Contents.Any(z => z.IsActive == true))
-               .FirstOrDefaultAsync(x => x.Id == request.IdTask);
+                var task = await _context.Tasks.AsNoTracking().Include(i => i.Contents).FirstOrDefaultAsync(x => x.Id == request.IdTask);
+                var content = task.Contents.Where(x => x.IsActive == true).FirstOrDefault();
                 var edtId = _context.Campaign.Find(task.IdCampaign).IdEditor;
+                var campaign = _context.Campaign.Find(task.IdCampaign).Title;
                 var lstTag = new List<TagsViewModel>();
                 var lstTags = _context.TasksTags.Where(x => x.IdTask == request.IdTask).ToList();
                 foreach (var item in lstTags)
@@ -67,9 +68,9 @@ namespace ContentProccessService.Application.Commands.StartTask
                 };
                 var Content = new ContentModels
                 {
-                    Id = task.Contents.FirstOrDefault().Id,
-                    Content = task.Contents.FirstOrDefault().TheContent,
-                    Name = task.Contents.FirstOrDefault().Name
+                    Id = content.Id,
+                    Content = content.TheContent,
+                    Name = content.Name
                 };
                 var taskView = new TasksViewModel()
                 {
@@ -83,7 +84,8 @@ namespace ContentProccessService.Application.Commands.StartTask
                     Editor = Editor,
                     Content = Content,
                     Id = task.Id,
-                    Tags = lstTag
+                    Tags = lstTag,
+                    Campaign = campaign
                 };
                 transaction.Commit();
                 return taskView;
