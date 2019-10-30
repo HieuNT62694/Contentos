@@ -61,41 +61,47 @@ namespace FBTest
         /// <returns>Result</returns>
         /// <param name="postText">Post to publish</param>
         /// <param name="pictureURL">Post to publish</param>
-        public string PublishToFacebook(string postText, string pictureURL)
+        public string PublishToFacebook(string postText, List<string> listPictureURL)
         {
             try
             {
-                // upload picture first
-                var rezImage = Task.Run(async () =>
-                {
-                    using (var http = new HttpClient())
-                    {
-                        return await UploadPhoto(pictureURL);
-                    }
-                });
-                var rezImageJson = JObject.Parse(rezImage.Result.Item2);
+                List<string> listPictureURLFB = new List<string>();
 
-                if (rezImage.Result.Item1 != 200)
+                foreach (var pictureURL in listPictureURL)
                 {
-                    try // return error from JSON
+                    // upload picture first
+                    var rezImage = Task.Run(async () =>
                     {
-                        return $"Error uploading photo to Facebook. {rezImageJson["error"]["message"].Value<string>()}";
-                    }
-                    catch (Exception ex) // return unknown error
+                        using (var http = new HttpClient())
+                        {
+                            return await UploadPhoto(pictureURL);
+                        }
+                    });
+                    var rezImageJson = JObject.Parse(rezImage.Result.Item2);
+
+                    if (rezImage.Result.Item1 != 200)
                     {
-                        // log exception somewhere
-                        return $"Unknown error uploading photo to Facebook. {ex.Message}";
+                        try
+                        {
+                            return $"Error uploading photo to Facebook. {rezImageJson["error"]["message"].Value<string>()}";
+                        }
+                        catch (Exception ex)
+                        {
+                            return $"Unknown error uploading photo to Facebook. {ex.Message}";
+                        }
                     }
+                    // get post ID from the response
+                    string postID = rezImageJson["id"].Value<string>();
+
+                    listPictureURLFB.Add(postID);
                 }
-                // get post ID from the response
-                string postID = rezImageJson["post_id"].Value<string>();
 
                 // and update this post (which is actually a photo) with your text
                 var rezText = Task.Run(async () =>
                 {
                     using (var http = new HttpClient())
                     {
-                        return await UpdatePhotoWithPost(postID, postText);
+                        return await PublishPostWithPhotos(listPictureURLFB, postText);
                     }
                 });
                 var rezTextJson = JObject.Parse(rezText.Result.Item2);
@@ -133,7 +139,8 @@ namespace FBTest
             {
                 var postData = new Dictionary<string, string> {
                 { "access_token", _accessToken },
-                { "url", photoURL }
+                { "url", photoURL },
+                { "published", "false"}
             };
 
                 var httpResponse = await http.PostAsync(
@@ -155,18 +162,23 @@ namespace FBTest
         /// <returns>StatusCode and JSON response</returns>
         /// <param name="postID">Post ID</param>
         /// <param name="postText">Text to add tp the post</param>
-        public async Task<Tuple<int, string>> UpdatePhotoWithPost(string postID, string postText)
+        public async Task<Tuple<int, string>> PublishPostWithPhotos(List<string> listPhotos, string postText)
         {
             using (var http = new HttpClient())
             {
                 var postData = new Dictionary<string, string> {
                 { "access_token", _accessToken },
-                { "message", postText }//,
-                // { "formatting", "MARKDOWN" } // doesn't work
+                { "message", postText }
             };
+                int count = 0;
+                foreach(var photo in listPhotos)
+                {
+                    postData.Add("attached_media[" + count + "]", "{\"media_fbid\":\"" + photo + "\"}");
+                    count++;
+                }
 
                 var httpResponse = await http.PostAsync(
-                    $"{_facebookAPI}{postID}",
+                    _postToPageURL,
                     new FormUrlEncodedContent(postData)
                     );
                 var httpContent = await httpResponse.Content.ReadAsStringAsync();
