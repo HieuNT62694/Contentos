@@ -1,26 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Capstone\\Doan\\Contento\\BatchjobService\\BatchjobService\\BatchjobService.csproj": {}
+    "D:\\Study\\Capstone\\aaa\\BatchjobService\\BatchjobService\\BatchjobService.csproj": {}
   },
   "projects": {
-    "D:\\Capstone\\Doan\\Contento\\BatchjobService\\BatchjobService\\BatchjobService.csproj": {
+    "D:\\Study\\Capstone\\aaa\\BatchjobService\\BatchjobService\\BatchjobService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Capstone\\Doan\\Contento\\BatchjobService\\BatchjobService\\BatchjobService.csproj",
+        "projectUniqueName": "D:\\Study\\Capstone\\aaa\\BatchjobService\\BatchjobService\\BatchjobService.csproj",
         "projectName": "BatchjobService",
-        "projectPath": "D:\\Capstone\\Doan\\Contento\\BatchjobService\\BatchjobService\\BatchjobService.csproj",
-        "packagesPath": "C:\\Users\\HieuNTSE62694\\.nuget\\packages\\",
-        "outputPath": "D:\\Capstone\\Doan\\Contento\\BatchjobService\\BatchjobService\\obj\\",
+        "projectPath": "D:\\Study\\Capstone\\aaa\\BatchjobService\\BatchjobService\\BatchjobService.csproj",
+        "packagesPath": "C:\\Users\\zzdai\\.nuget\\packages\\",
+        "outputPath": "D:\\Study\\Capstone\\aaa\\BatchjobService\\BatchjobService\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\HieuNTSE62694\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\zzdai\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp2.2"
@@ -54,6 +52,10 @@
             "Hangfire.AspNetCore": {
               "target": "Package",
               "version": "[1.7.6, )"
+            },
+            "HtmlAgilityPack.NetCore": {
+              "target": "Package",
+              "version": "[1.5.0.1, )"
             },
             "MediatR": {
               "target": "Package",

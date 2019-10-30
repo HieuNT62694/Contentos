@@ -19,7 +19,7 @@ namespace BatchjobService.Controllers
             _context = contentodbContext;
             _ubfPublish = ubfPublish;
         }
-        [HttpPost("Publish")]
+        [HttpPost("PublishToFB")]
         public IActionResult Index(PublishModels models)
         {
             _ubfPublish.UpdateStatusBeforePublishing(models.id, models.time);
@@ -30,11 +30,22 @@ namespace BatchjobService.Controllers
             return Accepted();
         }
 
-        [HttpPost("Test")]
-        public IActionResult Test(PublishModels models)
+        [HttpPost("PublishToWP")]
+        public IActionResult PublishToFB(PublishModels models)
         {
-            _context.PublishToFB(models.id);
+            _ubfPublish.UpdateStatusBeforePublishing(models.id, models.time);
+            var jobId = BackgroundJob.Schedule(
+                () => _context.PublishToWP(models.id),
+                models.time);
+
             return Accepted();
         }
+
+        //[HttpPost("Test")]
+        //public IActionResult Test(PublishModels models)
+        //{
+        //    _context.PublishToWP(models.id);
+        //    return Accepted();
+        //}
     }
 }

@@ -21,10 +21,13 @@ namespace BatchjobService.HangFireService
         {
             var content = _context.Contents.FirstOrDefault(w => w.Id == id && w.IsActive == true);
             var upTask = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
-            upTask.Status = 6;
-            upTask.PublishTime = time;
-            _context.UpdateRange(upTask);
-            _context.SaveChanges();
+            if(upTask.Status != 6)
+            {
+               upTask.Status = 6;
+               upTask.PublishTime = time;
+               _context.UpdateRange(upTask);
+               _context.SaveChanges();
+            }
         }
     }
 }
