@@ -123,6 +123,7 @@ namespace ContentProccessService
             {
                 app.UseHsts();
             }
+            app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseCors("MyPolicy");
             app.UseOpenApi();

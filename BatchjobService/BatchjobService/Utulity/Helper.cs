@@ -18,7 +18,7 @@ namespace BatchjobService.Utulity
         {
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(content);
-            var imgs = doc.DocumentNode.Elements("img");
+            var imgs = doc.DocumentNode.Descendants("img");
             List<string> listImg = new List<string>();
 
             foreach(var img in imgs)

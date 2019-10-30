@@ -13,4 +13,11 @@ namespace ContentProccessService.Models
         public string Name { get; set; }
         public string Content { get; set; }
     }
+    public class ContentViewer
+    {
+        public int IdTask { get; set; }
+        public ContentModels Contents { get; set; }
+        public List<TagsViewModel> ListTags { get; set; }
+        public List<string> Image { get; set; }
+    }
 }

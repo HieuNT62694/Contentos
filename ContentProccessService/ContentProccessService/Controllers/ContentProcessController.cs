@@ -30,6 +30,7 @@ using ContentProccessService.Application.Commands.SubmitContent;
 using ContentProccessService.Application.Commands.StartTask;
 using ContentProccessService.Application.Queries.GetListTaskByIdWriter;
 using ContentProccessService.Application.Queries.GetAllListTaskByIdEditor;
+using ContentProccessService.Application.Queries.GetContentViewer;
 
 namespace ContentProccessService.Controllers
 {
@@ -207,6 +208,15 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> GetAllTasksByEditorId(int id)
         {
             var response = await Mediator.Send(new GetAllListTaskByIdEditorRequest { IdEditor = id });
+            return Ok(response);
+        }
+        [HttpPost("content/viewer")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetContent(GetContentViewerRequest request)
+        {
+            //string cookieValueFromReq = Request.Cookies["Key"];
+
+            var response = await Mediator.Send(request);
             return Ok(response);
         }
     }
