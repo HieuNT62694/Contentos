@@ -29,5 +29,12 @@ namespace BatchjobService.Controllers
 
             return Accepted();
         }
+
+        [HttpPost("Test")]
+        public IActionResult Test(PublishModels models)
+        {
+            _context.PublishToFB(models.id);
+            return Accepted();
+        }
     }
 }
