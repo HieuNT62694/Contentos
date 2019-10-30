@@ -106,9 +106,19 @@ namespace ContentProccessService.Models
         public DateTime? PublishTime { get; set; }
         public List<TasksTags> Tags { get; set; }
     }
+    public class ReturnUpdateTaskModel
+    {
+        public int Id { get; set; }
+        public UsersModels Writer { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public DateTime? Deadline { get; set; }
+        public DateTime? PublishTime { get; set; }
+        public List<TagsViewModel> Tags { get; set; }
+    }
     //public class TaskDetailModel
     //{
-        
+
     //    public UsersModels IdWriter { get; set; }
     //    public string Title { get; set; }
     //    public string Description { get; set; }

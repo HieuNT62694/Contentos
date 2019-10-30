@@ -10,32 +10,37 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
 {
-    public class UpdateTaskEditorHandler : IRequestHandler<UpdateTaskEditorCommand, UpdateTaskModel>
+    public class UpdateTaskEditorHandler : IRequestHandler<UpdateTaskEditorCommand, ReturnUpdateTaskModel>
     {
         private readonly ContentoContext contentodbContext;
         public UpdateTaskEditorHandler(ContentoContext contentodbContext)
         {
             this.contentodbContext = contentodbContext;
         }
-        public async Task<UpdateTaskModel> Handle(UpdateTaskEditorCommand request, CancellationToken cancellationToken)
+        public async Task<ReturnUpdateTaskModel> Handle(UpdateTaskEditorCommand request, CancellationToken cancellationToken)
         {
             var transaction = contentodbContext.Database.BeginTransaction();
             try
             {
                 var upTask = contentodbContext.Tasks.AsNoTracking().Include(y=>y.TasksTags).FirstOrDefault(x => x.Id == request.IdTask);
-                var resultReturn = new UpdateTaskModel();
+                var resultReturn = new ReturnUpdateTaskModel();
+                var Tags = new List<TasksTags>();
+                var TagsReturn = new List<TagsViewModel>();
+                var writer = new UsersModels();
                 if (upTask == null)
                 {
                     return null;
                 }
                 if (upTask.Status == 1)
                 {
-                    var Tags = new List<TasksTags>();
+                   
 
                     foreach (var item in request.Tags)
                     {
-                        var tag = new TasksTags { IdTag = item.Id, CreatedDate = DateTime.UtcNow };
+                        var tag = new TasksTags { IdTag = item.Id,ModifiedDate = DateTime.UtcNow};
+                        var tagReturn = new TagsViewModel { Id = item.Id ,Name = contentodbContext.Tags.FirstOrDefault(x => x.Id == item.Id).Name };
                         Tags.Add(tag);
+                        TagsReturn.Add(tagReturn);
                     }
                     contentodbContext.TasksTags.RemoveRange(upTask.TasksTags);
                     upTask.Title = request.Title;
@@ -49,26 +54,43 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                     contentodbContext.Entry(upTask).State = EntityState.Modified;
 
                     await contentodbContext.SaveChangesAsync(cancellationToken);
-                    var writer = new UsersModels
-                    {
-                        Id = upTask.IdWriter,
-                        Name = contentodbContext.Users.FirstOrDefault(x => x.Id == upTask.IdWriter).Name
-                    };
+
+                    writer.Id = upTask.IdWriter;
+                    writer.Name = contentodbContext.Users.FirstOrDefault(x => x.Id == upTask.IdWriter).Name;
+                    
                     resultReturn.Title = upTask.Title;
                     resultReturn.Writer = writer;
                     resultReturn.Description = upTask.Description;
                     resultReturn.Deadline = upTask.Deadline;
                     resultReturn.PublishTime = upTask.PublishTime;
-                    resultReturn.Tags = Tags;
+                    resultReturn.Tags = TagsReturn;
                     resultReturn.Id = request.IdTask;
                     transaction.Commit();
                     return resultReturn;
                 }
                 //update with status !=1
+                foreach (var item in request.Tags)
+                {
+                    var tag = new TasksTags { IdTag = item.Id, ModifiedDate = DateTime.UtcNow };
+                    var tagReturn = new TagsViewModel { Id = item.Id, Name = contentodbContext.Tags.FirstOrDefault(x => x.Id == item.Id).Name };
+                    Tags.Add(tag);
+                    TagsReturn.Add(tagReturn);
+                }
                 upTask.Deadline = request.Deadline;
                 contentodbContext.Attach(upTask);
                 contentodbContext.Entry(upTask).State = EntityState.Modified;
                 await contentodbContext.SaveChangesAsync(cancellationToken);
+
+                writer.Id = upTask.IdWriter;
+                writer.Name = contentodbContext.Users.FirstOrDefault(x => x.Id == upTask.IdWriter).Name;
+
+                resultReturn.Title = upTask.Title;
+                resultReturn.Writer = writer;
+                resultReturn.Description = upTask.Description;
+                resultReturn.Deadline = upTask.Deadline;
+                resultReturn.PublishTime = upTask.PublishTime;
+                resultReturn.Tags = TagsReturn;
+                resultReturn.Id = request.IdTask;
                 resultReturn.Deadline = upTask.Deadline;
                 transaction.Commit();
                 return resultReturn;

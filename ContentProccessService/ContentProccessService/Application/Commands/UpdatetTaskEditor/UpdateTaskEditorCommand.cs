@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
 {
-    public class UpdateTaskEditorCommand : IRequest<UpdateTaskModel>
+    public class UpdateTaskEditorCommand : IRequest<ReturnUpdateTaskModel>
     {
         public int IdTask { get; set; }
         public int IdWriter { get; set; }
