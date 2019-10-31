@@ -31,12 +31,18 @@ using ContentProccessService.Application.Commands.StartTask;
 using ContentProccessService.Application.Queries.GetListTaskByIdWriter;
 using ContentProccessService.Application.Queries.GetAllListTaskByIdEditor;
 using ContentProccessService.Application.Queries.GetContentViewer;
+using Microsoft.AspNetCore.Http;
 
 namespace ContentProccessService.Controllers
 {
     public class ContentProcessController : BaseController
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
+        public ContentProcessController(IHttpContextAccessor httpContextAccessor)
+        {
+            this._httpContextAccessor = httpContextAccessor;
+        }
         [HttpGet("tags")]
         [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetListTagAsync()
@@ -210,14 +216,30 @@ namespace ContentProccessService.Controllers
             var response = await Mediator.Send(new GetAllListTaskByIdEditorRequest { IdEditor = id });
             return Ok(response);
         }
-        [HttpPost("content/viewer")]
+        [HttpGet("content/viewer")]
         //[Authorize(Roles = "")]
-        public async Task<IActionResult> GetContent(GetContentViewerRequest request)
+        public async Task<IActionResult> GetContent()
         {
-            //string cookieValueFromReq = Request.Cookies["Key"];
+            //string cookieValueFromContext = _httpContextAccessor.HttpContext.Request.Cookies["test"];
+            var cookieValueFromReq = Request.Cookies["test"];
+            if (cookieValueFromReq != null)
+            {
+                var lstIdtag = cookieValueFromReq.Replace('[',' ').Replace(']',' ').Trim().Split(",");
+                var request = new GetContentViewerRequest();
+                var lstid = new List<int>();
+                foreach (var item in lstIdtag)
+                {
 
-            var response = await Mediator.Send(request);
-            return Ok(response);
+                    var idTag = string.IsNullOrEmpty(item)  ? 0 : int.Parse(item) ;
+                    lstid.Add(idTag);
+                }
+                request.Tags = lstid;
+                var response = await Mediator.Send(request);
+                return Ok(response);
+            }
+            //string[] lstvalue = cookieValueFromReq.Values.AllKeys;
+            //var response = await Mediator.Send(request);
+            return BadRequest("Please give me Cookie");
         }
     }
 }
