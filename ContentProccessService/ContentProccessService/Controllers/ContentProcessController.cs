@@ -241,5 +241,30 @@ namespace ContentProccessService.Controllers
             //var response = await Mediator.Send(request);
             return BadRequest("Please give me Cookie");
         }
+        [HttpPost("cookies/viewer")]
+        //[Authorize(Roles = "")]
+        public void CreateCookies(string key, string value, int? expireTime)
+        {
+            //CookieOptions option = new CookieOptions();
+
+            //if (expireTime.HasValue)
+            //    option.Expires = DateTime.Now.AddMinutes(expireTime.Value);
+            //else
+            //    option.Expires = DateTime.Now.AddMilliseconds(10);
+
+            //Response.Cookies.Append(key, value, option);
+            var cookieOptions = new CookieOptions()
+            {
+                Path = "/",
+                HttpOnly = false,
+                IsEssential = true, //<- there
+                Expires = DateTime.Now.AddMonths(1),
+            };
+            if (expireTime.HasValue)
+                cookieOptions.Expires = DateTime.Now.AddMinutes(expireTime.Value);
+            else
+                cookieOptions.Expires = DateTime.Now.AddMonths(1);
+            Response.Cookies.Append(key, value, cookieOptions);
+        }
     }
 }
