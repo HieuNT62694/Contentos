@@ -24,7 +24,7 @@ namespace BatchjobService.Controllers
         {
             _ubfPublish.UpdateStatusBeforePublishing(models.id, models.time);
             var jobId = BackgroundJob.Schedule(
-                () => _context.PublishToFB(models.id),
+                () => _context.PublishToFB(models.id,models.token, models.pageId),
                 models.time);
 
             return Accepted();
@@ -35,7 +35,18 @@ namespace BatchjobService.Controllers
         {
             _ubfPublish.UpdateStatusBeforePublishing(models.id, models.time);
             var jobId = BackgroundJob.Schedule(
-                () => _context.PublishToWP(models.id),
+                () => _context.PublishToWP(models.id, models.token),
+                models.time);
+
+            return Accepted();
+        }
+
+        [HttpPost("PublishToContento")]
+        public IActionResult PublishToContento(PublishModels models)
+        {
+            _ubfPublish.UpdateStatusBeforePublishing(models.id, models.time);
+            var jobId = BackgroundJob.Schedule(
+                () => _context.PublishToContento(models.id),
                 models.time);
 
             return Accepted();
@@ -44,7 +55,7 @@ namespace BatchjobService.Controllers
         //[HttpPost("Test")]
         //public IActionResult Test(PublishModels models)
         //{
-        //    _context.PublishToWP(models.id);
+        //    _context.PublishToFB(models.id);
         //    return Accepted();
         //}
     }

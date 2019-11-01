@@ -22,8 +22,6 @@ namespace BatchjobService.Utulity
             {
                 Title = new Title(postText.Name),
                 Content = new Content(postText.TheContent)
-                //,
-                //Tags = new int[] { 3, 4, 5, 6 }
             };
 
             if (await client.IsValidJWToken())

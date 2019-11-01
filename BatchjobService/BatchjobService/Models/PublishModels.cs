@@ -8,6 +8,8 @@ namespace BatchjobService.Models
     public class PublishModels
     {
         public int id;
+        public string token;
+        public string pageId;
         public DateTime time;
     }
 }

@@ -11,14 +11,15 @@ namespace BatchjobService.Utulity
     {
         public static string removeHtml(string content)
         {
-            return Regex.Replace(content, "<[a-zA-Z/].*?>", string.Empty);
+            var con = Regex.Replace(content, "<[a/].*?>", "");
+            return Regex.Replace(con, "<[a-zA-Z/].*?>", Environment.NewLine);
         }
 
         public static List<string> getImage(string content)
         {
             HtmlDocument doc = new HtmlDocument();
             doc.LoadHtml(content);
-            var imgs = doc.DocumentNode.Elements("img");
+            var imgs = doc.DocumentNode.Descendants("img");
             List<string> listImg = new List<string>();
 
             foreach(var img in imgs)

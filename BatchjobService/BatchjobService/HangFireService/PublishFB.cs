@@ -11,8 +11,9 @@ namespace BatchjobService.HangFireService
 {
     public interface IPublishFBService
     {
-        Task PublishToWP(int id);
-        Task PublishToFB(int id);
+        Task PublishToWP(int id, string token);
+        Task PublishToFB(int id, string token, string pageId);
+        Task PublishToContento(int id);
     }
     public class PublishFB : IPublishFBService
     {
@@ -22,29 +23,26 @@ namespace BatchjobService.HangFireService
         {
             _context = contentodbContext;
         }
-        public async Task PublishToFB(int id)
+        public async Task PublishToFB(int id, string token, string pageId)
         {
             var content = _context.Contents.FirstOrDefault(w => w.Id == id && w.IsActive == true);
-            //var upTask = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
-            //if (upTask.Status != 7)
-            //{
-            //    upTask.Status = 7;
-            //    _context.Update(upTask);
-            //    _context.SaveChanges();
-            //}
+            var upTask = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
+            if (upTask.Status != 7)
+            {
+                upTask.Status = 7;
+                _context.Update(upTask);
+                _context.SaveChanges();
+            }
 
-            //dang set cung
-            Facebook facebook = new Facebook("EAAYoOnn95VwBAHdhFDev4ZA7GqN5lbxZCG8yrDxuOl0XuPmvTIvTcmGrsSrO7UHdCKnMjRBjeTgU1G1H0l4Bc6rcP5rbEmFhcizpZCn5IcKHFvMWT4mDNR5X6xzqnM35rdIFEjlOvKArj2QBraYa3JLoY9SDIZBvJkSJSPJvKEZB5zhs3u4f1v2IoZBFFStpAZD", "106817360743488");
+            //Facebook facebook = new Facebook("EAAYoOnn95VwBAHdhFDev4ZA7GqN5lbxZCG8yrDxuOl0XuPmvTIvTcmGrsSrO7UHdCKnMjRBjeTgU1G1H0l4Bc6rcP5rbEmFhcizpZCn5IcKHFvMWT4mDNR5X6xzqnM35rdIFEjlOvKArj2QBraYa3JLoY9SDIZBvJkSJSPJvKEZB5zhs3u4f1v2IoZBFFStpAZD", "106817360743488");
+
+            Facebook facebook = new Facebook(token, pageId);
 
             var post = Helper.removeHtml(content.TheContent);
 
-            //List<string> imgs = Helper.getImage(content.TheContent);
+            List<string> imgs = Helper.getImage(content.TheContent);
 
-            //Test Post With Multiple Photos
-            List<string> imgs = new List<string>();
-            imgs.Add("https://marketingland.com/wp-content/ml-loads/2015/11/content-marketing-idea-lightbulb-ss-1920.jpg");
-
-            if(imgs.Count == 0)
+            if (imgs.Count == 0)
             {
                 using (var http = new HttpClient())
                 {
@@ -62,7 +60,7 @@ namespace BatchjobService.HangFireService
 
 
 
-        public async Task PublishToWP(int id)
+        public async Task PublishToWP(int id, string token)
         {
             var content = _context.Contents.FirstOrDefault(w => w.Id == id && w.IsActive == true);
             var upTask = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
@@ -77,7 +75,27 @@ namespace BatchjobService.HangFireService
             await wordpress.PublishSimplePost(content);
         }
 
-
-        
+        public async Task PublishToContento(int id)
+        {
+            var content = _context.Contents.FirstOrDefault(w => w.Id == id && w.IsActive == true);
+            var upTask = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
+            if (upTask.Status != 7)
+            {
+                TasksChannels tasksChannels = new TasksChannels();
+                tasksChannels.IdChannel = 1;
+                upTask.Status = 7;
+                upTask.TasksChannels.Add(tasksChannels);
+                _context.Update(upTask);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                TasksChannels tasksChannels = new TasksChannels();
+                tasksChannels.IdChannel = 1;
+                upTask.TasksChannels.Add(tasksChannels);
+                _context.Update(upTask);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }
