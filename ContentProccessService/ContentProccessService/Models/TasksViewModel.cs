@@ -66,6 +66,12 @@ namespace ContentProccessService.Models
         public string Color { get; set; }
 
     }
+    public class StatusModelsReturn
+    {
+        public int? Id { get; set; }
+        public string Name { get; set; }
+
+    }
 
     public class TaskModel
     {

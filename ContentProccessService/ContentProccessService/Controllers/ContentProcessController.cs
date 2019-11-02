@@ -33,6 +33,8 @@ using ContentProccessService.Application.Queries.GetAllListTaskByIdEditor;
 using ContentProccessService.Application.Queries.GetContentViewer;
 using Microsoft.AspNetCore.Http;
 using ContentProccessService.Application.Queries.GetContentDetail;
+using ContentProccessService.Application.Queries.GetAllListStatus;
+using ContentProccessService.Application.Queries.GetAllStatusCampaign;
 
 namespace ContentProccessService.Controllers
 {
@@ -277,6 +279,20 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> GetContentDetail(int id)
         {
             var response = await Mediator.Send(new GetContentDetailRequest { IdTask = id });
+            return Ok(response);
+        }
+        [HttpGet("status/task")]
+        //[Authorize(Roles = "Writer")]
+        public async Task<IActionResult> GetAllStatus()
+        {
+            var response = await Mediator.Send(new GetAllStatusRequest());
+            return Ok(response);
+        }
+        [HttpGet("status/campaign")]
+        //[Authorize(Roles = "Writer")]
+        public async Task<IActionResult> GetAllStatusCampaign()
+        {
+            var response = await Mediator.Send(new GetAllStatusCampaignRequest());
             return Ok(response);
         }
     }
