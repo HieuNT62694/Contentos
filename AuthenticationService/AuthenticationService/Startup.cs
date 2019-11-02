@@ -39,7 +39,7 @@ namespace AuthenticationService
         public void ConfigureServices(IServiceCollection services)
         {
             //add Dbcontext
-            services.AddDbContext<ContentoContext>(options =>
+            services.AddDbContext<ContentoDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("AuthenDb"));
             });

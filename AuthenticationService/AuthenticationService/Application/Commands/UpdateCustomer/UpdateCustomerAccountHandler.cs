@@ -12,10 +12,10 @@ namespace AuthenticationService.Application.Commands.UpdateCustomer
 {
     public class UpdateCustomerAccountHandler : IRequestHandler<UpdateCustomerAccountCommads, CreateUserModel>
     {
-        private readonly ContentoContext _context;
+        private readonly ContentoDbContext _context;
 
 
-        public UpdateCustomerAccountHandler(ContentoContext context)
+        public UpdateCustomerAccountHandler(ContentoDbContext context)
         {
             _context = context;
         }
@@ -35,7 +35,9 @@ namespace AuthenticationService.Application.Commands.UpdateCustomer
                     //};
                     //lstAccount.Add(upAccount);
                     upUser.Company = request.CompanyName;
-                    upUser.Name = request.FullName;
+                    upUser.LastName = request.LastName;
+                    upUser.Phone = request.Phone;
+                    upUser.FirstName = request.FirstName;
                     upUser.Accounts.FirstOrDefault().Email = request.Email;
                     upUser.Accounts.FirstOrDefault().ModifiedDate = DateTime.UtcNow;
                     _context.Attach(upUser);
@@ -46,7 +48,8 @@ namespace AuthenticationService.Application.Commands.UpdateCustomer
                     {
                         CompanyName = upUser.Company,
                         Email = upUser.Accounts.FirstOrDefault().Email,
-                        FullName = upUser.Name,
+                        FullName = upUser.FirstName +" " +upUser.LastName,
+                        Phone = upUser.Phone,
                         Id = upUser.Id,
                     };
                     transaction.Commit();

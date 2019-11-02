@@ -29,7 +29,7 @@ namespace AuthenticationService.Controllers
             return Ok(response);
         }
         [HttpPost("Register")]
-        [Authorize(Roles = "Guest")]
+        //[Authorize(Roles = "Guest")]
         public async Task<object> Register(RegisterAccountCommands command)
         {
             await Mediator.Send(command);
@@ -87,10 +87,10 @@ namespace AuthenticationService.Controllers
         {
             var result = await Mediator.Send(command);
             //Create exchange
-            Producer producer = new Producer();
-            MessageAccountDTO messageDTO = new MessageAccountDTO{
-               FullName = result.FullName,Password = result.Password,Email = result.Email };
-            producer.PublishMessage(message: JsonConvert.SerializeObject(messageDTO), "AccountToEmail");
+            //Producer producer = new Producer();
+            //MessageAccountDTO messageDTO = new MessageAccountDTO{
+            //   FullName = result.FullName,Password = result.Password,Email = result.Email };
+            //producer.PublishMessage(message: JsonConvert.SerializeObject(messageDTO), "AccountToEmail");
             return Accepted(result);
 
         }

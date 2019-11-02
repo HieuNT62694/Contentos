@@ -15,9 +15,9 @@ namespace AuthenticationService.Application.Queries
     public class AuthenticationHandler : IRequestHandler<AuthenticationRequest, LoginSuccessViewModel>
     {
         private readonly IHelperFunction _helper;
-        private readonly ContentoContext _context;
+        private readonly ContentoDbContext _context;
 
-        public AuthenticationHandler(IHelperFunction helper, ContentoContext context)
+        public AuthenticationHandler(IHelperFunction helper, ContentoDbContext context)
         {
 
             _helper = helper;
@@ -38,7 +38,7 @@ namespace AuthenticationService.Application.Queries
                 if (checkPassword)
                 {
                     string role = _context.Roles.AsNoTracking().FirstOrDefault(r => r.Id == accounts.IdRole).Role;
-                    string fullname = _context.Users.Find(accounts.IdUser).Name;
+                    string fullname = _context.Users.Find(accounts.IdUser).FirstName + " " + _context.Users.Find(accounts.IdUser).LastName;
                     LoginSuccessViewModel resultReturn = new LoginSuccessViewModel
                     {
                         Id = accounts.IdUser,

@@ -18,6 +18,15 @@ namespace AuthenticationService.Application.Commands
         public string Password { get; set; }
 
         [Required]
-        public string FullName { get; set; }
+        public string LastName { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        [Required]
+        public int? Gender { get; set; }
+        [Required]
+        public int? Age { get; set; }
+        [Required]
+        public string Phone { get; set; }
+
     }
 }

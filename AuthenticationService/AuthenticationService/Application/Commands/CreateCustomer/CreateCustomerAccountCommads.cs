@@ -16,7 +16,11 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
         [Required]
         public int IdMarketer { get; set; }
         [Required]
-        public string FullName { get; set; }
+        public string FirstName { get; set; }
+        [Required]
+        public string LastName { get; set; }
+        [Required]
+        public string Phone { get; set; }
         [Required]
         public string CompanyName { get; set; }
     }

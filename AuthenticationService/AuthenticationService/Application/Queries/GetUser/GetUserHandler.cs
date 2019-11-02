@@ -13,9 +13,9 @@ namespace AuthenticationService.Application.Queries.GetUser
 {
     public class GetUserHandler : IRequestHandler<GetUserRequest, List<ListUserModel>>
     {
-        private readonly ContentoContext _context;
+        private readonly ContentoDbContext _context;
 
-        public GetUserHandler(ContentoContext context)
+        public GetUserHandler(ContentoDbContext context)
         {
 
             _context = context;
@@ -33,7 +33,7 @@ namespace AuthenticationService.Application.Queries.GetUser
                 var edtUser = new ListUserModel
                 {
                     Id = item.Id,
-                    Name = item.Name
+                    Name = item.FirstName+" "+item.LastName
                 };
                 lstEditor.Add(edtUser);
             }

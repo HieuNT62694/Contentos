@@ -10,9 +10,9 @@ namespace AuthenticationService.Application.Commands
 {
     public class RegisterAccountHandler : IRequestHandler<RegisterAccountCommands>
     {
-        private readonly ContentoContext _context;
+        private readonly ContentoDbContext _context;
 
-        public RegisterAccountHandler(ContentoContext context)
+        public RegisterAccountHandler(ContentoDbContext context)
         {
             _context = context;
         }
@@ -39,10 +39,11 @@ namespace AuthenticationService.Application.Commands
                     var newUser = new Users
                     {
                         IsActive = true,
-                        Name = request.FullName,
-                        IdOccupation = 1,
-                        IdLocation = 1,
-                        IdManager = 1,
+                        LastName = request.LastName,
+                        FirstName = request.FirstName,
+                        Age = request.Age,
+                        Gender = request.Gender,
+                        Phone = request.Phone,
                         Accounts = lstAcc
                     };
                     _context.Users.Add(newUser);

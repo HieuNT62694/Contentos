@@ -12,9 +12,9 @@ namespace AuthenticationService.Application.Queries.GetWriter
 {
     public class GetCustomerHandler : IRequestHandler<GetWriterRequest, List<ListUserModel>>
     {
-        private readonly ContentoContext _context;
+        private readonly ContentoDbContext _context;
 
-        public GetCustomerHandler(ContentoContext context)
+        public GetCustomerHandler(ContentoDbContext context)
         {
             _context = context;
         }
@@ -32,7 +32,7 @@ namespace AuthenticationService.Application.Queries.GetWriter
                 var User = new ListUserModel()
                 {
                     Id = item.Id,
-                    Name = item.Name
+                    Name = item.FirstName + " " + item.LastName
                 };
                 lstWriter.Add(User);
             }

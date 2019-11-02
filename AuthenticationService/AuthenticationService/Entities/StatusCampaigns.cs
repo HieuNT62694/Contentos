@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace AuthenticationService.Entities
 {
-    public partial class StatusCampaign
+    public partial class StatusCampaigns
     {
-        public StatusCampaign()
+        public StatusCampaigns()
         {
-            Campaign = new HashSet<Campaign>();
+            Campaigns = new HashSet<Campaigns>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public string Color { get; set; }
 
-        public virtual ICollection<Campaign> Campaign { get; set; }
+        public virtual ICollection<Campaigns> Campaigns { get; set; }
     }
 }

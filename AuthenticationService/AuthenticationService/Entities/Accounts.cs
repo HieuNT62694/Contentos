@@ -5,14 +5,9 @@ namespace AuthenticationService.Entities
 {
     public partial class Accounts
     {
-        public Accounts()
-        {
-            Activations = new HashSet<Activations>();
-        }
-
         public int Id { get; set; }
-        public int IdRole { get; set; }
-        public int IdUser { get; set; }
+        public int? IdUser { get; set; }
+        public int? IdRole { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public bool? IsActive { get; set; }
@@ -21,6 +16,5 @@ namespace AuthenticationService.Entities
 
         public virtual Roles IdRoleNavigation { get; set; }
         public virtual Users IdUserNavigation { get; set; }
-        public virtual ICollection<Activations> Activations { get; set; }
     }
 }

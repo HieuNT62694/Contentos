@@ -13,9 +13,9 @@ namespace AuthenticationService.Application.Queries.GetCustomer
 {
     public class GetCustomerBasicHandler : IRequestHandler<GetCustomerBasicRequest, List<ListUserModel>>
     {
-        private readonly ContentoContext _context;
+        private readonly ContentoDbContext _context;
 
-        public GetCustomerBasicHandler(ContentoContext context)
+        public GetCustomerBasicHandler(ContentoDbContext context)
         {
             _context = context;
         }
@@ -33,7 +33,7 @@ namespace AuthenticationService.Application.Queries.GetCustomer
                 var User = new ListUserModel()
                 {
                     Id = item.Id,
-                    Name = item.Name
+                    Name = item.FirstName+item.LastName
                 };
                 lstCustomer.Add(User);
             }

@@ -30,7 +30,7 @@ namespace AuthenticationService.Models
     }
     public class LoginSuccessViewModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string FullName { get; set; }
         public object Token { get; set; }
         public string ImagePath { get; set; }

@@ -12,7 +12,8 @@ namespace AuthenticationService.Entities
 
         public int Id { get; set; }
         public string Comment { get; set; }
-        public DateTime? CreateDate { get; set; }
+        public bool? IsActive { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         public virtual ICollection<Contents> Contents { get; set; }
     }

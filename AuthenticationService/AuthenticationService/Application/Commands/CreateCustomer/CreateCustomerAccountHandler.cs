@@ -15,11 +15,11 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
 {
     public class CreateCustomerAccountHandler : IRequestHandler<CreateCustomerAccountCommads, CreateUserModel>
     {
-        private readonly ContentoContext _context;
+        private readonly ContentoDbContext _context;
         private readonly IHelperFunction _helper;
 
 
-        public CreateCustomerAccountHandler(ContentoContext context,IHelperFunction helper)
+        public CreateCustomerAccountHandler(ContentoDbContext context,IHelperFunction helper)
         {
             _context = context;
             _helper = helper;
@@ -39,6 +39,7 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
                         Email = request.Email,
                         Password = BCrypt.Net.BCrypt.HashPassword(newPassword),
                         IdRole = 5,
+                        
                         IsActive = true,
                         CreatedDate = DateTime.UtcNow
 
@@ -48,11 +49,11 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
                     var newUser = new Users
                     {
                         IsActive = true,
-                        Name = request.FullName,
-                        IdOccupation = 1,
-                        IdLocation = 1,
+                        LastName = request.LastName,
+                        FirstName = request.FirstName,
                         IdManager = request.IdMarketer,
                         Company = request.CompanyName,
+                        Phone = request.Phone,
                         Accounts = lstAcc
                     };
                     _context.Users.Add(newUser);
@@ -63,9 +64,10 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
                 return new CreateUserModel
                 {
                     Id = _context.Users.AsNoTracking().OrderByDescending(x => x.Id).First().Id,
-                    FullName = request.FullName,
+                    FullName = request.FirstName+" "+ request.LastName,
                     Email = request.Email,
                     CompanyName = request.CompanyName,
+                    Phone = request.Phone,
                     Password = newPassword
                 };
             }

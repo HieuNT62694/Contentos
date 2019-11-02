@@ -10,7 +10,7 @@ namespace AuthenticationService.Entities
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
-        public virtual Campaign IdCampaignNavigation { get; set; }
+        public virtual Campaigns IdCampaignNavigation { get; set; }
         public virtual Tags IdTagsNavigation { get; set; }
     }
 }

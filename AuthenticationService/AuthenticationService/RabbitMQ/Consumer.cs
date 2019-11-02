@@ -17,8 +17,8 @@ namespace AuthenticationService.RabbitMQ
         private IConnection connection;
         private IModel channel;
         private string queueName;
-        ContentoContext context;
-        public Consumer(ContentoContext context, string exch)
+        ContentoDbContext context;
+        public Consumer(ContentoDbContext context, string exch)
         {
             InitRabbitMQ(exch);
             this.context = context;
