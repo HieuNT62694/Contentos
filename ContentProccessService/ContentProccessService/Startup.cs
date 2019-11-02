@@ -80,7 +80,7 @@ namespace ContentProccessService
             //addd cors
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
-                builder.WithOrigins("http://localhost:8080", "http://contento-fe.s3-website-ap-southeast-1.amazonaws.com")
+                builder.WithOrigins("http://localhost:8080", "http://contento-fe.s3-website-ap-southeast-1.amazonaws.com", "http://localhost")
                        .AllowAnyMethod()
                        .AllowAnyHeader()
                        .AllowCredentials();

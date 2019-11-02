@@ -32,6 +32,7 @@ using ContentProccessService.Application.Queries.GetListTaskByIdWriter;
 using ContentProccessService.Application.Queries.GetAllListTaskByIdEditor;
 using ContentProccessService.Application.Queries.GetContentViewer;
 using Microsoft.AspNetCore.Http;
+using ContentProccessService.Application.Queries.GetContentDetail;
 
 namespace ContentProccessService.Controllers
 {
@@ -44,7 +45,7 @@ namespace ContentProccessService.Controllers
             this._httpContextAccessor = httpContextAccessor;
         }
         [HttpGet("tags")]
-        [Authorize(Roles = "Marketer")]
+        //[Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetListTagAsync()
         {
             var response = await Mediator.Send(new GetTagRequest());
@@ -221,7 +222,7 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> GetContent()
         {
             //string cookieValueFromContext = _httpContextAccessor.HttpContext.Request.Cookies["test"];
-            var cookieValueFromReq = Request.Cookies["test"];
+            var cookieValueFromReq = Request.Cookies["CCTT"];
             if (cookieValueFromReq != null)
             {
                 var lstIdtag = cookieValueFromReq.Replace('[',' ').Replace(']',' ').Trim().Split(",");
@@ -241,7 +242,7 @@ namespace ContentProccessService.Controllers
             //var response = await Mediator.Send(request);
             return BadRequest("Please give me Cookie");
         }
-        [HttpPost("cookies/viewer")]
+        [HttpGet("cookies/viewer")]
         //[Authorize(Roles = "")]
         public void CreateCookies(string key, string value, int? expireTime)
         {
@@ -258,13 +259,25 @@ namespace ContentProccessService.Controllers
                 Path = "/",
                 HttpOnly = false,
                 IsEssential = true, //<- there
-                Expires = DateTime.Now.AddMonths(1),
+                Expires = DateTime.Now.AddYears(1),
+                SameSite = SameSiteMode.None
             };
+            if (string.IsNullOrEmpty(value))
+            {
+                value = "0";
+            }
             if (expireTime.HasValue)
                 cookieOptions.Expires = DateTime.Now.AddMinutes(expireTime.Value);
             else
                 cookieOptions.Expires = DateTime.Now.AddMonths(1);
             Response.Cookies.Append(key, value, cookieOptions);
+        }
+        [HttpGet("content-detail/viewer/{id}")]
+        //[Authorize(Roles = "Writer")]
+        public async Task<IActionResult> GetContentDetail(int id)
+        {
+            var response = await Mediator.Send(new GetContentDetailRequest { IdTask = id });
+            return Ok(response);
         }
     }
 }

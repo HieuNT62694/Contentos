@@ -19,5 +19,15 @@ namespace ContentProccessService.Models
         public ContentModels Contents { get; set; }
         public List<TagsViewModel> ListTags { get; set; }
         public List<string> Image { get; set; }
+        public DateTime? PublishTime { get; set; }
+    }
+    public class ContentDetailReturn
+    {
+        public int IdTask { get; set; }
+        public ContentModels Contents { get; set; }
+        public List<TagsViewModel> ListTags { get; set; }
+        public List<string> Image { get; set; }
+        public DateTime? PublishTime { get; set; }
+        public UsersModels Writer { get; set; }
     }
 }

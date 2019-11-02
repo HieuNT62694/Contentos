@@ -21,7 +21,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
         }
         public async Task<List<ContentViewer>> Handle(GetContentViewerRequest request, CancellationToken cancellationToken)
         {
-            if (request.Tags.Count > 1)
+            if (request.Tags.Count > 0 && !request.Tags.Contains(0))
             {
                 var content = _context.Tasks.AsNoTracking()
               .Where(x => x.Status == 7
@@ -46,7 +46,6 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                     var Cnt = new ContentModels
                     {
                         Id = item.Contents.Id,
-                        Content = html2text(item.Contents.TheContent),
                         Name = item.Contents.Name
                     };
                     var lstTag = new List<TagsViewModel>();
@@ -64,6 +63,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                     var ContentReturn = new ContentViewer
                     {
                         IdTask = item.x.Id,
+                        PublishTime = item.x.PublishTime,
                         Contents = Cnt,
                         Image = imgs,
                         ListTags = lstTag
@@ -97,7 +97,6 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                     var Cnt = new ContentModels
                     {
                         Id = item.Contents.Id,
-                        Content = html2text(item.Contents.TheContent),
                         Name = item.Contents.Name
                     };
                     var lstTag = new List<TagsViewModel>();
@@ -113,6 +112,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                     var ContentReturn = new ContentViewer
                     {
                         IdTask = item.x.Id,
+                        PublishTime = item.x.PublishTime,
                         Contents = Cnt,
                         Image = imgs,
                         ListTags = lstTag
