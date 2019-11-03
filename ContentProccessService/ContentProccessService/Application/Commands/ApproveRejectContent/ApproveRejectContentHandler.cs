@@ -12,8 +12,8 @@ namespace ContentProccessService.Application.Commands.ApproveRejectContent
 {
     public class ApproveRejectContentHandler : IRequestHandler<ApproveRejectContentRequest>
     {
-        private readonly ContentoContext contentodbContext;
-        public ApproveRejectContentHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext contentodbContext;
+        public ApproveRejectContentHandler(ContentoDbContext contentodbContext)
         {
             this.contentodbContext = contentodbContext;
         }
@@ -48,7 +48,10 @@ namespace ContentProccessService.Application.Commands.ApproveRejectContent
                     var addComment = new Comments
                     {
                         Comment = request.Comments,
-                        CreateDate = DateTime.UtcNow
+                        IdContent = request.IdContent,
+                        CreatedDate = DateTime.UtcNow,
+                        IsActive = true,
+                        
                     };
                     contentodbContext.Comments.Add(addComment);
                     await contentodbContext.SaveChangesAsync(cancellationToken);
@@ -56,13 +59,13 @@ namespace ContentProccessService.Application.Commands.ApproveRejectContent
                     var upContent = contentodbContext.Contents.FirstOrDefault(y => y.Id == request.IdContent);
                     upContent.IsActive = false;
                     contentodbContext.Attach(upContent);
-                    contentodbContext.Entry(upContent).Property(x => x.IdComment).IsModified = true;
+                    //contentodbContext.Entry(upContent).Property(x => x.IdComment).IsModified = true;
                     ////insert new content
                     var addContent = new Contents();
                     addContent.IdTask = upContent.IdTask;
                     addContent.IsActive = true;
                     addContent.CreatedDate = DateTime.UtcNow;
-                    addContent.IdComment = addComment.Id;
+                    //addContent.IdComment = addComment.Id;
                     addContent.Version = upContent.Version + 1;
                     addContent.TheContent = upContent.TheContent;
                     addContent.Name = request.Name;

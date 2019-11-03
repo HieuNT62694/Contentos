@@ -12,8 +12,8 @@ namespace ContentProccessService.Application.Queries.GetListTaksByCampaignId
 {
     public class GetListTasksByCampaignIdHandler : IRequestHandler<GetListTasksByCampaignIdRequest, List<TasksViewModel>>
     {
-        private readonly ContentoContext _context;
-        public GetListTasksByCampaignIdHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext _context;
+        public GetListTasksByCampaignIdHandler(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }
@@ -25,10 +25,11 @@ namespace ContentProccessService.Application.Queries.GetListTaksByCampaignId
             var lstTask = new List<TasksViewModel>();
             foreach (var item in task)
             {
+                var wtn = _context.Users.FirstOrDefault(x => x.Id == item.IdWritter);
                 var Writter = new UsersModels
                 {
-                    Id = item.IdWriter,
-                    Name = _context.Users.FirstOrDefault(x => x.Id == item.IdWriter).Name
+                    Id = item.IdWritter,
+                    Name = wtn.FirstName + " " + wtn.LastName
                 };
                 var Status = new StatusModels
                 {
@@ -44,7 +45,7 @@ namespace ContentProccessService.Application.Queries.GetListTaksByCampaignId
                     Writer = Writter,
                     //Description = item.Description,
                     Status = Status,
-                    StartedDate = item.StartedDate,
+                    StartedDate = item.StartDate,
                     Id = item.Id
                 };
                 lstTask.Add(taskView);

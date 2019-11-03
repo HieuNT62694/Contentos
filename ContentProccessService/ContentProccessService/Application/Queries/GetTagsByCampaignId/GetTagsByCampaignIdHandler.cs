@@ -12,20 +12,20 @@ namespace ContentProccessService.Application.Queries.GetTagsByCampaignId
 {
     public class GetTagsByCampaignIdHandler : IRequestHandler<GetTagsByCampaignIdRequest, List<TagViewModel>>
     {
-        private readonly ContentoContext _context;
-        public GetTagsByCampaignIdHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext _context;
+        public GetTagsByCampaignIdHandler(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }
         public async Task<List<TagViewModel>> Handle(GetTagsByCampaignIdRequest request, CancellationToken cancellationToken)
         {
-            var tmp = await _context.CampaignTags.AsNoTracking()
-                .Include(t => t.IdTagsNavigation).Where(w => w.IdCampaign == request.CampaignId).ToListAsync();
+            var tmp = await _context.TagsCampaigns.AsNoTracking()
+                .Include(t => t.IdTagNavigation).Where(w => w.IdCampaign == request.CampaignId).ToListAsync();
 
             List<TagViewModel> ls = new List<TagViewModel>();
             foreach(var item in tmp)
             {
-                ls.Add(new TagViewModel { id = item.IdTagsNavigation.Id, name = item.IdTagsNavigation.Name });
+                ls.Add(new TagViewModel { id = item.IdTagNavigation.Id, name = item.IdTagNavigation.Name });
             }
             return ls;
         }

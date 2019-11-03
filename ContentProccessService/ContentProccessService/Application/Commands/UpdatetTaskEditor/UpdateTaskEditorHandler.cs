@@ -12,8 +12,8 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
 {
     public class UpdateTaskEditorHandler : IRequestHandler<UpdateTaskEditorCommand, ReturnUpdateTaskModel>
     {
-        private readonly ContentoContext contentodbContext;
-        public UpdateTaskEditorHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext contentodbContext;
+        public UpdateTaskEditorHandler(ContentoDbContext contentodbContext)
         {
             this.contentodbContext = contentodbContext;
         }
@@ -44,7 +44,7 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                     }
                     contentodbContext.TasksTags.RemoveRange(upTask.TasksTags);
                     upTask.Title = request.Title;
-                    upTask.IdWriter = request.IdWriter;
+                    upTask.IdWritter = request.IdWriter;
                     upTask.Description = request.Description;
                     upTask.Deadline = request.Deadline;
                     upTask.PublishTime = request.PublishTime;
@@ -54,9 +54,9 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                     contentodbContext.Entry(upTask).State = EntityState.Modified;
 
                     await contentodbContext.SaveChangesAsync(cancellationToken);
-
-                    writer.Id = upTask.IdWriter;
-                    writer.Name = contentodbContext.Users.FirstOrDefault(x => x.Id == upTask.IdWriter).Name;
+                   var get = contentodbContext.Users.FirstOrDefault(x => x.Id == upTask.IdWritter);
+                    writer.Id = upTask.IdWritter;
+                    writer.Name = get.FirstName + " " + get.LastName;
                     
                     resultReturn.Title = upTask.Title;
                     resultReturn.Writer = writer;
@@ -81,8 +81,9 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                 contentodbContext.Entry(upTask).State = EntityState.Modified;
                 await contentodbContext.SaveChangesAsync(cancellationToken);
 
-                writer.Id = upTask.IdWriter;
-                writer.Name = contentodbContext.Users.FirstOrDefault(x => x.Id == upTask.IdWriter).Name;
+                writer.Id = upTask.IdWritter;
+                var user = contentodbContext.Users.FirstOrDefault(x => x.Id == upTask.IdWritter);
+                writer.Name = user.FirstName +" " + user.LastName;
 
                 resultReturn.Title = upTask.Title;
                 resultReturn.Writer = writer;

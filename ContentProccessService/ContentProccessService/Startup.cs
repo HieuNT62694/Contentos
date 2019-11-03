@@ -45,7 +45,7 @@ namespace ContentProccessService
             });
 
             //add Dbcontext
-            services.AddDbContext<ContentoContext>(options =>
+            services.AddDbContext<ContentoDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("CampaignDb"));
             });

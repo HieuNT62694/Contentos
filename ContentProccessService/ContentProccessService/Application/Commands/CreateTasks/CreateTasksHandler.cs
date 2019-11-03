@@ -12,8 +12,8 @@ namespace ContentProccessService.Application.Commands.CreateTasks
 {
     public class CreateTasksHandler : IRequestHandler<CreateTasksRequest, List<TasksViewModel>>
     {
-        private readonly ContentoContext contentodbContext;
-        public CreateTasksHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext contentodbContext;
+        public CreateTasksHandler(ContentoDbContext contentodbContext)
         {
             this.contentodbContext = contentodbContext;
         }
@@ -30,13 +30,13 @@ namespace ContentProccessService.Application.Commands.CreateTasks
                     var task = new Tasks
                     {
                         IdCampaign = item.IdCampaign,
-                        IdWriter = item.IdWriter,
+                        IdWritter = item.IdWriter,
                         Deadline = item.Deadline,
                         Description = item.Description,
                         PublishTime = item.PublishTime,
                         Title = item.Title,
-                        StartedDate = DateTime.UtcNow,
-                        ModifiedDate = DateTime.UtcNow,
+                        CreatedDate = DateTime.UtcNow,
+                        //ModifiedDate = DateTime.UtcNow,
                         Status = 1
                     };
                     contentodbContext.Attach(task);
@@ -47,13 +47,13 @@ namespace ContentProccessService.Application.Commands.CreateTasks
                         Deadline = task.Deadline,
                         Id = task.Id,
                         Description = task.Description,
-                        StartedDate = task.StartedDate,
+                        StartedDate = task.CreatedDate,
                         PublishTime = task.PublishTime,
                         Title = task.Title,
                     };
                     tasks.Add(taskModel);
                 }
-                var upStatus = contentodbContext.Campaign.FirstOrDefault(y => y.Id == request.tasks.FirstOrDefault().IdCampaign);
+                var upStatus = contentodbContext.Campaigns.FirstOrDefault(y => y.Id == request.tasks.FirstOrDefault().IdCampaign);
                 if (upStatus.Status == 1)
                 {
                     upStatus.Status = 2;

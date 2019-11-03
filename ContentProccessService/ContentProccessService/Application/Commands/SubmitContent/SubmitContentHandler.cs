@@ -11,9 +11,9 @@ namespace ContentProccessService.Application.Commands.SubmitContent
 {
     public class SubmitContentHandler : IRequestHandler<SubmitContentCommand>
     {
-        private readonly ContentoContext _context;
+        private readonly ContentoDbContext _context;
 
-        public SubmitContentHandler(ContentoContext context)
+        public SubmitContentHandler(ContentoDbContext context)
         {
             _context = context;
         }

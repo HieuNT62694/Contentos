@@ -11,9 +11,9 @@ namespace ContentProccessService.Application.Queries.GetTasksByEditorId
 {
     public class GetTasksByEditorIdHandler : IRequestHandler<GetTasksByEditorIdRequest, List<TasksViewByEditorModel>>
     {
-        private readonly ContentoContext Context;
+        private readonly ContentoDbContext Context;
 
-        public GetTasksByEditorIdHandler(ContentoContext context)
+        public GetTasksByEditorIdHandler(ContentoDbContext context)
         {
             Context = context;
         }

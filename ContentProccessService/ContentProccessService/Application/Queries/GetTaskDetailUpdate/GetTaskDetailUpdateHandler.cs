@@ -12,8 +12,8 @@ namespace ContentProccessService.Application.Queries.GetTaskDetailUpdate
 {
     public class GetTaskDetailUpdateHandler : IRequestHandler<GetTaskDetailUpdateRequest, TasksViewModel>
     {
-        private readonly ContentoContext _context;
-        public GetTaskDetailUpdateHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext _context;
+        public GetTaskDetailUpdateHandler(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }
@@ -21,7 +21,7 @@ namespace ContentProccessService.Application.Queries.GetTaskDetailUpdate
         {
             var task = await _context.Tasks.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.IdTask);
-            var edtId = _context.Campaign.Find(task.IdCampaign).IdEditor;
+            var edtId = _context.Campaigns.Find(task.IdCampaign).IdEditor;
             var lstTag = new List<TagsViewModel>();
             var lstTags = _context.TasksTags.Where(x => x.IdTask == request.IdTask).ToList();
             foreach (var item in lstTags)
@@ -31,10 +31,11 @@ namespace ContentProccessService.Application.Queries.GetTaskDetailUpdate
                 tag.Id = item.IdTag;
                 lstTag.Add(tag);
             }
+            var wtn = _context.Users.FirstOrDefault(x => x.Id == task.IdWritter);
             var Writter = new UsersModels
             {
-                Id = task.IdWriter,
-                Name = _context.Users.FirstOrDefault(x => x.Id == task.IdWriter).Name
+                Id = task.IdWritter,
+                Name = wtn.FirstName + " " + wtn.LastName
             };
             var Status = new StatusModels
             {
@@ -50,7 +51,7 @@ namespace ContentProccessService.Application.Queries.GetTaskDetailUpdate
                 Writer = Writter,
                 Description = task.Description,
                 Status = Status,
-                StartedDate = task.StartedDate,
+                StartedDate = task.StartDate,
                 Id = task.Id,
                 Tags = lstTag
             };

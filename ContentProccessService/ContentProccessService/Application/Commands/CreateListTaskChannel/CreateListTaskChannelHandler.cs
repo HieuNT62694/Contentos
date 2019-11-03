@@ -11,9 +11,9 @@ namespace ContentProccessService.Application.Commands.CreateListTaskChannel
 {
     public class CreateListTaskChannelHandler : IRequestHandler<CreateListTaskChannelRequest, List<TaskChannelModelRespone>>
     {
-        private readonly ContentoContext contentodbContext;
+        private readonly ContentoDbContext contentodbContext;
 
-        public CreateListTaskChannelHandler(ContentoContext contentodbContext)
+        public CreateListTaskChannelHandler(ContentoDbContext contentodbContext)
         {
             this.contentodbContext = contentodbContext;
         }
@@ -31,7 +31,7 @@ namespace ContentProccessService.Application.Commands.CreateListTaskChannel
                     CreatedDate = DateTime.Now,
                 };
                 contentodbContext.Attach(taskchannel);
-                contentodbContext.TasksChannels.Add(taskchannel);
+                //contentodbContext.TasksChannels.Add(taskchannel);
                 await contentodbContext.SaveChangesAsync(cancellationToken);
                 TaskChannelModelRespone TaskChannels = new TaskChannelModelRespone
                 {

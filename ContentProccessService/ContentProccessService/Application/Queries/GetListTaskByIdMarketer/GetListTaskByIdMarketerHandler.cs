@@ -12,24 +12,24 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdMarketer
 {
     public class GetListTaskByIdMarketerHandler : IRequestHandler<GetListTaskByIdMarketerRequest, List<TasksViewModel>>
     {
-        private readonly ContentoContext _context;
-        public GetListTaskByIdMarketerHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext _context;
+        public GetListTaskByIdMarketerHandler(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }
         public async Task<List<TasksViewModel>> Handle(GetListTaskByIdMarketerRequest request, CancellationToken cancellationToken)
         {
-            var lstIdCampaign = await _context.Campaign.AsNoTracking().Where(x => x.IdMarketer == request.IdMartketer).ToListAsync();
+            var lstIdCampaign = await _context.Campaigns.AsNoTracking().Include(x=>x.Tasks).Where(x => x.IdMarketer == request.IdMartketer).ToListAsync();
             var lstTask = new List<TasksViewModel>();
             foreach (var item in lstIdCampaign)
             {
-                var task = _context.Tasks.Where(x => x.IdCampaign == item.Id && (x.Status == 5 || x.Status == 6)).ToList();
-                foreach (var itemtask in task)
+                foreach (var itemtask in item.Tasks)
                 {
+                    var wtn = _context.Users.FirstOrDefault(x => x.Id == itemtask.IdWritter);
                     var Writter = new UsersModels
                     {
-                        Id = itemtask.IdWriter,
-                        Name = _context.Users.FirstOrDefault(x => x.Id == itemtask.IdWriter).Name
+                        Id = itemtask.IdWritter,
+                        Name = wtn.FirstName + " " +wtn.LastName
                     };
                     var Status = new StatusModels
                     {
@@ -45,7 +45,7 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdMarketer
                         Writer = Writter,
                         //Description = itemtask.Description,
                         Status = Status,
-                        StartedDate = itemtask.StartedDate,
+                        StartedDate = itemtask.StartDate,
                         Id = itemtask.Id
                     };
                     lstTask.Add(taskView);

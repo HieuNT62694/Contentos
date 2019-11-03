@@ -12,8 +12,8 @@ namespace ContentProccessService.Application.Queries.GetTags
 {
     public class GetTagHandler : IRequestHandler<GetTagRequest, IEnumerable<TagViewModel>>
     {
-        private readonly ContentoContext _context;
-        public GetTagHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext _context;
+        public GetTagHandler(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }

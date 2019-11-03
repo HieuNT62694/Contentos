@@ -11,8 +11,8 @@ namespace ContentProccessService.Application.Commands.CreateTask
 {
     public class CreateTaskHandler : IRequestHandler<CreateTaskRequest, TasksViewModel>
     {
-        private readonly ContentoContext contentodbContext;
-        public CreateTaskHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext contentodbContext;
+        public CreateTaskHandler(ContentoDbContext contentodbContext)
         {
             this.contentodbContext = contentodbContext;
         }
@@ -46,12 +46,12 @@ namespace ContentProccessService.Application.Commands.CreateTask
                 var task = new Tasks
                     {
                         IdCampaign = request.Task.IdCampaign,
-                        IdWriter = request.Task.IdWriter,
+                        IdWritter = request.Task.IdWriter,
                         Deadline = request.Task.Deadline,
                         Description = request.Task.Description,
                         PublishTime = request.Task.PublishTime,
                         Title = request.Task.Title,
-                        StartedDate = DateTime.UtcNow,
+                        CreatedDate = DateTime.UtcNow,
                         ModifiedDate = DateTime.UtcNow,
                         TasksTags = Tags,
                         Status = 1
@@ -72,10 +72,12 @@ namespace ContentProccessService.Application.Commands.CreateTask
                 status.Name = contentodbContext.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Name;
                 status.Color = contentodbContext.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Color;
 
+                var user = contentodbContext.Users.FirstOrDefault(x => x.Id == task.IdWritter);
                 var writer = new UsersModels
                 {
-                    Id = task.IdWriter,
-                    Name = contentodbContext.Users.FirstOrDefault(x => x.Id == task.IdWriter).Name
+                    Id = task.IdWritter,
+
+                    Name = user.FirstName + " " + user.LastName
                 };
                 var taskModel = new TasksViewModel
                 {
@@ -83,13 +85,13 @@ namespace ContentProccessService.Application.Commands.CreateTask
                     Writer = writer,
                     Id = task.Id,
                     Description = task.Description,
-                    StartedDate = task.StartedDate,
+                    StartedDate = task.CreatedDate,
                     PublishTime = task.PublishTime,
                     Tags = ReturnTags,
                     Status = status,
                     Title = task.Title,
                 };
-                var upStatus = contentodbContext.Campaign.FirstOrDefault(y => y.Id == request.Task.IdCampaign);
+                var upStatus = contentodbContext.Campaigns.FirstOrDefault(y => y.Id == request.Task.IdCampaign);
                 if (upStatus.Status == 1)
                 {
                     upStatus.Status = 2;

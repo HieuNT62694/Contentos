@@ -14,8 +14,8 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
 {
     public class GetContentViewerHandler : IRequestHandler<GetContentViewerRequest, List<ContentViewer>>
     {
-        private readonly ContentoContext _context;
-        public GetContentViewerHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext _context;
+        public GetContentViewerHandler(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }
@@ -26,7 +26,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                 var content = _context.Tasks.AsNoTracking()
               .Where(x => x.Status == 7
               && x.Contents.Any(t => t.IsActive == true)
-              && x.TasksChannels.Any(t => t.IdChannel == 1)
+              && x.TasksFanpages.Any(t => t.IdFanpage == 1)
               && x.TasksTags.Any(z => request.Tags.Contains(z.IdTag)))
               .OrderByDescending(x=>x.PublishTime)
               .Select(x => new
@@ -78,7 +78,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                 var content = _context.Tasks.AsNoTracking()
               .Where(x => x.Status == 7
               && x.Contents.Any(t => t.IsActive == true)
-              && x.TasksChannels.Any(t => t.IdChannel == 1))
+              && x.TasksFanpages.Any(t => t.IdFanpage == 1))
               .OrderByDescending(x => x.PublishTime)
               .Select(x => new
               {

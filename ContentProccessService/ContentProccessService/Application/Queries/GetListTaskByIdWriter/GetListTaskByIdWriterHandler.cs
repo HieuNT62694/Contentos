@@ -13,15 +13,15 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdWriter
 
     public class GetListTaskByIdWriterHandler : IRequestHandler<GetListTaskByIdWriterRequest, List<TasksViewByEditorModel>>
     {
-        private readonly ContentoContext _context;
-        public GetListTaskByIdWriterHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext _context;
+        public GetListTaskByIdWriterHandler(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }
         public async Task<List<TasksViewByEditorModel>> Handle(GetListTaskByIdWriterRequest request, CancellationToken cancellationToken)
         {
             List<TasksViewByEditorModel> Tasks = new List<TasksViewByEditorModel>();
-            var ls = await _context.Tasks.AsNoTracking().Include(t => t.IdCampaignNavigation).Include(g => g.StatusNavigation).Include(f => f.Contents).Where(x => x.IdWriter == request.IdWriter).ToListAsync();
+            var ls = await _context.Tasks.AsNoTracking().Include(t => t.IdCampaignNavigation).Include(g => g.StatusNavigation).Include(f => f.Contents).Where(x => x.IdWritter == request.IdWriter).ToListAsync();
 
             foreach (var item in ls)
             {

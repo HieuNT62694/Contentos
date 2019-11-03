@@ -12,9 +12,9 @@ namespace ContentProccessService.Application.Commands.SaveContent
 {
     public class SaveContentHandler : IRequestHandler<SaveContentCommand, ContentsViewModel>
     {
-        private readonly ContentoContext _context;
+        private readonly ContentoDbContext _context;
 
-        public SaveContentHandler(ContentoContext context)
+        public SaveContentHandler(ContentoDbContext context)
         {
             _context = context;
         }

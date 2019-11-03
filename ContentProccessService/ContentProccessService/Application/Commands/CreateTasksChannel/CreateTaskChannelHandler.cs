@@ -11,8 +11,8 @@ namespace ContentProccessService.Application.Commands.CreateTasksChannel
     public class CreateTaskChannelHandler : IRequestHandler<CreateTaskChannelRequest, TasksChannels>
     {
 
-        private readonly ContentoContext contentodbContext;
-        public CreateTaskChannelHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext contentodbContext;
+        public CreateTaskChannelHandler(ContentoDbContext contentodbContext)
         {
             this.contentodbContext = contentodbContext;
         }
@@ -26,7 +26,7 @@ namespace ContentProccessService.Application.Commands.CreateTasksChannel
                 CreatedDate = DateTime.UtcNow,
             };
 
-            contentodbContext.TasksChannels.Add(taskchannel);
+            //contentodbContext.TasksChannels.Add(taskchannel);
             contentodbContext.Attach(taskchannel);
             await contentodbContext.SaveChangesAsync();
             return taskchannel;

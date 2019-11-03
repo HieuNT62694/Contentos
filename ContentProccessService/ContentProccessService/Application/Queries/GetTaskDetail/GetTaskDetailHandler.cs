@@ -11,18 +11,19 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
 {
     public class GetTaskDetailHandler : IRequestHandler<GetTaskDetailRequest, TasksViewModel>
     {
-        private readonly ContentoContext _context;
-        public GetTaskDetailHandler(ContentoContext contentodbContext)
+        private readonly ContentoDbContext _context;
+        public GetTaskDetailHandler(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }
         public async Task<TasksViewModel> Handle(GetTaskDetailRequest request, CancellationToken cancellationToken)
         {
-            var task = await _context.Tasks.AsNoTracking().Include(i=>i.Contents)
+            var task = await _context.Tasks.AsNoTracking().Include(i=>i.Contents).ThenInclude(Contents=> Contents.Comments)
                 .FirstOrDefaultAsync(x => x.Id == request.IdTask);
-            var edtId = _context.Campaign.Find(task.IdCampaign).IdEditor;
+            var edtId = _context.Campaigns.Find(task.IdCampaign).IdEditor;
             var content = task.Contents.Where(x => x.IsActive == true).FirstOrDefault();
-            var campaign = _context.Campaign.Find(task.IdCampaign).Title;
+            var comment = task.Contents.Where(x => x.IsActive == false && x.Version == (content.Version - 1) ).FirstOrDefault();
+            var campaign = _context.Campaigns.Find(task.IdCampaign).Title;
             var lstTag = new List<TagsViewModel>();
             var lstTags = _context.TasksTags.Where(x=>x.IdTask == request.IdTask).ToList();
             foreach (var item in lstTags)
@@ -32,10 +33,11 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                 tag.Id = item.IdTag;
                 lstTag.Add(tag);
             }
+            var wtn = _context.Users.FirstOrDefault(x => x.Id == task.IdWritter);
             var Writter = new UsersModels
             {
-                Id = task.IdWriter,
-                Name = _context.Users.FirstOrDefault(x => x.Id == task.IdWriter).Name
+                Id = task.IdWritter,
+                Name = wtn.FirstName + " " + wtn.LastName
             };
             var Status = new StatusModels
             {
@@ -43,24 +45,25 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                 Name = _context.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Name,
                 Color = _context.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Color
             };
+            var etn = _context.Users.FirstOrDefault(x => x.Id == edtId);
             var Editor = new UsersModels
             {
                 Id = edtId,
-                Name = _context.Users.FirstOrDefault(x => x.Id == edtId).Name
+                Name = etn.FirstName + " " + etn.LastName
             };
             var Content = new ContentModels
             {
-                Id = content.Id,
+                Id = content.Id, 
                 Content = content.TheContent,
                 Name = content.Name
             };
             var Comment = new Comments();
-            if (task.Contents.FirstOrDefault(x => x.IsActive == true).IdComment != null)
+            if (comment.Comments != null)
             {
-                Comment.Comment = _context.Comments.FirstOrDefault(x => x.Id == content.IdComment).Comment;
+                Comment.Comment = comment.Comments.FirstOrDefault(x=>x.IsActive == true).Comment;
             }
-           
-               var taskView = new TasksViewModel()
+
+            var taskView = new TasksViewModel()
                {
                    Title = task.Title,
                    Deadline = task.Deadline,
@@ -68,7 +71,7 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                    Writer = Writter,
                    Description = task.Description,
                    Status = Status,
-                   StartedDate = task.StartedDate,
+                   StartedDate = task.StartDate,
                    Editor = Editor,
                    Content = Content,
                    Comment = Comment,
