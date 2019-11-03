@@ -23,7 +23,7 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdMarketer
             var lstTask = new List<TasksViewModel>();
             foreach (var item in lstIdCampaign)
             {
-                var task = _context.Tasks.Where(x => x.IdCampaign == item.Id && (x.Status == 5 || x.Status == 6)).ToList();
+                var task = _context.Tasks.Where(x => x.IdCampaign == item.Id && (x.Status == 5 || x.Status == 6 || x.Status == 7)).ToList();
                 foreach (var itemtask in task)
                 {
                     var Writter = new UsersModels

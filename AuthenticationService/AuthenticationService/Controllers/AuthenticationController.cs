@@ -4,6 +4,7 @@ using AuthenticationService.Application.Commands;
 using AuthenticationService.Application.Commands.CreateCustomer;
 using AuthenticationService.Application.Commands.UpdateCustomer;
 using AuthenticationService.Application.Queries;
+using AuthenticationService.Application.Queries.GetAllWriterByIdMarketer;
 using AuthenticationService.Application.Queries.GetCustomer;
 using AuthenticationService.Application.Queries.GetUser;
 using AuthenticationService.Application.Queries.GetWriter;
@@ -41,6 +42,18 @@ namespace AuthenticationService.Controllers
         public async Task<IActionResult> GetListEditor(int id)
         {
             var response = await Mediator.Send(new GetUserRequest { IdMarketer = id }) ;
+            if (response.Count == 0)
+            {
+                return BadRequest("Don't have Editor For Marketer");
+            }
+            return Ok(response);
+
+        }
+        [HttpGet("Writer/Marketers/{id}")]
+        //[Authorize(Roles = "Marketer")]
+        public async Task<IActionResult> GetListWriterByIdMarketer(int id)
+        {
+            var response = await Mediator.Send(new GetAllWriterByIdMarketerRequest { MarketerId = id });
             if (response.Count == 0)
             {
                 return BadRequest("Don't have Editor For Marketer");
