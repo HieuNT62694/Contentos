@@ -49,6 +49,7 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                     upTask.Deadline = request.Deadline;
                     upTask.PublishTime = request.PublishTime;
                     upTask.TasksTags = Tags;
+
                     upTask.ModifiedDate = DateTime.UtcNow;
                     contentodbContext.Attach(upTask);
                     contentodbContext.Entry(upTask).State = EntityState.Modified;
@@ -77,10 +78,20 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                     TagsReturn.Add(tagReturn);
                 }
                 upTask.Deadline = request.Deadline;
+                upTask.PublishTime = request.PublishTime;
+                if (request.Deadline > DateTime.UtcNow)
+                {
+                    upTask.Status = 2;
+                }
                 contentodbContext.Attach(upTask);
                 contentodbContext.Entry(upTask).State = EntityState.Modified;
                 await contentodbContext.SaveChangesAsync(cancellationToken);
-
+                var Status = new StatusModels()
+                {
+                    Id = upTask.Status,
+                    Name = contentodbContext.StatusTasks.FirstOrDefault(x => x.Id == upTask.Status).Name,
+                    Color = contentodbContext.StatusTasks.FirstOrDefault(x => x.Id == upTask.Status).Color
+                };
                 writer.Id = upTask.IdWriter;
                 writer.Name = contentodbContext.Users.FirstOrDefault(x => x.Id == upTask.IdWriter).Name;
 
@@ -90,6 +101,7 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                 resultReturn.Deadline = upTask.Deadline;
                 resultReturn.PublishTime = upTask.PublishTime;
                 resultReturn.Tags = TagsReturn;
+                resultReturn.Status = Status;
                 resultReturn.Id = request.IdTask;
                 resultReturn.Deadline = upTask.Deadline;
                 transaction.Commit();
