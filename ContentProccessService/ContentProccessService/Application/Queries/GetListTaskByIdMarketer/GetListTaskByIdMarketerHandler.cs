@@ -19,7 +19,7 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdMarketer
         }
         public async Task<List<TasksViewModel>> Handle(GetListTaskByIdMarketerRequest request, CancellationToken cancellationToken)
         {
-            var lstIdCampaign = await _context.Campaigns.AsNoTracking().Include(x=>x.Tasks).Where(x => x.IdMarketer == request.IdMartketer).ToListAsync();
+            var lstIdCampaign = await _context.Campaigns.AsNoTracking().Include(x => x.Tasks).Where(x => x.IdMarketer == request.IdMartketer && (x.Status == 5 || x.Status == 6 || x.Status == 7)).ToListAsync();
             var lstTask = new List<TasksViewModel>();
             foreach (var item in lstIdCampaign)
             {

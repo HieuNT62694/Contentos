@@ -27,6 +27,7 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                 var Tags = new List<TasksTags>();
                 var TagsReturn = new List<TagsViewModel>();
                 var writer = new UsersModels();
+               
                 if (upTask == null)
                 {
                     return null;
@@ -77,6 +78,11 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                     TagsReturn.Add(tagReturn);
                 }
                 upTask.Deadline = request.Deadline;
+                upTask.PublishTime = request.PublishTime;
+                if (request.Deadline > DateTime.UtcNow)
+                {
+                    upTask.Status = 2;
+                }
                 contentodbContext.Attach(upTask);
                 contentodbContext.Entry(upTask).State = EntityState.Modified;
                 await contentodbContext.SaveChangesAsync(cancellationToken);
@@ -84,6 +90,13 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                 writer.Id = upTask.IdWritter;
                 var user = contentodbContext.Users.FirstOrDefault(x => x.Id == upTask.IdWritter);
                 writer.Name = user.FirstName +" " + user.LastName;
+                var status = new StatusModels
+                {
+                    Id =  upTask.Id,
+                    Name = contentodbContext.StatusTasks.Find(upTask.Id).Name,
+                    Color = contentodbContext.StatusTasks.Find(upTask.Id).Color
+
+                };
 
                 resultReturn.Title = upTask.Title;
                 resultReturn.Writer = writer;
@@ -92,6 +105,7 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                 resultReturn.PublishTime = upTask.PublishTime;
                 resultReturn.Tags = TagsReturn;
                 resultReturn.Id = request.IdTask;
+                resultReturn.Status = status;
                 resultReturn.Deadline = upTask.Deadline;
                 transaction.Commit();
                 return resultReturn;

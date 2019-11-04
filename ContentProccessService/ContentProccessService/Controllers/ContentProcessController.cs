@@ -35,6 +35,7 @@ using Microsoft.AspNetCore.Http;
 using ContentProccessService.Application.Queries.GetContentDetail;
 using ContentProccessService.Application.Queries.GetAllListStatus;
 using ContentProccessService.Application.Queries.GetAllStatusCampaign;
+using ContentProccessService.Application.Queries.GetStatusPublish;
 
 namespace ContentProccessService.Controllers
 {
@@ -293,6 +294,13 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> GetAllStatusCampaign()
         {
             var response = await Mediator.Send(new GetAllStatusCampaignRequest());
+            return Ok(response);
+        }
+        [HttpGet("status-publish/task")]
+        //[Authorize(Roles = "Writer")]
+        public async Task<IActionResult> GetPublishStatusTask()
+        {
+            var response = await Mediator.Send(new GetStatusPublishRequest());
             return Ok(response);
         }
     }

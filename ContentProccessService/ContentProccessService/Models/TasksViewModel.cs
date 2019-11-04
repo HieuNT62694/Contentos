@@ -121,6 +121,7 @@ namespace ContentProccessService.Models
         public DateTime? Deadline { get; set; }
         public DateTime? PublishTime { get; set; }
         public List<TagsViewModel> Tags { get; set; }
+        public StatusModels Status { get; set; }
     }
     //public class TaskDetailModel
     //{

@@ -4,7 +4,9 @@ using AuthenticationService.Application.Commands;
 using AuthenticationService.Application.Commands.CreateCustomer;
 using AuthenticationService.Application.Commands.UpdateCustomer;
 using AuthenticationService.Application.Queries;
+using AuthenticationService.Application.Queries.GetAllWriterByIdMarketer;
 using AuthenticationService.Application.Queries.GetCustomer;
+using AuthenticationService.Application.Queries.GetCustomerByIdEditor;
 using AuthenticationService.Application.Queries.GetUser;
 using AuthenticationService.Application.Queries.GetWriter;
 using AuthenticationService.Entities;
@@ -40,7 +42,7 @@ namespace AuthenticationService.Controllers
         [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetListEditor(int id)
         {
-            var response = await Mediator.Send(new GetUserRequest { IdMarketer = id }) ;
+            var response = await Mediator.Send(new GetUserRequest { IdMarketer = id });
             if (response.Count == 0)
             {
                 return BadRequest("Don't have Editor For Marketer");
@@ -53,7 +55,7 @@ namespace AuthenticationService.Controllers
         [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetListWriter(int id)
         {
-            var response = await Mediator.Send(new GetWriterRequest {EditorId = id });
+            var response = await Mediator.Send(new GetWriterRequest { EditorId = id });
             if (response.Count == 0)
             {
                 return BadRequest("Don't have Writter For Marketer");
@@ -61,7 +63,7 @@ namespace AuthenticationService.Controllers
             return Ok(response);
         }
 
-         [HttpGet("Customers/Marketers-Basic/{id}/")]
+        [HttpGet("Customers/Marketers-Basic/{id}/")]
         [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetListCustomerBasic(int id)
         {
@@ -104,6 +106,29 @@ namespace AuthenticationService.Controllers
                 return BadRequest();
             }
             return Accepted(result);
+        }
+        [HttpGet("Writer/Marketers/{id}")]
+        //[Authorize(Roles = "Marketer")]
+        public async Task<IActionResult> GetListWriterByIdMarketer(int id)
+        {
+            var response = await Mediator.Send(new GetAllWriterByIdMarketerRequest { MarketerId = id });
+            if (response.Count == 0)
+            {
+                return BadRequest("Don't have Editor For Marketer");
+            }
+            return Ok(response);
+        }
+        [HttpGet("customer/editor/{id}")]
+        //[Authorize(Roles = "Marketer")]
+        public async Task<IActionResult> GetcustomerByIdEditor(int id)
+        {
+            var response = await Mediator.Send(new GetCustomerByIdEditorRequest { EditorId = id });
+            if (response.Count == 0)
+            {
+                return BadRequest("Don't have Editor For Marketer");
+            }
+            return Ok(response);
+
         }
     }
 }
