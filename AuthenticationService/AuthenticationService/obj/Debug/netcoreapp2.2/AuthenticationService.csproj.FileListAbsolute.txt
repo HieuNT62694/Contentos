@@ -8,7 +8,6 @@ D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\bin\Debug\
 D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\bin\Debug\netcoreapp2.2\AuthenticationService.runtimeconfig.dev.json
 D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\bin\Debug\netcoreapp2.2\AuthenticationService.dll
 D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\bin\Debug\netcoreapp2.2\AuthenticationService.pdb
-D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\obj\Debug\netcoreapp2.2\AuthenticationService.csprojAssemblyReference.cache
 D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\obj\Debug\netcoreapp2.2\AuthenticationService.RazorAssemblyInfo.cache
 D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\obj\Debug\netcoreapp2.2\AuthenticationService.RazorAssemblyInfo.cs
 D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\obj\Debug\netcoreapp2.2\AuthenticationService.RazorTargetAssemblyInfo.cache
