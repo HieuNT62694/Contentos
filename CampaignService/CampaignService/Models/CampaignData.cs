@@ -41,4 +41,10 @@ namespace CampaignService.Models
         public string Name { get; set; }
         public string Color { get; set; }
     }
+
+    public class CampaignModels
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
 }
