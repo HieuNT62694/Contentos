@@ -30,10 +30,15 @@ namespace ContentProccessService.Models
         public string Content { get; set; }
         public string Name { get; set; }
     }
+    public class CampaignModels
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
     public class TasksViewByEditorModel
     {
         public int Id { get; set; }
-        public string Campaign { get; set; }
+        public CampaignModels Campaign { get; set; }
         public string Title { get; set; }
         public StatusTaskModels Status { get; set; }
         public DateTime? ModifiedDate { get; set; }

@@ -41,7 +41,7 @@ namespace CampaignService
                 options.UseSqlServer(Configuration.GetConnectionString("CampaignDb"));
             });
             //RabbitMQ
-            services.AddSingleton<IHostedService>(provider => new Consumer("AccountCreate"));
+            //services.AddSingleton<IHostedService>(provider => new Consumer("AccountCreate"));
             //add swagger
             services.AddOpenApiDocument(config =>
             {

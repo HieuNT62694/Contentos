@@ -1,6 +1,7 @@
 ﻿using ContentProccessService.Entities;
 using ContentProccessService.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,12 @@ namespace ContentProccessService.Application.Queries.GetAllListStatus
         }
         public async Task<List<StatusModelsReturn>> Handle(GetAllStatusRequest request, CancellationToken cancellationToken)
         {
-            return  Context.StatusTasks.Select(x=>
+            return await Context.StatusTasks.Select(x=>
             new StatusModelsReturn
             {
                 Id = x.Id,
                 Name = x.Name
-            }).ToList();
+            }).ToListAsync();
             
         }
     }
