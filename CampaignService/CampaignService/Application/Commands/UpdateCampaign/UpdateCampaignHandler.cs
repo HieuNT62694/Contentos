@@ -43,7 +43,7 @@ namespace CampaignService.Application.Commands.UpdateCampaign
 
                 foreach (var item in request.Tags)
                 {
-                    var tag = new TagsCampaigns { IdTag = item.Id };
+                    var tag = new TagsCampaigns { IdTag = item };
                     upTags.Add(tag);
                 }
 

@@ -30,7 +30,7 @@ namespace CampaignService.Application.Commands.CreateCampaign
 
                 foreach (var item in request.Tags)
                 {
-                    var tag = new TagsCampaigns { IdTag = item.Id};
+                    var tag = new TagsCampaigns { IdTag = item};
                     Tags.Add(tag);
                 }
 

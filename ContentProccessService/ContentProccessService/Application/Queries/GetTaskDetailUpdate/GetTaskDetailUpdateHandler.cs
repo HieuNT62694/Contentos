@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Queries.GetTaskDetailUpdate
 {
-    public class GetTaskDetailUpdateHandler : IRequestHandler<GetTaskDetailUpdateRequest, TasksViewModel>
+    public class GetTaskDetailUpdateHandler : IRequestHandler<GetTaskDetailUpdateRequest, TasksViewModelReturn>
     {
         private readonly ContentoDbContext _context;
         public GetTaskDetailUpdateHandler(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }
-        public async Task<TasksViewModel> Handle(GetTaskDetailUpdateRequest request, CancellationToken cancellationToken)
+        public async Task<TasksViewModelReturn> Handle(GetTaskDetailUpdateRequest request, CancellationToken cancellationToken)
         {
             var task = await _context.Tasks.AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Id == request.IdTask);
@@ -31,6 +31,11 @@ namespace ContentProccessService.Application.Queries.GetTaskDetailUpdate
                 tag.Id = item.IdTag;
                 lstTag.Add(tag);
             }
+            var lstTagid = new List<int>();
+            foreach (var item in lstTags)
+            {
+                lstTagid.Add(item.IdTag);
+            }
             var wtn = _context.Users.FirstOrDefault(x => x.Id == task.IdWritter);
             var Writter = new UsersModels
             {
@@ -43,7 +48,7 @@ namespace ContentProccessService.Application.Queries.GetTaskDetailUpdate
                 Name = _context.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Name,
                 Color = _context.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Color
             };
-            var taskView = new TasksViewModel()
+            var taskView = new TasksViewModelReturn()
             {
                 Title = task.Title,
                 Deadline = task.Deadline,
@@ -53,7 +58,9 @@ namespace ContentProccessService.Application.Queries.GetTaskDetailUpdate
                 Status = Status,
                 StartedDate = task.StartDate,
                 Id = task.Id,
-                Tags = lstTag
+                Tags = lstTagid,
+                TagFull = lstTag
+
             };
 
             return taskView;

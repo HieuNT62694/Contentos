@@ -15,6 +15,6 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
         public string Description { get; set; }
         public DateTime? Deadline { get; set; }
         public DateTime? PublishTime { get; set; }
-        public List<Tag> Tags { get; set; }
+        public List<int> Tags { get; set; }
     }
 }

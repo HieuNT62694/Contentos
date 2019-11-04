@@ -13,7 +13,7 @@ namespace CampaignService.Application.Commands.CreateCampaign
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime? EndDate { get; set; }
-        public List<Tag> Tags { get; set; }
+        public List<int> Tags { get; set; }
         public Customer Customer { get; set; }
         public Editor Editor { get; set; }
         public int IdMarketer { get; set; }

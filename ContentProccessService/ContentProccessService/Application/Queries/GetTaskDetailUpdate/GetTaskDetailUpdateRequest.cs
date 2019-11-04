@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Queries.GetTaskDetailUpdate
 {
-    public class GetTaskDetailUpdateRequest : IRequest<TasksViewModel>
+    public class GetTaskDetailUpdateRequest : IRequest<TasksViewModelReturn>
     {
         public int IdTask { get; set; }
     }

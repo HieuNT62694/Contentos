@@ -40,7 +40,7 @@ namespace ContentProccessService.Application.Commands.CreateTask
 
                 foreach (var item in request.Task.Tags)
                 {
-                    var tag = new TasksTags { IdTag = item.Id, CreatedDate = DateTime.UtcNow };
+                    var tag = new TasksTags { IdTag = item, CreatedDate = DateTime.UtcNow };
                     Tags.Add(tag);
                 }
                 var task = new Tasks

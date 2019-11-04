@@ -33,7 +33,7 @@ namespace AuthenticationService.Application.Queries.GetCustomer
                 var User = new CreateUserModel()
                 {
                     Id = item.Id,
-                    FullName = item.FirstName+item.LastName,
+                    FullName = item.FirstName+" "+item.LastName,
                     Email = item.Accounts.First().Email,
                     CompanyName = item.Company,
                     Phone = item.Phone

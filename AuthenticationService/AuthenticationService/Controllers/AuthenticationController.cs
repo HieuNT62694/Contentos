@@ -7,6 +7,7 @@ using AuthenticationService.Application.Queries;
 using AuthenticationService.Application.Queries.GetAllWriterByIdMarketer;
 using AuthenticationService.Application.Queries.GetCustomer;
 using AuthenticationService.Application.Queries.GetCustomerByIdEditor;
+using AuthenticationService.Application.Queries.GetcustomerDetail;
 using AuthenticationService.Application.Queries.GetUser;
 using AuthenticationService.Application.Queries.GetWriter;
 using AuthenticationService.Entities;
@@ -126,6 +127,18 @@ namespace AuthenticationService.Controllers
             if (response.Count == 0)
             {
                 return BadRequest("Don't have Editor For Marketer");
+            }
+            return Ok(response);
+
+        }
+        [HttpGet("customer-detail/{id}")]
+        //[Authorize(Roles = "Marketer")]
+        public async Task<IActionResult> GetcustomerDetail(int id)
+        {
+            var response = await Mediator.Send(new GetCustomerDetailRequest { IdCustomer = id });
+            if (response == null)
+            {
+                return BadRequest("Don't have Account");
             }
             return Ok(response);
 

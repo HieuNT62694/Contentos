@@ -6,6 +6,25 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Models
 {
+    public class TasksViewModelReturn
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public DateTime? Deadline { get; set; }
+        public DateTime? PublishTime { get; set; }
+        public int? IsActive { get; set; }
+        public DateTime? StartedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public UsersModels Writer { get; set; }
+        public UsersModels Editor { get; set; }
+        public ContentModels Content { get; set; }
+        public StatusModels Status { get; set; }
+        public List<int> Tags { get; set; }
+        public List<TagsViewModel> TagFull { get; set; }
+        public Comments Comment { get; set; }
+        public string Campaign { get; set; }
+    }
     public class TasksViewModel
     {
         public int Id { get; set; }
@@ -105,7 +124,7 @@ namespace ContentProccessService.Models
         public string Description { get; set; }
         public DateTime? Deadline { get; set; }
         public DateTime? PublishTime { get; set; }
-        public List<Tag> Tags { get; set; }
+        public List<int> Tags { get; set; }
     }
     public class UpdateTaskModel
     {

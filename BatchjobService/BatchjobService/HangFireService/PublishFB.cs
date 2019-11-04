@@ -12,7 +12,7 @@ namespace BatchjobService.HangFireService
 {
     public interface IPublishFBService
     {
-        Task PublishToContento(int id);
+        Task PublishToContento(int contentId);
         Task PublishToWP(int id);
         Task PublishToFB(int fanpageId, int contentId);
     }
@@ -77,9 +77,8 @@ namespace BatchjobService.HangFireService
             await wordpress.PublishSimplePost(content);
         }
 
-        public async Task PublishToContento(int fanpageId, int contentId)
+        public async Task PublishToContento(int contentId)
         {
-            var fanpage = _context.Fanpages.FirstOrDefault(f => f.Id == fanpageId && f.IsActive == true);
             var content = _context.Contents.FirstOrDefault(w => w.Id == contentId && w.IsActive == true);
             var task = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
 
@@ -87,7 +86,7 @@ namespace BatchjobService.HangFireService
             {
                 task.Status = 7;
                 _context.Update(task);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AuthenticationService.Controllers;
+using BatchjobService.Application.Queries.GetFanpages;
 using BatchjobService.Entities;
 using BatchjobService.HangFireService;
 using BatchjobService.Models;
@@ -45,16 +46,13 @@ namespace BatchjobService.Controllers
             return Ok();
         }
 
-        //[HttpPost("PublishToWP")]
-        //public IActionResult PublishToFB(PublishModels models)
-        //{
-        //    _ubfPublish.UpdateStatusBeforePublishing(models.id, models.time);
-        //    var jobId = BackgroundJob.Schedule(
-        //        () => _publish.PublishToWP(models.id),
-        //        models.time);
+        [HttpGet("Fanpages")]
+        public async Task<List<FanpageViewModel>> GetAllFanpageAsync()
+        {
+            var response = await Mediator.Send(new GetFanpagesRequest());
 
-        //    return Accepted();
-        //}
+            return response;
+        }
 
         private void PublishFB(int fanpageId, int contentId, DateTime time)
         {
@@ -114,7 +112,7 @@ namespace BatchjobService.Controllers
             _context.SaveChanges();
         }
 
-        public async Task PublishContento(int fanpageId, int contentId, DateTime time)
+        private async Task PublishContento(int fanpageId, int contentId, DateTime time)
         {
             var content = _context.Contents.FirstOrDefault(w => w.Id == contentId && w.IsActive == true);
             var task = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);

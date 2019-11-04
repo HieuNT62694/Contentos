@@ -13,6 +13,7 @@ using NSwag;
 using NSwag.Generation.Processors.Security;
 using System;
 using System.Linq;
+using MediatR;
 
 namespace BatchjobService
 {
@@ -39,6 +40,8 @@ namespace BatchjobService
             services.AddScoped<IPublishFBService, PublishFB>();
             services.AddScoped<IUpdateBeforePublishingService, UpdateBeforePublishingService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddMediatR(typeof(Startup).Assembly);
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {

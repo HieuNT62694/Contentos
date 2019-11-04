@@ -38,8 +38,8 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
 
                     foreach (var item in request.Tags)
                     {
-                        var tag = new TasksTags { IdTag = item.Id,ModifiedDate = DateTime.UtcNow};
-                        var tagReturn = new TagsViewModel { Id = item.Id ,Name = contentodbContext.Tags.FirstOrDefault(x => x.Id == item.Id).Name };
+                        var tag = new TasksTags { IdTag = item,ModifiedDate = DateTime.UtcNow};
+                        var tagReturn = new TagsViewModel { Id = item ,Name = contentodbContext.Tags.FirstOrDefault(x => x.Id == item).Name };
                         Tags.Add(tag);
                         TagsReturn.Add(tagReturn);
                     }
@@ -72,8 +72,8 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                 //update with status !=1
                 foreach (var item in request.Tags)
                 {
-                    var tag = new TasksTags { IdTag = item.Id, ModifiedDate = DateTime.UtcNow };
-                    var tagReturn = new TagsViewModel { Id = item.Id, Name = contentodbContext.Tags.FirstOrDefault(x => x.Id == item.Id).Name };
+                    var tag = new TasksTags { IdTag = item, ModifiedDate = DateTime.UtcNow };
+                    var tagReturn = new TagsViewModel { Id = item, Name = contentodbContext.Tags.FirstOrDefault(x => x.Id == item).Name };
                     Tags.Add(tag);
                     TagsReturn.Add(tagReturn);
                 }

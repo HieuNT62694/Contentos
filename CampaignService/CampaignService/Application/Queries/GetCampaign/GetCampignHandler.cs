@@ -50,15 +50,22 @@ namespace CampaignService.Application.Queries.GetCampaign
             model.Status.Color = stat.Color;
 
             //Get ListTag
-            List<Tag> ls = new List<Tag>();
+            List<Tag> lsfull = new List<Tag>();
             foreach (var tag in entity.TagsCampaigns)
             {
                 var cTag = new Tag { Id = tag.IdTag, Name = _context.Tags.Find(tag.IdTag).Name };
-                ls.Add(cTag);
+                lsfull.Add(cTag);
+            }
+            //tag full             
+            List<int> ls = new List<int>();
+            foreach (var tag in entity.TagsCampaigns)
+            {
+
+                ls.Add(tag.IdTag);
             }
 
             model.listTag = ls;
-
+            model.TagFull = lsfull;
             return model;
         }
 
