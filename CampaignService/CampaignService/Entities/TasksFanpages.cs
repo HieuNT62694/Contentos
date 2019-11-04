@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace CampaignService.Entities
 {
-    public partial class TasksChannels
+    public partial class TasksFanpages
     {
-        public int Id { get; set; }
         public int IdTask { get; set; }
-        public int IdChannel { get; set; }
+        public int IdFanpage { get; set; }
+        public int? IdJob { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
-        public virtual Channels IdChannelNavigation { get; set; }
+        public virtual Fanpages IdFanpageNavigation { get; set; }
         public virtual Tasks IdTaskNavigation { get; set; }
     }
 }

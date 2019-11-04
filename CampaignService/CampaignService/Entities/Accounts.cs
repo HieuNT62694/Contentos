@@ -7,12 +7,12 @@ namespace CampaignService.Entities
     {
         public Accounts()
         {
-            Activations = new HashSet<Activations>();
+            TasksAccounts = new HashSet<TasksAccounts>();
         }
 
         public int Id { get; set; }
-        public int IdRole { get; set; }
-        public int IdUser { get; set; }
+        public int? IdUser { get; set; }
+        public int? IdRole { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public bool? IsActive { get; set; }
@@ -21,6 +21,6 @@ namespace CampaignService.Entities
 
         public virtual Roles IdRoleNavigation { get; set; }
         public virtual Users IdUserNavigation { get; set; }
-        public virtual ICollection<Activations> Activations { get; set; }
+        public virtual ICollection<TasksAccounts> TasksAccounts { get; set; }
     }
 }

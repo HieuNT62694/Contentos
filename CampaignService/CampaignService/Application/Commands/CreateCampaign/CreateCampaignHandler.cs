@@ -13,9 +13,9 @@ namespace CampaignService.Application.Commands.CreateCampaign
 {
     public class CreateCampaignHandler : IRequestHandler<CreateCampaignCommand, CampaignData>
     {
-        private readonly ContentoContext _context;
+        private readonly ContentoDbContext _context;
 
-        public CreateCampaignHandler(ContentoContext campaignDbContext)
+        public CreateCampaignHandler(ContentoDbContext campaignDbContext)
         {
             _context = campaignDbContext;
         }
@@ -26,15 +26,15 @@ namespace CampaignService.Application.Commands.CreateCampaign
             var transaction = _context.Database.BeginTransaction();
             try
             {
-                var Tags = new List<CampaignTags>();
+                var Tags = new List<TagsCampaigns>();
 
                 foreach (var item in request.Tags)
                 {
-                    var tag = new CampaignTags { IdTags = item.Id, CreatedDate = DateTime.UtcNow };
+                    var tag = new TagsCampaigns { IdTag = item.Id};
                     Tags.Add(tag);
                 }
 
-                var newCampaign = new Campaign
+                var newCampaign = new Campaigns
                 {
 
                     EndDate = request.EndDate,
@@ -42,17 +42,17 @@ namespace CampaignService.Application.Commands.CreateCampaign
                     IdEditor = request.Editor.Id,
                     Description = request.Description,
                     Title = request.Title,
-                    StartedDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.UtcNow,
                     Status = 1,
                     IdMarketer = request.IdMarketer,
-                    CampaignTags = Tags
+                    TagsCampaigns = Tags
                 };
 
-                _context.Campaign.Add(newCampaign);
+                _context.Campaigns.Add(newCampaign);
 
                 await _context.SaveChangesAsync(cancellationToken);
 
-                var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaign, CampaignData>()
+                var config = new MapperConfiguration(cfg => cfg.CreateMap<Campaigns, CampaignData>()
                 .ForMember(x => x.Status, opt => opt.Ignore()));
                 var mapper = config.CreateMapper();
 
@@ -66,20 +66,21 @@ namespace CampaignService.Application.Commands.CreateCampaign
                 //Get Customer Name & Id
                 model.Customer = new Models.Customer();
                 model.Customer.Id = newCampaign.IdCustomer;
-                model.Customer.Name = _context.Users.Find(newCampaign.IdCustomer).Name;
+                var cus = _context.Users.Find(newCampaign.IdCustomer);
+                model.Customer.Name = cus.FirstName + " " + cus.LastName;
 
                 //Get Status Name & Id
                 model.Status = new Models.Status();
                 model.Status.Id = newCampaign.Status;
-                var stat = _context.StatusCampaign.Find(newCampaign.Status);
+                var stat = _context.StatusCampaigns.Find(newCampaign.Status);
                 model.Status.Name = stat.Name;
                 model.Status.Color = stat.Color;
 
                 //Get ListTag
                 List<Models.Tag> ls = new List<Models.Tag>();
-                foreach (var tag in newCampaign.CampaignTags)
+                foreach (var tag in newCampaign.TagsCampaigns)
                 {
-                    var cTag = new Models.Tag { Id = tag.IdTags, Name = _context.Tags.Find(tag.IdTags).Name };
+                    var cTag = new Models.Tag { Id = tag.IdTag, Name = _context.Tags.Find(tag.IdTag).Name };
                     ls.Add(cTag);
                 }
 

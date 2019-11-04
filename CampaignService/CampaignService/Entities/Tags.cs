@@ -7,19 +7,17 @@ namespace CampaignService.Entities
     {
         public Tags()
         {
-            CampaignTags = new HashSet<CampaignTags>();
-            Persionalizations = new HashSet<Persionalizations>();
+            Personalizations = new HashSet<Personalizations>();
+            TagsCampaigns = new HashSet<TagsCampaigns>();
             TasksTags = new HashSet<TasksTags>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
         public bool? IsActive { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        public DateTime? ModifiedDate { get; set; }
 
-        public virtual ICollection<CampaignTags> CampaignTags { get; set; }
-        public virtual ICollection<Persionalizations> Persionalizations { get; set; }
+        public virtual ICollection<Personalizations> Personalizations { get; set; }
+        public virtual ICollection<TagsCampaigns> TagsCampaigns { get; set; }
         public virtual ICollection<TasksTags> TasksTags { get; set; }
     }
 }

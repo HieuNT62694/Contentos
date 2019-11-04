@@ -36,12 +36,12 @@ namespace CampaignService
         public void ConfigureServices(IServiceCollection services)
         {
             //add Dbcontext
-            services.AddDbContext<ContentoContext>(options =>
+            services.AddDbContext<ContentoDbContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("CampaignDb"));
             });
             //RabbitMQ
-            services.AddSingleton<IHostedService>(provider => new Consumer("AccountCreate"));
+            //services.AddSingleton<IHostedService>(provider => new Consumer("AccountCreate"));
             //add swagger
             services.AddOpenApiDocument(config =>
             {
@@ -50,8 +50,6 @@ namespace CampaignService
                     document.Info.Version = "v1";
                     document.Info.Title = string.Format($"Campaign Service");
                     document.Info.Description = string.Format($"Developer Documentation Page For Campaign Service");
-
-
                 };
 
                 config.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme

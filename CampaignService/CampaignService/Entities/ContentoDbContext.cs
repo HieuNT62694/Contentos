@@ -4,35 +4,34 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace CampaignService.Entities
 {
-    public partial class ContentoContext : DbContext
+    public partial class ContentoDbContext : DbContext
     {
-        public ContentoContext()
+        public ContentoDbContext()
         {
         }
 
-        public ContentoContext(DbContextOptions<ContentoContext> options)
+        public ContentoDbContext(DbContextOptions<ContentoDbContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<Accounts> Accounts { get; set; }
-        public virtual DbSet<Activations> Activations { get; set; }
-        public virtual DbSet<Behaviours> Behaviours { get; set; }
-        public virtual DbSet<Campaign> Campaign { get; set; }
-        public virtual DbSet<CampaignTags> CampaignTags { get; set; }
+        public virtual DbSet<Campaigns> Campaigns { get; set; }
         public virtual DbSet<Channels> Channels { get; set; }
         public virtual DbSet<Comments> Comments { get; set; }
         public virtual DbSet<Contents> Contents { get; set; }
+        public virtual DbSet<Fanpages> Fanpages { get; set; }
         public virtual DbSet<FavoritesContents> FavoritesContents { get; set; }
-        public virtual DbSet<Locations> Locations { get; set; }
-        public virtual DbSet<Occupations> Occupations { get; set; }
-        public virtual DbSet<Persionalizations> Persionalizations { get; set; }
+        public virtual DbSet<Notifys> Notifys { get; set; }
+        public virtual DbSet<Personalizations> Personalizations { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
-        public virtual DbSet<StatusCampaign> StatusCampaign { get; set; }
+        public virtual DbSet<StatusCampaigns> StatusCampaigns { get; set; }
         public virtual DbSet<StatusTasks> StatusTasks { get; set; }
         public virtual DbSet<Tags> Tags { get; set; }
+        public virtual DbSet<TagsCampaigns> TagsCampaigns { get; set; }
         public virtual DbSet<Tasks> Tasks { get; set; }
-        public virtual DbSet<TasksChannels> TasksChannels { get; set; }
+        public virtual DbSet<TasksAccounts> TasksAccounts { get; set; }
+        public virtual DbSet<TasksFanpages> TasksFanpages { get; set; }
         public virtual DbSet<TasksTags> TasksTags { get; set; }
         public virtual DbSet<Tokens> Tokens { get; set; }
         public virtual DbSet<Users> Users { get; set; }
@@ -42,7 +41,7 @@ namespace CampaignService.Entities
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=34.87.31.23;Database=Contento;User ID=sa;Password=Hieunguyen1@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
+                optionsBuilder.UseSqlServer("Server=34.87.31.23;Database=ContentoDb;User ID=sa;Password=Hieunguyen1@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
             }
         }
 
@@ -62,7 +61,7 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Email)
                     .HasColumnName("email")
-                    .HasMaxLength(50);
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.IdRole).HasColumnName("id_role");
 
@@ -79,83 +78,24 @@ namespace CampaignService.Entities
                 entity.HasOne(d => d.IdRoleNavigation)
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.IdRole)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_accounts_roles");
+                    .HasConstraintName("FK_AccountRole");
 
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Accounts)
                     .HasForeignKey(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_accounts_users");
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("fk_AccountUser");
             });
 
-            modelBuilder.Entity<Activations>(entity =>
+            modelBuilder.Entity<Campaigns>(entity =>
             {
-                entity.ToTable("activations");
-
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Date)
-                    .HasColumnName("date")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.IdAccount).HasColumnName("id_account");
-
-                entity.Property(e => e.IdBehaviour).HasColumnName("id_behaviour");
-
-                entity.Property(e => e.IdContent)
-                    .HasColumnName("id_content")
-                    .ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Quantity).HasColumnName("quantity");
-
-                entity.HasOne(d => d.IdAccountNavigation)
-                    .WithMany(p => p.Activations)
-                    .HasForeignKey(d => d.IdAccount)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_activations_accounts");
-
-                entity.HasOne(d => d.IdBehaviourNavigation)
-                    .WithMany(p => p.Activations)
-                    .HasForeignKey(d => d.IdBehaviour)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_activations_behaviours");
-
-                entity.HasOne(d => d.IdContentNavigation)
-                    .WithMany(p => p.Activations)
-                    .HasForeignKey(d => d.IdContent)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_activations_contents");
-            });
-
-            modelBuilder.Entity<Behaviours>(entity =>
-            {
-                entity.ToTable("behaviours");
+                entity.ToTable("campaigns");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
-
-                entity.Property(e => e.IsActive).HasColumnName("is_active");
-
-                entity.Property(e => e.ModifiedDate)
-                    .HasColumnName("modified_date")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.Name)
-                    .HasColumnName("name")
-                    .HasMaxLength(100);
-            });
-
-            modelBuilder.Entity<Campaign>(entity =>
-            {
-                entity.ToTable("campaign");
-
-                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Description).HasColumnName("description");
 
@@ -169,12 +109,8 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.IdMarketer).HasColumnName("id_marketer");
 
-                entity.Property(e => e.Modified)
-                    .HasColumnName("modified")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.StartedDate)
-                    .HasColumnName("started_date")
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Status).HasColumnName("status");
@@ -184,56 +120,24 @@ namespace CampaignService.Entities
                     .HasMaxLength(200);
 
                 entity.HasOne(d => d.IdCustomerNavigation)
-                    .WithMany(p => p.CampaignIdCustomerNavigation)
+                    .WithMany(p => p.CampaignsIdCustomerNavigation)
                     .HasForeignKey(d => d.IdCustomer)
-                    .HasConstraintName("FK_Customer");
+                    .HasConstraintName("FK_CampaignCustomer");
 
                 entity.HasOne(d => d.IdEditorNavigation)
-                    .WithMany(p => p.CampaignIdEditorNavigation)
+                    .WithMany(p => p.CampaignsIdEditorNavigation)
                     .HasForeignKey(d => d.IdEditor)
-                    .HasConstraintName("FK_Editor");
+                    .HasConstraintName("FK_CampaignEditor");
 
                 entity.HasOne(d => d.IdMarketerNavigation)
-                    .WithMany(p => p.CampaignIdMarketerNavigation)
+                    .WithMany(p => p.CampaignsIdMarketerNavigation)
                     .HasForeignKey(d => d.IdMarketer)
-                    .HasConstraintName("FK_Marketer");
+                    .HasConstraintName("FK_CampaignMarketer");
 
                 entity.HasOne(d => d.StatusNavigation)
-                    .WithMany(p => p.Campaign)
+                    .WithMany(p => p.Campaigns)
                     .HasForeignKey(d => d.Status)
-                    .HasConstraintName("FK_StatusCampaign");
-            });
-
-            modelBuilder.Entity<CampaignTags>(entity =>
-            {
-                entity.HasKey(e => new { e.IdCampaign, e.IdTags })
-                    .HasName("PK_campaign_tags_1");
-
-                entity.ToTable("campaign_tags");
-
-                entity.Property(e => e.IdCampaign).HasColumnName("id_campaign");
-
-                entity.Property(e => e.IdTags).HasColumnName("id_tags");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnName("created_date")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.ModifiedDate)
-                    .HasColumnName("modified_date")
-                    .HasColumnType("datetime");
-
-                entity.HasOne(d => d.IdCampaignNavigation)
-                    .WithMany(p => p.CampaignTags)
-                    .HasForeignKey(d => d.IdCampaign)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_campaign_tags_campaign");
-
-                entity.HasOne(d => d.IdTagsNavigation)
-                    .WithMany(p => p.CampaignTags)
-                    .HasForeignKey(d => d.IdTags)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_campaign_tags_tags");
+                    .HasConstraintName("FK_CampaignStatus");
             });
 
             modelBuilder.Entity<Channels>(entity =>
@@ -242,17 +146,9 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnName("created_date")
-                    .HasColumnType("datetime");
-
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
                 entity.Property(e => e.Link).HasColumnName("link");
-
-                entity.Property(e => e.ModifiedDate)
-                    .HasColumnName("modified_date")
-                    .HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
@@ -265,11 +161,22 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Comment).HasColumnName("comment");
+                entity.Property(e => e.Comment)
+                    .HasColumnName("comment")
+                    .HasColumnType("text");
 
-                entity.Property(e => e.CreateDate)
-                    .HasColumnName("create_date")
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
                     .HasColumnType("datetime");
+
+                entity.Property(e => e.IdContent).HasColumnName("id_content");
+
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
+                entity.HasOne(d => d.IdContentNavigation)
+                    .WithMany(p => p.Comments)
+                    .HasForeignKey(d => d.IdContent)
+                    .HasConstraintName("FK_comment_content");
             });
 
             modelBuilder.Entity<Contents>(entity =>
@@ -281,8 +188,6 @@ namespace CampaignService.Entities
                 entity.Property(e => e.CreatedDate)
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
-
-                entity.Property(e => e.IdComment).HasColumnName("id_comment");
 
                 entity.Property(e => e.IdTask).HasColumnName("id_task");
 
@@ -300,22 +205,50 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Version).HasColumnName("version");
 
-                entity.HasOne(d => d.IdCommentNavigation)
-                    .WithMany(p => p.Contents)
-                    .HasForeignKey(d => d.IdComment)
-                    .HasConstraintName("FK_CommentContent");
-
                 entity.HasOne(d => d.IdTaskNavigation)
                     .WithMany(p => p.Contents)
                     .HasForeignKey(d => d.IdTask)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_contents_tasks");
+                    .HasConstraintName("FK_ContentToTask");
+            });
+
+            modelBuilder.Entity<Fanpages>(entity =>
+            {
+                entity.ToTable("fanpages");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdChannel).HasColumnName("id_channel");
+
+                entity.Property(e => e.IdCustomer).HasColumnName("id_customer");
+
+                entity.Property(e => e.IdMarketer).HasColumnName("id_marketer");
+
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.Password).HasColumnName("password");
+
+                entity.Property(e => e.Token).HasColumnName("token");
+
+                entity.Property(e => e.Username).HasColumnName("username");
+
+                entity.HasOne(d => d.IdChannelNavigation)
+                    .WithMany(p => p.Fanpages)
+                    .HasForeignKey(d => d.IdChannel)
+                    .HasConstraintName("FK_fanpage_channel");
+
+                entity.HasOne(d => d.IdMarketerNavigation)
+                    .WithMany(p => p.Fanpages)
+                    .HasForeignKey(d => d.IdMarketer)
+                    .HasConstraintName("FK_fanpage_marketer");
             });
 
             modelBuilder.Entity<FavoritesContents>(entity =>
             {
-                entity.HasKey(e => new { e.IdContent, e.IdUser })
-                    .HasName("PK_favorites _contents_1");
+                entity.HasKey(e => new { e.IdContent, e.IdUser });
 
                 entity.ToTable("favorites _contents");
 
@@ -327,8 +260,6 @@ namespace CampaignService.Entities
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.IsActive).HasColumnName("is_active");
-
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
                     .HasColumnType("datetime");
@@ -337,62 +268,76 @@ namespace CampaignService.Entities
                     .WithMany(p => p.FavoritesContents)
                     .HasForeignKey(d => d.IdContent)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_favorites _contents_contents");
+                    .HasConstraintName("FK_FavoritesContentToContent");
 
-                entity.HasOne(d => d.IdContent1)
+                entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.FavoritesContents)
-                    .HasForeignKey(d => d.IdContent)
+                    .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_favorites _contents_users");
+                    .HasConstraintName("FK_FavoritesContentToUser");
             });
 
-            modelBuilder.Entity<Locations>(entity =>
+            modelBuilder.Entity<Notifys>(entity =>
             {
-                entity.ToTable("locations");
+                entity.ToTable("notifys");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Location).HasColumnName("location");
-            });
-
-            modelBuilder.Entity<Occupations>(entity =>
-            {
-                entity.ToTable("occupations");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Name).HasColumnName("name");
-            });
-
-            modelBuilder.Entity<Persionalizations>(entity =>
-            {
-                entity.ToTable("persionalizations");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnName("created_date")
+                entity.Property(e => e.Date)
+                    .HasColumnName("date")
                     .HasColumnType("datetime");
+
+                entity.Property(e => e.IdToken).HasColumnName("id_token");
+
+                entity.Property(e => e.Messager)
+                    .HasColumnName("messager")
+                    .HasMaxLength(250);
+
+                entity.Property(e => e.Title)
+                    .HasColumnName("title")
+                    .HasMaxLength(200);
+
+                entity.HasOne(d => d.IdTokenNavigation)
+                    .WithMany(p => p.Notifys)
+                    .HasForeignKey(d => d.IdToken)
+                    .HasConstraintName("FK_token");
+            });
+
+            modelBuilder.Entity<Personalizations>(entity =>
+            {
+                entity.HasKey(e => new { e.IdTag, e.IdUser });
+
+                entity.ToTable("personalizations");
 
                 entity.Property(e => e.IdTag).HasColumnName("id_tag");
 
                 entity.Property(e => e.IdUser).HasColumnName("id_user");
 
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.Percentage).HasColumnName("percentage");
+
+                entity.Property(e => e.TimeInteraction)
+                    .HasColumnName("time_interaction")
+                    .HasDefaultValueSql("((0))");
+
                 entity.HasOne(d => d.IdTagNavigation)
-                    .WithMany(p => p.Persionalizations)
+                    .WithMany(p => p.Personalizations)
                     .HasForeignKey(d => d.IdTag)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_persionalizations_tags");
+                    .HasConstraintName("FK_PersonalizationsToTags");
 
                 entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.Persionalizations)
+                    .WithMany(p => p.Personalizations)
                     .HasForeignKey(d => d.IdUser)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_persionalizations_users");
+                    .HasConstraintName("FK_PersonalizationsToUser");
             });
 
             modelBuilder.Entity<Roles>(entity =>
@@ -401,24 +346,16 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnName("created_date")
-                    .HasColumnType("datetime");
-
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
-
-                entity.Property(e => e.ModifiedDate)
-                    .HasColumnName("modified_date")
-                    .HasColumnType("datetime");
 
                 entity.Property(e => e.Role)
                     .HasColumnName("role")
                     .HasMaxLength(50);
             });
 
-            modelBuilder.Entity<StatusCampaign>(entity =>
+            modelBuilder.Entity<StatusCampaigns>(entity =>
             {
-                entity.ToTable("status_campaign");
+                entity.ToTable("status_campaigns");
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
@@ -441,7 +378,9 @@ namespace CampaignService.Entities
                     .HasColumnName("color")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Name).HasColumnName("name");
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasMaxLength(100);
             });
 
             modelBuilder.Entity<Tags>(entity =>
@@ -450,19 +389,34 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnName("created_date")
-                    .HasColumnType("datetime");
-
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
-
-                entity.Property(e => e.ModifiedDate)
-                    .HasColumnName("modified_date")
-                    .HasColumnType("datetime");
 
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<TagsCampaigns>(entity =>
+            {
+                entity.HasKey(e => new { e.IdCampaign, e.IdTag });
+
+                entity.ToTable("tags_campaigns");
+
+                entity.Property(e => e.IdCampaign).HasColumnName("id_campaign");
+
+                entity.Property(e => e.IdTag).HasColumnName("id_tag");
+
+                entity.HasOne(d => d.IdCampaignNavigation)
+                    .WithMany(p => p.TagsCampaigns)
+                    .HasForeignKey(d => d.IdCampaign)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TagCampaignToCampaign");
+
+                entity.HasOne(d => d.IdTagNavigation)
+                    .WithMany(p => p.TagsCampaigns)
+                    .HasForeignKey(d => d.IdTag)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TagCampaignToTags");
             });
 
             modelBuilder.Entity<Tasks>(entity =>
@@ -470,6 +424,10 @@ namespace CampaignService.Entities
                 entity.ToTable("tasks");
 
                 entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.Deadline)
                     .HasColumnName("deadline")
@@ -479,7 +437,7 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.IdCampaign).HasColumnName("id_campaign");
 
-                entity.Property(e => e.IdWriter).HasColumnName("id_writer");
+                entity.Property(e => e.IdWritter).HasColumnName("id_writter");
 
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
@@ -489,8 +447,8 @@ namespace CampaignService.Entities
                     .HasColumnName("publish_time")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.StartedDate)
-                    .HasColumnName("started_date")
+                entity.Property(e => e.StartDate)
+                    .HasColumnName("start_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Status).HasColumnName("status");
@@ -502,54 +460,88 @@ namespace CampaignService.Entities
                 entity.HasOne(d => d.IdCampaignNavigation)
                     .WithMany(p => p.Tasks)
                     .HasForeignKey(d => d.IdCampaign)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TaskCampaign");
+                    .HasConstraintName("FK_TaskCampaignToCampaign");
+
+                entity.HasOne(d => d.IdWritterNavigation)
+                    .WithMany(p => p.Tasks)
+                    .HasForeignKey(d => d.IdWritter)
+                    .HasConstraintName("FK_TaskUser");
 
                 entity.HasOne(d => d.StatusNavigation)
                     .WithMany(p => p.Tasks)
                     .HasForeignKey(d => d.Status)
-                    .HasConstraintName("FK_StatusTask");
+                    .HasConstraintName("FK_TaskStatus");
             });
 
-            modelBuilder.Entity<TasksChannels>(entity =>
+            modelBuilder.Entity<TasksAccounts>(entity =>
             {
-                entity.ToTable("tasks_channels");
+                entity.HasKey(e => new { e.IdAccount, e.IdTask });
 
-                entity.HasIndex(e => new { e.IdTask, e.IdChannel })
-                    .HasName("uq_task_channel")
-                    .IsUnique();
+                entity.ToTable("tasks_accounts");
 
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.IdAccount).HasColumnName("id_account");
+
+                entity.Property(e => e.IdTask).HasColumnName("id_task");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.IdChannel).HasColumnName("id_channel");
-
-                entity.Property(e => e.IdTask).HasColumnName("id_task");
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
 
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
-                entity.HasOne(d => d.IdChannelNavigation)
-                    .WithMany(p => p.TasksChannels)
-                    .HasForeignKey(d => d.IdChannel)
+                entity.HasOne(d => d.IdAccountNavigation)
+                    .WithMany(p => p.TasksAccounts)
+                    .HasForeignKey(d => d.IdAccount)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tasks_channels_channels");
+                    .HasConstraintName("FK_TasksAccountToAccount");
 
                 entity.HasOne(d => d.IdTaskNavigation)
-                    .WithMany(p => p.TasksChannels)
+                    .WithMany(p => p.TasksAccounts)
                     .HasForeignKey(d => d.IdTask)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tasks_channels_tasks");
+                    .HasConstraintName("FK_TasksAccountToTask");
+            });
+
+            modelBuilder.Entity<TasksFanpages>(entity =>
+            {
+                entity.HasKey(e => new { e.IdTask, e.IdFanpage });
+
+                entity.ToTable("tasks_fanpages");
+
+                entity.Property(e => e.IdTask).HasColumnName("id_task");
+
+                entity.Property(e => e.IdFanpage).HasColumnName("id_fanpage");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.IdJob).HasColumnName("id_job");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdFanpageNavigation)
+                    .WithMany(p => p.TasksFanpages)
+                    .HasForeignKey(d => d.IdFanpage)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TaskChannelToFanage");
+
+                entity.HasOne(d => d.IdTaskNavigation)
+                    .WithMany(p => p.TasksFanpages)
+                    .HasForeignKey(d => d.IdTask)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TasksChannelsToTasks");
             });
 
             modelBuilder.Entity<TasksTags>(entity =>
             {
-                entity.HasKey(e => new { e.IdTask, e.IdTag })
-                    .HasName("PK_tasks_tags_1");
+                entity.HasKey(e => new { e.IdTask, e.IdTag });
 
                 entity.ToTable("tasks_tags");
 
@@ -569,13 +561,13 @@ namespace CampaignService.Entities
                     .WithMany(p => p.TasksTags)
                     .HasForeignKey(d => d.IdTag)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tasks_tags_tags");
+                    .HasConstraintName("FK_TaskTagToTags");
 
                 entity.HasOne(d => d.IdTaskNavigation)
                     .WithMany(p => p.TasksTags)
                     .HasForeignKey(d => d.IdTask)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_tasks_tags_tasks");
+                    .HasConstraintName("FK_Tasks");
             });
 
             modelBuilder.Entity<Tokens>(entity =>
@@ -594,8 +586,6 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.IdUser).HasColumnName("id_user");
 
-                entity.Property(e => e.IsActive).HasColumnName("is_active");
-
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
                     .HasColumnType("datetime");
@@ -607,7 +597,7 @@ namespace CampaignService.Entities
                 entity.HasOne(d => d.IdUserNavigation)
                     .WithMany(p => p.Tokens)
                     .HasForeignKey(d => d.IdUser)
-                    .HasConstraintName("FK__tokens__id_user__02084FDA");
+                    .HasConstraintName("FK_TokenUser");
             });
 
             modelBuilder.Entity<Users>(entity =>
@@ -616,37 +606,37 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Avatar).HasColumnName("avatar");
+                entity.Property(e => e.Age).HasColumnName("age");
 
-                entity.Property(e => e.Company).HasColumnName("company");
+                entity.Property(e => e.Company)
+                    .HasColumnName("company")
+                    .HasMaxLength(200);
+
+                entity.Property(e => e.FirstName)
+                    .IsRequired()
+                    .HasColumnName("first_name")
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.Gender).HasColumnName("gender");
 
-                entity.Property(e => e.IdLocation).HasColumnName("id_location");
-
                 entity.Property(e => e.IdManager).HasColumnName("id_manager");
-
-                entity.Property(e => e.IdOccupation).HasColumnName("id_occupation");
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Name)
-                    .HasColumnName("name")
+                entity.Property(e => e.LastName)
+                    .IsRequired()
+                    .HasColumnName("last_name")
                     .HasMaxLength(100);
 
-                entity.Property(e => e.Quote).HasColumnName("quote");
+                entity.Property(e => e.Phone)
+                    .HasColumnName("phone")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
 
-                entity.HasOne(d => d.IdLocationNavigation)
-                    .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.IdLocation)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_users_locations");
-
-                entity.HasOne(d => d.IdOccupationNavigation)
-                    .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.IdOccupation)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_users_occupations");
+                entity.HasOne(d => d.IdManagerNavigation)
+                    .WithMany(p => p.InverseIdManagerNavigation)
+                    .HasForeignKey(d => d.IdManager)
+                    .HasConstraintName("FK_UserManager");
             });
         }
     }
