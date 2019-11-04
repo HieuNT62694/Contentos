@@ -1,14 +1,11 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Net.Http;
 using Newtonsoft.Json;
 using System.Text;
-using Firebase.Database;
-using Firebase.Database.Query;
+using System.IO;
+using System.Net;
 
 namespace AuthenticationService.Application.Commands.Notify
 {
@@ -16,21 +13,60 @@ namespace AuthenticationService.Application.Commands.Notify
     {
         public async Task<bool> Handle(NotifyCommands request, CancellationToken cancellationToken)
         {
-            var auth = "gREVaDJG8lOlOsWVj4J9tdKsnADGa8VkDlTuNP55";
-            var firebase = new FirebaseClient("https://contento-d8c16.firebaseio.com/", new FirebaseOptions
-            { AuthTokenAsyncFactory = () => Task.FromResult(auth) });
-            // add new item to list of data and let the client generate new key for you (done offline)
+          
+            try
+            {
+                WebRequest tRequest = WebRequest.Create("https://fcm.googleapis.com/fcm/send");
+                tRequest.Method = "post";
+                //serverKey - Key from Firebase cloud messaging server  
+                tRequest.Headers.Add(string.Format("Authorization: key={0}", "AAAAAHxqgzU:APA91bFCTHWFUIrq-aEFuP7uepcpnF_IRQF6RRZ2taQIzw-ns51gqnc1u6uvEFaTnYsLpH0goSwn4gMOciOcAuRyaPuuk6Z-2ttJ09oquYQ9JYYZC8pDPVOQ3EYTyqRwYWBXE25HKy01"));
+                //Sender Id - From firebase project setting  
+                tRequest.Headers.Add(string.Format("Sender: id={0}", "2087355189"));
+                tRequest.ContentType = "application/json";
+                var payload = new
+                {
+                    to = "cKddtT0riAU:APA91bHks4sUqORwyF3c0gCaTWaLJbSUNe2CLCyj4yqPaWD5woBoPCqXHulDsHiA7zrDMJ5gK_vZ6UNObq_hX3oKQGz6v9G1N1nKP93XsTJCdODohyGBkNjSIMkcqZo8GL8CFKuTZun6",
+                    priority = "high",
+                    content_available = true,
+                    notification = new
+                    {
+                        body = "Test",
+                        title = "Test",
+                        badge = 1
+                    },
+                    data = new
+                    {
+                        image = "Conmeongu",
+                    },
+
+                };
+
+                string postbody = JsonConvert.SerializeObject(payload).ToString();
+                Byte[] byteArray = Encoding.UTF8.GetBytes(postbody);
+                tRequest.ContentLength = byteArray.Length;
+                using (Stream dataStream = tRequest.GetRequestStream())
+                {
+                    dataStream.Write(byteArray, 0, byteArray.Length);
+                    using (WebResponse tResponse = tRequest.GetResponse())
+                    {
+                        using (Stream dataStreamResponse = tResponse.GetResponseStream())
+                        {
+                            if (dataStreamResponse != null) using (StreamReader tReader = new StreamReader(dataStreamResponse))
+                                {
+                                    String sResponseFromServer = tReader.ReadToEnd();
+                                    Console.WriteLine(sResponseFromServer);
+                                }
+                        }
+                    }
 
 
-            //// note that there is another overload for the PostAsync method which delegates the new key generation to the firebase server
+                }
+            }
+            catch (Exception ex)
+            {
 
-            //Console.WriteLine($"Key for the new dinosaur: {dino.Key}");
-
-            // add new item directly to the specified location (this will overwrite whatever data already exists at that location)
-            await firebase.Child("message")
-              .PosttAsync(request);
-
-            
+                string str = ex.Message;
+            }
             return true;
 
            
