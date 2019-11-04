@@ -3,11 +3,12 @@ using System.Collections.Generic;
 
 namespace BatchjobService.Entities
 {
-    public partial class Persionalizations
+    public partial class Personalizations
     {
-        public int Id { get; set; }
         public int IdUser { get; set; }
         public int IdTag { get; set; }
+        public double? TimeInteraction { get; set; }
+        public int? Percentage { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
 

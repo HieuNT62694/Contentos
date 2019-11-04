@@ -7,16 +7,13 @@ namespace BatchjobService.Entities
     {
         public Channels()
         {
-            TasksChannels = new HashSet<TasksChannels>();
+            Fanpages = new HashSet<Fanpages>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Link { get; set; }
         public bool? IsActive { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        public DateTime? ModifiedDate { get; set; }
 
-        public virtual ICollection<TasksChannels> TasksChannels { get; set; }
+        public virtual ICollection<Fanpages> Fanpages { get; set; }
     }
 }

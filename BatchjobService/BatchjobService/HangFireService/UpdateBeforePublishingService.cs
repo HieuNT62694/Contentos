@@ -12,8 +12,8 @@ namespace BatchjobService.HangFireService
     }
     public class UpdateBeforePublishingService : IUpdateBeforePublishingService
     {
-        private readonly ContentoContext _context;
-        public UpdateBeforePublishingService(ContentoContext contentodbContext)
+        private readonly ContentoDbContext _context;
+        public UpdateBeforePublishingService(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }

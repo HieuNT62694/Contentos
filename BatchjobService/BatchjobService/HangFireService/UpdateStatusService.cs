@@ -14,8 +14,8 @@ namespace BatchjobService.HangFireService
     }
     public class UpdateStatusService : IUpdateStatusService
     {
-        private readonly ContentoContext _context;
-        public UpdateStatusService(ContentoContext contentodbContext)
+        private readonly ContentoDbContext _context;
+        public UpdateStatusService(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }

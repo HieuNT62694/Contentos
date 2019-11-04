@@ -7,7 +7,8 @@ namespace BatchjobService.Models
 {
     public class PublishModels
     {
-        public int id;
+        public List<int> listFanpage;
+        public int contentId;
         public DateTime time;
     }
 }
