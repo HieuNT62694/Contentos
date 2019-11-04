@@ -31,11 +31,16 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdWriter
                     Color = item.StatusNavigation.Color,
                     Id = item.StatusNavigation.Id
                 };
+                var Campaign = new CampaignModels
+                {
+                    Id = item.IdCampaignNavigation.Id,
+                    Name = item.IdCampaignNavigation.Title
+                };
                 Tasks.Add(new TasksViewByEditorModel
                 {
                     Id = item.Id,
                     //Description = item.Description,
-                    Campaign = item.IdCampaignNavigation.Title,
+                    Campaign = Campaign,
                     ModifiedDate = item.Contents.Count == 0  ? null : item.Contents.FirstOrDefault().ModifiedDate,
                     Deadline = item.Deadline,
                     Title = item.Title,
