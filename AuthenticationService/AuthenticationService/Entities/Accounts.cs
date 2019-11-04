@@ -5,6 +5,11 @@ namespace AuthenticationService.Entities
 {
     public partial class Accounts
     {
+        public Accounts()
+        {
+            TasksAccounts = new HashSet<TasksAccounts>();
+        }
+
         public int Id { get; set; }
         public int? IdUser { get; set; }
         public int? IdRole { get; set; }
@@ -16,5 +21,6 @@ namespace AuthenticationService.Entities
 
         public virtual Roles IdRoleNavigation { get; set; }
         public virtual Users IdUserNavigation { get; set; }
+        public virtual ICollection<TasksAccounts> TasksAccounts { get; set; }
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Commands.UpdateTaskChannel
 {
-    public class UpdateTaskChannelHandler : IRequestHandler<UpdateTaskChannelRequest, TasksChannels>
+    public class UpdateTaskChannelHandler : IRequestHandler<UpdateTaskChannelRequest, TasksFanpages>
     {
         private readonly ContentoDbContext _context;
 
@@ -18,11 +18,11 @@ namespace ContentProccessService.Application.Commands.UpdateTaskChannel
             _context = context;
         }
 
-        public async Task<TasksChannels> Handle(UpdateTaskChannelRequest request, CancellationToken cancellationToken)
+        public async Task<TasksFanpages> Handle(UpdateTaskChannelRequest request, CancellationToken cancellationToken)
         {
             //TasksChannels taskchannel = _context.TasksFanpages.Find(request.IdTaskChannel);
             //_context.TasksFanpages.Remove(taskchannel);
-            TasksChannels taskchannel = new TasksChannels();
+            TasksFanpages taskchannel = new TasksFanpages();
             await _context.SaveChangesAsync(cancellationToken);
             return taskchannel;
         }

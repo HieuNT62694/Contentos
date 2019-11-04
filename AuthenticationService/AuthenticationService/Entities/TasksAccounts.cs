@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace AuthenticationService.Entities
 {
-    public partial class TasksChannels
+    public partial class TasksAccounts
     {
-        public int Id { get; set; }
+        public int IdAccount { get; set; }
         public int IdTask { get; set; }
-        public int IdChannel { get; set; }
+        public bool? IsActive { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
 
-        public virtual Channels IdChannelNavigation { get; set; }
+        public virtual Accounts IdAccountNavigation { get; set; }
         public virtual Tasks IdTaskNavigation { get; set; }
     }
 }

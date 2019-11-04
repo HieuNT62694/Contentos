@@ -5,16 +5,12 @@ namespace AuthenticationService.Entities
 {
     public partial class Comments
     {
-        public Comments()
-        {
-            Contents = new HashSet<Contents>();
-        }
-
         public int Id { get; set; }
+        public int? IdContent { get; set; }
         public string Comment { get; set; }
         public bool? IsActive { get; set; }
         public DateTime? CreatedDate { get; set; }
 
-        public virtual ICollection<Contents> Contents { get; set; }
+        public virtual Contents IdContentNavigation { get; set; }
     }
 }

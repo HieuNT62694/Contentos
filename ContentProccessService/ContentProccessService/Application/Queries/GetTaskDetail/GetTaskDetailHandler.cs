@@ -58,7 +58,7 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                 Name = content.Name
             };
             var Comment = new Comments();
-            if (comment.Comments != null)
+                if (comment != null)
             {
                 Comment.Comment = comment.Comments.FirstOrDefault(x=>x.IsActive == true).Comment;
             }

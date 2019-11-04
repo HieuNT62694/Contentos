@@ -7,6 +7,7 @@ namespace AuthenticationService.Entities
     {
         public Campaigns()
         {
+            TagsCampaigns = new HashSet<TagsCampaigns>();
             Tasks = new HashSet<Tasks>();
         }
 
@@ -25,6 +26,7 @@ namespace AuthenticationService.Entities
         public virtual Users IdEditorNavigation { get; set; }
         public virtual Users IdMarketerNavigation { get; set; }
         public virtual StatusCampaigns StatusNavigation { get; set; }
+        public virtual ICollection<TagsCampaigns> TagsCampaigns { get; set; }
         public virtual ICollection<Tasks> Tasks { get; set; }
     }
 }

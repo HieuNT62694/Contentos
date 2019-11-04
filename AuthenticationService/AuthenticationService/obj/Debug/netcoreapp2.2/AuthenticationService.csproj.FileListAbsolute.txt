@@ -13,3 +13,4 @@ D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\obj\Debug\
 D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\obj\Debug\netcoreapp2.2\AuthenticationService.RazorTargetAssemblyInfo.cache
 D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\obj\Debug\netcoreapp2.2\AuthenticationService.dll
 D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\obj\Debug\netcoreapp2.2\AuthenticationService.pdb
+D:\Capstone\Doan\Contento\AuthenticationService\AuthenticationService\obj\Debug\netcoreapp2.2\AuthenticationService.csprojAssemblyReference.cache

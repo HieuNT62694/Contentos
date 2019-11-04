@@ -148,8 +148,6 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Link).HasColumnName("link");
-
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasMaxLength(100);

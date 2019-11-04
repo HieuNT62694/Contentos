@@ -23,9 +23,9 @@ namespace ContentProccessService.Application.Commands.CreateListTaskChannel
             List<TaskChannelModelRespone> Listtaskschannel = new List<TaskChannelModelRespone>();
             foreach (var item in request.ListTaskChannel)
             {
-                var taskchannel = new TasksChannels
+                var taskchannel = new TasksFanpages
                 {
-                    IdChannel = item.IdChannel,
+                    IdFanpage = item.IdChannel,
                     IdTask = item.IdTask,
                     ModifiedDate = DateTime.Now,
                     CreatedDate = DateTime.Now,
@@ -35,8 +35,8 @@ namespace ContentProccessService.Application.Commands.CreateListTaskChannel
                 await contentodbContext.SaveChangesAsync(cancellationToken);
                 TaskChannelModelRespone TaskChannels = new TaskChannelModelRespone
                 {
-                    id = taskchannel.Id,
-                    IdChannel = taskchannel.IdChannel,
+                    //id = taskchannel.id,
+                    IdChannel = taskchannel.IdFanpage,
                     IdTask = taskchannel.IdTask
                 };
                 Listtaskschannel.Add(TaskChannels);

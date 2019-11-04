@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Commands.CreateTasksChannel
 {
-    public class CreateTaskChannelHandler : IRequestHandler<CreateTaskChannelRequest, TasksChannels>
+    public class CreateTaskChannelHandler : IRequestHandler<CreateTaskChannelRequest, TasksFanpages>
     {
 
         private readonly ContentoDbContext contentodbContext;
@@ -16,17 +16,17 @@ namespace ContentProccessService.Application.Commands.CreateTasksChannel
         {
             this.contentodbContext = contentodbContext;
         }
-        public async Task<TasksChannels> Handle(CreateTaskChannelRequest request, CancellationToken cancellationToken)
+        public async Task<TasksFanpages> Handle(CreateTaskChannelRequest request, CancellationToken cancellationToken)
         {
-            var taskchannel = new TasksChannels
+            var taskchannel = new TasksFanpages
             {
-                IdChannel = request.IdChannel,
+                IdFanpage = request.IdChannel,
                 IdTask = request.IdTask,
                 ModifiedDate = DateTime.UtcNow,
                 CreatedDate = DateTime.UtcNow,
             };
 
-            //contentodbContext.TasksChannels.Add(taskchannel);
+            contentodbContext.TasksFanpages.Add(taskchannel);
             contentodbContext.Attach(taskchannel);
             await contentodbContext.SaveChangesAsync();
             return taskchannel;

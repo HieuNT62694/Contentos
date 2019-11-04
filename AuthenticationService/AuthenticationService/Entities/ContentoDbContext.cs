@@ -21,21 +21,20 @@ namespace AuthenticationService.Entities
         public virtual DbSet<Comments> Comments { get; set; }
         public virtual DbSet<Contents> Contents { get; set; }
         public virtual DbSet<Fanpages> Fanpages { get; set; }
+        public virtual DbSet<FavoritesContents> FavoritesContents { get; set; }
         public virtual DbSet<Notifys> Notifys { get; set; }
+        public virtual DbSet<Personalizations> Personalizations { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
         public virtual DbSet<StatusCampaigns> StatusCampaigns { get; set; }
         public virtual DbSet<StatusTasks> StatusTasks { get; set; }
         public virtual DbSet<Tags> Tags { get; set; }
+        public virtual DbSet<TagsCampaigns> TagsCampaigns { get; set; }
         public virtual DbSet<Tasks> Tasks { get; set; }
+        public virtual DbSet<TasksAccounts> TasksAccounts { get; set; }
+        public virtual DbSet<TasksFanpages> TasksFanpages { get; set; }
+        public virtual DbSet<TasksTags> TasksTags { get; set; }
         public virtual DbSet<Tokens> Tokens { get; set; }
         public virtual DbSet<Users> Users { get; set; }
-
-        // Unable to generate entity type for table 'dbo.favorites _contents'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.personalizations'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.tags_campaigns'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.tasks_accounts'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.tasks_channels'. Please see the warning messages.
-        // Unable to generate entity type for table 'dbo.tasks_tags'. Please see the warning messages.
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -149,8 +148,6 @@ namespace AuthenticationService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.Link).HasColumnName("link");
-
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasMaxLength(100);
@@ -170,7 +167,14 @@ namespace AuthenticationService.Entities
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.IdContent).HasColumnName("id_content");
+
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
+
+                entity.HasOne(d => d.IdContentNavigation)
+                    .WithMany(p => p.Comments)
+                    .HasForeignKey(d => d.IdContent)
+                    .HasConstraintName("FK_comment_content");
             });
 
             modelBuilder.Entity<Contents>(entity =>
@@ -183,13 +187,9 @@ namespace AuthenticationService.Entities
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.IdComment).HasColumnName("id_comment");
-
                 entity.Property(e => e.IdTask).HasColumnName("id_task");
 
-                entity.Property(e => e.IsActive)
-                    .HasColumnName("is_active")
-                    .HasMaxLength(100);
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
 
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
@@ -202,11 +202,6 @@ namespace AuthenticationService.Entities
                 entity.Property(e => e.TheContent).HasColumnName("the_content");
 
                 entity.Property(e => e.Version).HasColumnName("version");
-
-                entity.HasOne(d => d.IdCommentNavigation)
-                    .WithMany(p => p.Contents)
-                    .HasForeignKey(d => d.IdComment)
-                    .HasConstraintName("FK_ContentToComment");
 
                 entity.HasOne(d => d.IdTaskNavigation)
                     .WithMany(p => p.Contents)
@@ -228,6 +223,10 @@ namespace AuthenticationService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
+                entity.Property(e => e.Name)
+                    .HasColumnName("name")
+                    .HasMaxLength(250);
+
                 entity.Property(e => e.Password).HasColumnName("password");
 
                 entity.Property(e => e.Token).HasColumnName("token");
@@ -243,6 +242,37 @@ namespace AuthenticationService.Entities
                     .WithMany(p => p.Fanpages)
                     .HasForeignKey(d => d.IdMarketer)
                     .HasConstraintName("FK_fanpage_marketer");
+            });
+
+            modelBuilder.Entity<FavoritesContents>(entity =>
+            {
+                entity.HasKey(e => new { e.IdContent, e.IdUser });
+
+                entity.ToTable("favorites _contents");
+
+                entity.Property(e => e.IdContent).HasColumnName("id_content");
+
+                entity.Property(e => e.IdUser).HasColumnName("id_user");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdContentNavigation)
+                    .WithMany(p => p.FavoritesContents)
+                    .HasForeignKey(d => d.IdContent)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_FavoritesContentToContent");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.FavoritesContents)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_FavoritesContentToUser");
             });
 
             modelBuilder.Entity<Notifys>(entity =>
@@ -269,6 +299,43 @@ namespace AuthenticationService.Entities
                     .WithMany(p => p.Notifys)
                     .HasForeignKey(d => d.IdToken)
                     .HasConstraintName("FK_token");
+            });
+
+            modelBuilder.Entity<Personalizations>(entity =>
+            {
+                entity.HasKey(e => new { e.IdTag, e.IdUser });
+
+                entity.ToTable("personalizations");
+
+                entity.Property(e => e.IdTag).HasColumnName("id_tag");
+
+                entity.Property(e => e.IdUser).HasColumnName("id_user");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Percentage).HasColumnName("percentage");
+
+                entity.Property(e => e.TimeInteraction)
+                    .HasColumnName("time_interaction")
+                    .HasDefaultValueSql("((0))");
+
+                entity.HasOne(d => d.IdTagNavigation)
+                    .WithMany(p => p.Personalizations)
+                    .HasForeignKey(d => d.IdTag)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PersonalizationsToTags");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.Personalizations)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_PersonalizationsToUser");
             });
 
             modelBuilder.Entity<Roles>(entity =>
@@ -327,6 +394,29 @@ namespace AuthenticationService.Entities
                     .HasMaxLength(50);
             });
 
+            modelBuilder.Entity<TagsCampaigns>(entity =>
+            {
+                entity.HasKey(e => new { e.IdCampaign, e.IdTag });
+
+                entity.ToTable("tags_campaigns");
+
+                entity.Property(e => e.IdCampaign).HasColumnName("id_campaign");
+
+                entity.Property(e => e.IdTag).HasColumnName("id_tag");
+
+                entity.HasOne(d => d.IdCampaignNavigation)
+                    .WithMany(p => p.TagsCampaigns)
+                    .HasForeignKey(d => d.IdCampaign)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TagCampaignToCampaign");
+
+                entity.HasOne(d => d.IdTagNavigation)
+                    .WithMany(p => p.TagsCampaigns)
+                    .HasForeignKey(d => d.IdTag)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TagCampaignToTags");
+            });
+
             modelBuilder.Entity<Tasks>(entity =>
             {
                 entity.ToTable("tasks");
@@ -355,6 +445,10 @@ namespace AuthenticationService.Entities
                     .HasColumnName("publish_time")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.StartDate)
+                    .HasColumnName("start_date")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.Status).HasColumnName("status");
 
                 entity.Property(e => e.Title)
@@ -375,6 +469,103 @@ namespace AuthenticationService.Entities
                     .WithMany(p => p.Tasks)
                     .HasForeignKey(d => d.Status)
                     .HasConstraintName("FK_TaskStatus");
+            });
+
+            modelBuilder.Entity<TasksAccounts>(entity =>
+            {
+                entity.HasKey(e => new { e.IdAccount, e.IdTask });
+
+                entity.ToTable("tasks_accounts");
+
+                entity.Property(e => e.IdAccount).HasColumnName("id_account");
+
+                entity.Property(e => e.IdTask).HasColumnName("id_task");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdAccountNavigation)
+                    .WithMany(p => p.TasksAccounts)
+                    .HasForeignKey(d => d.IdAccount)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TasksAccountToAccount");
+
+                entity.HasOne(d => d.IdTaskNavigation)
+                    .WithMany(p => p.TasksAccounts)
+                    .HasForeignKey(d => d.IdTask)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TasksAccountToTask");
+            });
+
+            modelBuilder.Entity<TasksFanpages>(entity =>
+            {
+                entity.HasKey(e => new { e.IdTask, e.IdFanpage });
+
+                entity.ToTable("tasks_fanpages");
+
+                entity.Property(e => e.IdTask).HasColumnName("id_task");
+
+                entity.Property(e => e.IdFanpage).HasColumnName("id_fanpage");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.IdJob).HasColumnName("id_job");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdFanpageNavigation)
+                    .WithMany(p => p.TasksFanpages)
+                    .HasForeignKey(d => d.IdFanpage)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TaskChannelToFanage");
+
+                entity.HasOne(d => d.IdTaskNavigation)
+                    .WithMany(p => p.TasksFanpages)
+                    .HasForeignKey(d => d.IdTask)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TasksChannelsToTasks");
+            });
+
+            modelBuilder.Entity<TasksTags>(entity =>
+            {
+                entity.HasKey(e => new { e.IdTask, e.IdTag });
+
+                entity.ToTable("tasks_tags");
+
+                entity.Property(e => e.IdTask).HasColumnName("id_task");
+
+                entity.Property(e => e.IdTag).HasColumnName("id_tag");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.IdTagNavigation)
+                    .WithMany(p => p.TasksTags)
+                    .HasForeignKey(d => d.IdTag)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_TaskTagToTags");
+
+                entity.HasOne(d => d.IdTaskNavigation)
+                    .WithMany(p => p.TasksTags)
+                    .HasForeignKey(d => d.IdTask)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Tasks");
             });
 
             modelBuilder.Entity<Tokens>(entity =>
