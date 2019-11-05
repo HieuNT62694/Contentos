@@ -19,6 +19,7 @@ namespace BatchjobService.Entities
         public string Password { get; set; }
         public bool? IsActive { get; set; }
         public int? IdCustomer { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
         public virtual Channels IdChannelNavigation { get; set; }
         public virtual Users IdMarketerNavigation { get; set; }

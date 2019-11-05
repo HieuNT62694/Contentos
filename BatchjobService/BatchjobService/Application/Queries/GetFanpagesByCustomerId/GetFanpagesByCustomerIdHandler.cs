@@ -25,7 +25,7 @@ namespace BatchjobService.Application.Queries.GetFanpagesByCustomerId
 
             List<FanpageViewModel> listFanpages = new List<FanpageViewModel>();
 
-            if (fanpages == null)
+            if(fanpages == null)
             {
                 return listFanpages;
             }
@@ -34,15 +34,16 @@ namespace BatchjobService.Application.Queries.GetFanpagesByCustomerId
             {
                 FanpageViewModel model = new FanpageViewModel();
 
-                var customer = _context.Users.Find(fanpage.IdCustomer);
-
                 model.id = fanpage.Id;
                 model.name = fanpage.Name;
                 model.channel = new Channel { id = fanpage.IdChannelNavigation.Id, name = fanpage.IdChannelNavigation.Name };
-                if (customer != null)
+                if (fanpage.IdCustomer != null)
                 {
+                    var customer = _context.Users.Find(fanpage.IdCustomer);
                     model.customer = new Customer { id = customer.Id, name = customer.FirstName + " " + customer.LastName };
                 }
+
+                model.modifiedDate = fanpage.ModifiedDate;
 
                 listFanpages.Add(model);
             }

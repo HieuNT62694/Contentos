@@ -223,6 +223,10 @@ namespace BatchjobService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasMaxLength(250);

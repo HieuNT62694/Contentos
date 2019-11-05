@@ -11,6 +11,7 @@ namespace BatchjobService.Models
         public string name { get; set; }
         public Channel channel { get; set; }
         public Customer customer { get; set; }
+        public DateTime? modifiedDate { get; set; }
     }
 
     public class Channel

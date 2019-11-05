@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AuthenticationService.Controllers;
+using BatchjobService.Application.Command.CreateFanpage;
+using BatchjobService.Application.Command.UpdateFanpage;
 using BatchjobService.Application.Queries.GetFanpages;
 using BatchjobService.Application.Queries.GetFanpagesByCustomerId;
 using BatchjobService.Application.Queries.GetFanpagesByMarketerId;
@@ -40,7 +42,7 @@ namespace BatchjobService.Controllers
                 {
                     case 2 :  PublishFB(item , models.contentId, models.time);
                         break;
-                    case 3 :  _publish.PublishToWP(models.contentId);
+                    case 3 :  PublishWP(item, models.contentId, models.time);
                         break;
                 }
             }
@@ -68,7 +70,20 @@ namespace BatchjobService.Controllers
         public async Task<List<FanpageViewModel>> GetFanpageByMarketerIdAsync(int channelId, int marketerId)
         {
             var response = await Mediator.Send(new GetFanpagesByMarketerIdRequest { marketerId = marketerId, channelId = channelId });
+            return response;
+        }
 
+        [HttpPost("fanpages")]
+        public async Task<FanpageViewModel> CreateFanpageAsync(CreateFanpageCommand createFanpageCommand)
+        {
+            var response = await Mediator.Send(createFanpageCommand);
+            return response;
+        }
+
+        [HttpPut("fanpages")]
+        public async Task<FanpageViewModel> UpdateFanpageAsync(UpdateFanpageCommand updateFanpageCommand)
+        {
+            var response = await Mediator.Send(updateFanpageCommand);
             return response;
         }
 
