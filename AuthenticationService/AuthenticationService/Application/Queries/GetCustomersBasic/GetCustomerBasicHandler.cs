@@ -33,7 +33,7 @@ namespace AuthenticationService.Application.Queries.GetCustomer
                 var User = new ListUserModel()
                 {
                     Id = item.Id,
-                    Name = item.FirstName+item.LastName
+                    Name = item.FirstName+" "+item.LastName
                 };
                 lstCustomer.Add(User);
             }

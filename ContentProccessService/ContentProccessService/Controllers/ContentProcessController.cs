@@ -270,9 +270,9 @@ namespace ContentProccessService.Controllers
                 value = "0";
             }
             if (expireTime.HasValue)
-                cookieOptions.Expires = DateTime.Now.AddMinutes(expireTime.Value);
+                cookieOptions.Expires = DateTime.Now.AddMonths(expireTime.Value);
             else
-                cookieOptions.Expires = DateTime.Now.AddMonths(1);
+                cookieOptions.Expires = DateTime.Now.AddYears(1);
             Response.Cookies.Append(key, value, cookieOptions);
         }
         [HttpGet("content-detail/viewer/{id}")]

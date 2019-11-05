@@ -49,7 +49,7 @@ namespace AuthenticationService.Application.Commands.UpdateCustomer
                         CompanyName = upUser.Company,
                         Email = upUser.Accounts.FirstOrDefault().Email,
                         FullName = upUser.FirstName +" " +upUser.LastName,
-                        Phone = upUser.Phone,
+                        Phone = string.IsNullOrEmpty(upUser.Phone) == true  ? null : upUser.Phone.Trim(),
                         Id = upUser.Id,
                     };
                     transaction.Commit();

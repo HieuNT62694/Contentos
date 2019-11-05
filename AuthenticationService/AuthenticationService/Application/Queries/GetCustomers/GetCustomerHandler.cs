@@ -36,7 +36,7 @@ namespace AuthenticationService.Application.Queries.GetCustomer
                     FullName = item.FirstName+" "+item.LastName,
                     Email = item.Accounts.First().Email,
                     CompanyName = item.Company,
-                    Phone = item.Phone
+                    Phone = string.IsNullOrEmpty(item.Phone) == true ? null : item.Phone.Trim()
                 };
                 lstCustomer.Add(User);
             }

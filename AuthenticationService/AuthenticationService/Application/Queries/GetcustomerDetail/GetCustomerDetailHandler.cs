@@ -30,7 +30,7 @@ namespace AuthenticationService.Application.Queries.GetcustomerDetail
                 FirstName = acc.IdUserNavigation.FirstName,
                 LastName = acc.IdUserNavigation.LastName,
                 Email = acc.Email,
-                Phone = acc.IdUserNavigation.Phone
+                Phone = string.IsNullOrEmpty(acc.IdUserNavigation.Phone) == true  ? null : acc.IdUserNavigation.Phone.Trim()
             };
             return reUser;
 

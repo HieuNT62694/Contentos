@@ -57,19 +57,20 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
                         Accounts = lstAcc
                     };
                     _context.Users.Add(newUser);
+                    await _context.SaveChangesAsync();
+                    transaction.Commit();
+                    return new CreateUserModel
+                    {
+                        Id = _context.Users.AsNoTracking().OrderByDescending(x => x.Id).First().Id,
+                        FullName = request.FirstName + " " + request.LastName,
+                        Email = request.Email,
+                        CompanyName = request.CompanyName,
+                        Phone = string.IsNullOrEmpty(request.Phone)  ? null : request.Phone.Trim(),
+                        Password = newPassword
+                    };
                 }
-
-                await _context.SaveChangesAsync();
-                transaction.Commit();
-                return new CreateUserModel
-                {
-                    Id = _context.Users.AsNoTracking().OrderByDescending(x => x.Id).First().Id,
-                    FullName = request.FirstName+" "+ request.LastName,
-                    Email = request.Email,
-                    CompanyName = request.CompanyName,
-                    Phone = request.Phone,
-                    Password = newPassword
-                };
+                return null;
+               
             }
             catch(Exception e)
             {
