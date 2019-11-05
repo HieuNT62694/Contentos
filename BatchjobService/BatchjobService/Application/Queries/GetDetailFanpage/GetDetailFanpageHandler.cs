@@ -7,33 +7,20 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BatchjobService.Application.Command.UpdateFanpage
+namespace BatchjobService.Application.Queries.GetDetailFanpage
 {
-    public class UpdateFanpageHandler : IRequestHandler<UpdateFanpageCommand, FanpageViewModel>
+    public class GetDetailFanpageHandler : IRequestHandler<GetDetailFanpageRequest, FanpageViewModel>
     {
         private readonly ContentoDbContext _context;
 
-        public UpdateFanpageHandler(ContentoDbContext context)
+        public GetDetailFanpageHandler(ContentoDbContext context)
         {
             _context = context;
         }
-        public async Task<FanpageViewModel> Handle(UpdateFanpageCommand request, CancellationToken cancellationToken)
+
+        public async Task<FanpageViewModel> Handle(GetDetailFanpageRequest request, CancellationToken cancellationToken)
         {
-            Fanpages fanpage = _context.Fanpages.Find(request.fanpageId);
-
-            fanpage.IdChannel = request.channelId;
-            if (request.customerId > 0)
-            {
-                fanpage.IdCustomer = request.customerId;
-            }
-            fanpage.IsActive = true;
-            fanpage.Token = request.token;
-            fanpage.ModifiedDate = DateTime.Now;
-            fanpage.Name = request.name;
-
-            _context.Update(fanpage);
-
-            await _context.SaveChangesAsync();
+            Fanpages fanpage = await _context.Fanpages.FindAsync(request.id);
 
             _context.Entry(fanpage).Reference(p => p.IdChannelNavigation).Load();
 

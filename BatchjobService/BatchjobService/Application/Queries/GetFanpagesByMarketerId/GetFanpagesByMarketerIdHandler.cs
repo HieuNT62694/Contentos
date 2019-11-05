@@ -42,6 +42,10 @@ namespace BatchjobService.Application.Queries.GetFanpagesByMarketerId
                     var customer = _context.Users.Find(fanpage.IdCustomer);
                     model.customer = new Customer { id = customer.Id, name = customer.FirstName + " " + customer.LastName };
                 }
+                else
+                {
+                    model.customer = new Customer { id = 0, name = "" };
+                }
 
                 model.modifiedDate = fanpage.ModifiedDate;
 

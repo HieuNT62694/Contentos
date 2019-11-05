@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BatchjobService.Application.Queries.GetFanpages
+namespace BatchjobService.Application.Queries.GetDetailFanpage
 {
-    public class GetFanpagesRequest : IRequest<List<FanpageViewModel>>
-    {
+    public class GetDetailFanpageRequest : IRequest<FanpageViewModel>
+    { 
         public int id { get; set; }
     }
 }

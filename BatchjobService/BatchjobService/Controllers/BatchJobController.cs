@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuthenticationService.Controllers;
 using BatchjobService.Application.Command.CreateFanpage;
+using BatchjobService.Application.Command.DeleteFanpage;
 using BatchjobService.Application.Command.UpdateFanpage;
+using BatchjobService.Application.Queries.GetDetailFanpage;
 using BatchjobService.Application.Queries.GetFanpages;
 using BatchjobService.Application.Queries.GetFanpagesByCustomerId;
 using BatchjobService.Application.Queries.GetFanpagesByMarketerId;
@@ -50,10 +52,18 @@ namespace BatchjobService.Controllers
             return Ok();
         }
 
-        [HttpGet("fanpages")]
-        public async Task<List<FanpageViewModel>> GetAllFanpageAsync()
+        [HttpGet("fanpages/{id}")]
+        public async Task<List<FanpageViewModel>> GetAllFanpageAsync(int id)
         {
-            var response = await Mediator.Send(new GetFanpagesRequest());
+            var response = await Mediator.Send(new GetFanpagesRequest {id = id});
+
+            return response;
+        }
+
+        [HttpGet("fanpage-detail/{id}")]
+        public async Task<FanpageViewModel> GetDetailFanpageAsync(int id)
+        {
+            var response = await Mediator.Send(new GetDetailFanpageRequest { id = id });
 
             return response;
         }
@@ -74,17 +84,31 @@ namespace BatchjobService.Controllers
         }
 
         [HttpPost("fanpages")]
-        public async Task<FanpageViewModel> CreateFanpageAsync(CreateFanpageCommand createFanpageCommand)
+        public async Task<IActionResult> CreateFanpageAsync(CreateFanpageCommand createFanpageCommand)
         {
             var response = await Mediator.Send(createFanpageCommand);
-            return response;
+            return Accepted(response);
         }
 
         [HttpPut("fanpages")]
-        public async Task<FanpageViewModel> UpdateFanpageAsync(UpdateFanpageCommand updateFanpageCommand)
+        public async Task<IActionResult> UpdateFanpageAsync(UpdateFanpageCommand updateFanpageCommand)
         {
             var response = await Mediator.Send(updateFanpageCommand);
-            return response;
+            return Accepted(response);
+        }
+
+        [HttpDelete("fanpages/{id}")]
+        public async Task<IActionResult> DeleteFanpageAsync(int id)
+        {
+            try
+            {
+                var response = await Mediator.Send(new DeleteFanpageCommand {id = id});
+            }
+            catch
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
 
         private void PublishFB(int fanpageId, int contentId, DateTime time)

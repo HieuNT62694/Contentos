@@ -21,7 +21,7 @@ namespace BatchjobService.Application.Queries.GetFanpages
 
         public async Task<List<FanpageViewModel>> Handle(GetFanpagesRequest request, CancellationToken cancellationToken)
         {
-            var fanpages = await _context.Fanpages.Include(i => i.IdChannelNavigation).ToListAsync();
+            var fanpages = await _context.Fanpages.Include(i => i.IdChannelNavigation).Where(w => w.IdMarketer == request.id).ToListAsync();
 
             List<FanpageViewModel> listFanpages = new List<FanpageViewModel>();
 
@@ -41,6 +41,10 @@ namespace BatchjobService.Application.Queries.GetFanpages
                 {
                     var customer = _context.Users.Find(fanpage.IdCustomer);
                     model.customer = new Customer { id = customer.Id, name = customer.FirstName + " " + customer.LastName };
+                }
+                else
+                {
+                    model.customer = new Customer { id = 0, name = "" };
                 }
                 model.modifiedDate = fanpage.ModifiedDate;
 
