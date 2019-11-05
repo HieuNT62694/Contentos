@@ -8,20 +8,20 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BatchjobService.Application.Queries.GetFanpages
+namespace BatchjobService.Application.Queries.GetFanpagesByCustomerId
 {
-    public class GetFanpagesHandler : IRequestHandler<GetFanpagesRequest, List<FanpageViewModel>>
+    public class GetFanpagesByCustomerIdHandler : IRequestHandler<GetFanpagesByCustomerIdRequest, List<FanpageViewModel>>
     {
+
         private readonly ContentoDbContext _context;
 
-        public GetFanpagesHandler(ContentoDbContext context)
+        public GetFanpagesByCustomerIdHandler(ContentoDbContext context)
         {
             _context = context;
         }
-
-        public async Task<List<FanpageViewModel>> Handle(GetFanpagesRequest request, CancellationToken cancellationToken)
+        public async Task<List<FanpageViewModel>> Handle(GetFanpagesByCustomerIdRequest request, CancellationToken cancellationToken)
         {
-            var fanpages = await _context.Fanpages.Include(i => i.IdChannelNavigation).ToListAsync();
+            var fanpages = await _context.Fanpages.Include(i => i.IdChannelNavigation).Where(w => w.IdCustomer == request.customerId && w.IdChannel == request.channelId).ToListAsync();
 
             List<FanpageViewModel> listFanpages = new List<FanpageViewModel>();
 
@@ -39,7 +39,7 @@ namespace BatchjobService.Application.Queries.GetFanpages
                 model.id = fanpage.Id;
                 model.name = fanpage.Name;
                 model.channel = new Channel { id = fanpage.IdChannelNavigation.Id, name = fanpage.IdChannelNavigation.Name };
-                if(customer != null)
+                if (customer != null)
                 {
                     model.customer = new Customer { id = customer.Id, name = customer.FirstName + " " + customer.LastName };
                 }

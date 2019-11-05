@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AuthenticationService.Controllers;
 using BatchjobService.Application.Queries.GetFanpages;
+using BatchjobService.Application.Queries.GetFanpagesByCustomerId;
+using BatchjobService.Application.Queries.GetFanpagesByMarketerId;
 using BatchjobService.Entities;
 using BatchjobService.HangFireService;
 using BatchjobService.Models;
@@ -26,7 +28,7 @@ namespace BatchjobService.Controllers
             _context = contentodbContext;
         }
 
-        [HttpPost("Publish")]
+        [HttpPost("publish")]
         public IActionResult Index(PublishModels models)
         {
             _ubfPublish.UpdateStatusBeforePublishing(models.contentId, models.time);
@@ -46,10 +48,26 @@ namespace BatchjobService.Controllers
             return Ok();
         }
 
-        [HttpGet("Fanpages")]
+        [HttpGet("fanpages")]
         public async Task<List<FanpageViewModel>> GetAllFanpageAsync()
         {
             var response = await Mediator.Send(new GetFanpagesRequest());
+
+            return response;
+        }
+
+        [HttpGet("fanpages/customer/{channelId}/{customerId}")]
+        public async Task<List<FanpageViewModel>> GetFanpageByCustomerIdAsync(int channelId, int customerId)
+        {
+            var response = await Mediator.Send(new GetFanpagesByCustomerIdRequest {customerId = customerId , channelId = channelId });
+
+            return response;
+        }
+
+        [HttpGet("fanpages/marketer/{channelId}/{marketerId}")]
+        public async Task<List<FanpageViewModel>> GetFanpageByMarketerIdAsync(int channelId, int marketerId)
+        {
+            var response = await Mediator.Send(new GetFanpagesByMarketerIdRequest { marketerId = marketerId, channelId = channelId });
 
             return response;
         }
