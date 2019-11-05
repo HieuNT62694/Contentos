@@ -47,6 +47,7 @@ namespace BatchjobService.Application.Queries.GetFanpages
                     model.customer = new Customer { id = 0, name = "" };
                 }
                 model.modifiedDate = fanpage.ModifiedDate;
+                
 
                 listFanpages.Add(model);
             }

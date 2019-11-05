@@ -61,7 +61,7 @@ namespace BatchjobService.Controllers
         }
 
         [HttpGet("fanpage-detail/{id}")]
-        public async Task<FanpageViewModel> GetDetailFanpageAsync(int id)
+        public async Task<EditViewModel> GetDetailFanpageAsync(int id)
         {
             var response = await Mediator.Send(new GetDetailFanpageRequest { id = id });
 

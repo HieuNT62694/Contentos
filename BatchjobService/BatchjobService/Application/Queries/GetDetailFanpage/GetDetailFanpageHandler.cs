@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BatchjobService.Application.Queries.GetDetailFanpage
 {
-    public class GetDetailFanpageHandler : IRequestHandler<GetDetailFanpageRequest, FanpageViewModel>
+    public class GetDetailFanpageHandler : IRequestHandler<GetDetailFanpageRequest, EditViewModel>
     {
         private readonly ContentoDbContext _context;
 
@@ -18,28 +18,25 @@ namespace BatchjobService.Application.Queries.GetDetailFanpage
             _context = context;
         }
 
-        public async Task<FanpageViewModel> Handle(GetDetailFanpageRequest request, CancellationToken cancellationToken)
+        public async Task<EditViewModel> Handle(GetDetailFanpageRequest request, CancellationToken cancellationToken)
         {
             Fanpages fanpage = await _context.Fanpages.FindAsync(request.id);
 
             _context.Entry(fanpage).Reference(p => p.IdChannelNavigation).Load();
 
-            FanpageViewModel model = new FanpageViewModel();
+            EditViewModel model = new EditViewModel();
 
             model.id = fanpage.Id;
             model.name = fanpage.Name;
-            model.channel = new Channel { id = fanpage.IdChannelNavigation.Id, name = fanpage.IdChannelNavigation.Name };
+            model.channel = fanpage.IdChannelNavigation.Id;
             if (fanpage.IdCustomer != null)
             {
                 var customer = _context.Users.Find(fanpage.IdCustomer);
-                model.customer = new Customer { id = customer.Id, name = customer.FirstName + " " + customer.LastName };
-            }
-            else
-            {
-                model.customer = new Customer { id = 0, name = "" };
+                model.customer = customer.Id;
             }
 
             model.modifiedDate = fanpage.ModifiedDate;
+            model.token = fanpage.Token;
 
             return model;
         }

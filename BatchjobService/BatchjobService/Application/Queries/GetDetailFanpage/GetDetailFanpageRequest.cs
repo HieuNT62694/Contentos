@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BatchjobService.Application.Queries.GetDetailFanpage
 {
-    public class GetDetailFanpageRequest : IRequest<FanpageViewModel>
+    public class GetDetailFanpageRequest : IRequest<EditViewModel>
     { 
         public int id { get; set; }
     }
