@@ -11,6 +11,7 @@ using BatchjobService.Application.Queries.GetFanpages;
 using BatchjobService.Application.Queries.GetFanpagesByCustomerId;
 using BatchjobService.Application.Queries.GetFanpagesByCustomerIdAndChannelId;
 using BatchjobService.Application.Queries.GetFanpagesByMarketerId;
+using BatchjobService.Application.Queries.GetTaskFanpageByContentId;
 using BatchjobService.Entities;
 using BatchjobService.HangFireService;
 using BatchjobService.Models;
@@ -36,23 +37,31 @@ namespace BatchjobService.Controllers
         [HttpPost("publish")]
         public IActionResult Index(PublishModels models)
         {
-            _ubfPublish.UpdateStatusBeforePublishing(models.contentId, models.time, models.listTag);
+            var content = _context.Contents.FirstOrDefault(w => w.Id == models.contentId && w.IsActive == true);
+            var task = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);     
+            if(task.Status == 7)
+            {
+                return Conflict();
+            }
+            var fanpages = _context.Fanpages.Include(i => i.IdChannelNavigation).ToList();
+
+            _ubfPublish.UpdateStatusBeforePublishing(task.Id, models.time, models.listTag);
 
             foreach (var item in models.listFanpage)
             {
-                var fanpage = _context.Fanpages.Include(i => i.IdChannelNavigation).FirstOrDefault(f => f.Id == item).IdChannelNavigation.Id;
+                var fanpage = fanpages.FirstOrDefault(f => f.Id == item).IdChannelNavigation.Id;
                 switch (fanpage)
                 {
-                    case 1 :  PublishContento(item, models.contentId, models.time);
+                    case 1 :  PublishContento(item, models.contentId, models.time, task.Id);
                         break;
-                    case 2 :  PublishFB(item , models.contentId, models.time);
+                    case 2 :  PublishFB(item , models.contentId, models.time, task.Id);
                         break;
-                    case 3 :  PublishWP(item, models.contentId, models.time);
+                    case 3 :  PublishWP(item, models.contentId, models.time, task.Id);
                         break;
                 }
             }
 
-            return Ok();
+            return Accepted();
         }
 
         [HttpGet("fanpages/{id}")]
@@ -122,88 +131,52 @@ namespace BatchjobService.Controllers
             return Ok();
         }
 
-        private void PublishFB(int fanpageId, int contentId, DateTime time)
+        [HttpGet("taskfanpages/content/{id}")]
+        public async Task<IActionResult> GetTaskFanpagesAsync(int id)
         {
-            var content = _context.Contents.FirstOrDefault(w => w.Id == contentId && w.IsActive == true);
-            var task = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
+            var response = await Mediator.Send(new GetTaskFanpageByContentIdRequest { id = id });
+            return Accepted(response);
+        }
 
-            var taskFanpages = _context.TasksFanpages.FirstOrDefault(w => w.IdTask == task.Id && w.IdFanpage == fanpageId);
-
+        private void PublishFB(int fanpageId, int contentId, DateTime time, int taskId)
+        {
             var jobId = BackgroundJob.Schedule(
                 () => _publish.PublishToFB(fanpageId, contentId),
                 time);
 
-            if (taskFanpages != null)
-            {
-                BackgroundJob.Delete(taskFanpages.IdJob);
-                taskFanpages.IdJob = jobId;
-                _context.TasksFanpages.Update(taskFanpages);
-            }
-            else
-            {
-                taskFanpages = new TasksFanpages();
-                taskFanpages.IdFanpage = fanpageId;
-                taskFanpages.IdTask = task.Id;
-                taskFanpages.IdJob = jobId;
-                _context.TasksFanpages.Add(taskFanpages);
-            }
+            var taskFanpages = new TasksFanpages();
+            taskFanpages.IdFanpage = fanpageId;
+            taskFanpages.IdTask = taskId;
+            taskFanpages.IdJob = jobId;
+            _context.TasksFanpages.Add(taskFanpages);
             _context.SaveChanges();
         }
 
-        private void PublishWP(int fanpageId, int contentId, DateTime time)
+        private void PublishWP(int fanpageId, int contentId, DateTime time, int taskId)
         {
-            var content = _context.Contents.FirstOrDefault(w => w.Id == contentId && w.IsActive == true);
-            var task = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
-
-            var taskFanpages = _context.TasksFanpages.FirstOrDefault(w => w.IdTask == task.Id && w.IdFanpage == fanpageId);
-
-
             var jobId = BackgroundJob.Schedule(
                 () => _publish.PublishToWP(contentId),
                 time);
 
-            if (taskFanpages != null)
-            {
-                BackgroundJob.Delete(taskFanpages.IdJob);
-                taskFanpages.IdJob = jobId;
-                _context.TasksFanpages.Update(taskFanpages);
-            }
-            else
-            {
-                taskFanpages = new TasksFanpages();
-                taskFanpages.IdFanpage = fanpageId;
-                taskFanpages.IdTask = task.Id;
-                taskFanpages.IdJob = jobId;
-                _context.TasksFanpages.Add(taskFanpages);
-            }
+            var taskFanpages = new TasksFanpages();
+            taskFanpages.IdFanpage = fanpageId;
+            taskFanpages.IdTask = taskId;
+            taskFanpages.IdJob = jobId;
+            _context.TasksFanpages.Add(taskFanpages);
             _context.SaveChanges();
         }
 
-        private void PublishContento(int fanpageId, int contentId, DateTime time)
+        private void PublishContento(int fanpageId, int contentId, DateTime time, int taskId)
         {
-            var content = _context.Contents.FirstOrDefault(w => w.Id == contentId && w.IsActive == true);
-            var task = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
-
-            var taskFanpages = _context.TasksFanpages.FirstOrDefault(w => w.IdTask == task.Id && w.IdFanpage == fanpageId);
-
             var jobId = BackgroundJob.Schedule(
                 () => _publish.PublishToContento(contentId),
                 time);
 
-            if (taskFanpages != null)
-            {
-                BackgroundJob.Delete(taskFanpages.IdJob);
-                taskFanpages.IdJob = jobId;
-                _context.TasksFanpages.Update(taskFanpages);
-            }
-            else
-            {
-                taskFanpages = new TasksFanpages();
-                taskFanpages.IdFanpage = fanpageId;
-                taskFanpages.IdTask = task.Id;
-                taskFanpages.IdJob = jobId;
-                _context.TasksFanpages.Add(taskFanpages);
-            }
+            var taskFanpages = new TasksFanpages();
+            taskFanpages.IdFanpage = fanpageId;
+            taskFanpages.IdTask = taskId;
+            taskFanpages.IdJob = jobId;
+            _context.TasksFanpages.Add(taskFanpages);
             _context.SaveChanges();
         }
     }

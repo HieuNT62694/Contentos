@@ -1,4 +1,6 @@
 ﻿using BatchjobService.Entities;
+using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,25 +21,36 @@ namespace BatchjobService.HangFireService
         }
         public void UpdateStatusBeforePublishing(int id, DateTime time, List<int> lstTag)
         {
-            var content = _context.Contents.FirstOrDefault(w => w.Id == id && w.IsActive == true);
-            var upTask = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
+            var upTask = _context.Tasks.FirstOrDefault(x => x.Id == id);
+            _context.Entry(upTask).Collection(p => p.TasksTags).Load();
 
             List<TasksTags> tags = new List<TasksTags>();
 
             foreach(var item in lstTag)
             {
-                tags.Add(new TasksTags { IdTag = item });
+                tags.Add(new TasksTags { IdTag = item , IdTask = upTask.Id});
             }
 
             if(upTask.Status <= 6)
             {
+                if (upTask.Status == 6)
+                {
+                    var taskFanpages = _context.TasksFanpages.Where(w => w.IdTask == id).ToList();
+                    foreach (var item in taskFanpages)
+                    {
+                        BackgroundJob.Delete(item.IdJob);
+                    }
+                    _context.RemoveRange(taskFanpages);
+                }
                upTask.Status = 6;
                upTask.PublishTime = time;
-               upTask.TasksTags = tags;
-
                _context.Update(upTask);
+               _context.RemoveRange(upTask.TasksTags);
+               _context.TasksTags.AddRange(tags);
                _context.SaveChanges();
             }
+
+
         }
     }
 }
