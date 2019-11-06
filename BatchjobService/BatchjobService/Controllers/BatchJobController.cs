@@ -135,7 +135,7 @@ namespace BatchjobService.Controllers
         public async Task<IActionResult> GetTaskFanpagesAsync(int id)
         {
             var response = await Mediator.Send(new GetTaskFanpageByContentIdRequest { id = id });
-            return Accepted(response);
+            return Ok(response);
         }
 
         private void PublishFB(int fanpageId, int contentId, DateTime time, int taskId)
