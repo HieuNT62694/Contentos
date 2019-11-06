@@ -31,7 +31,7 @@ namespace AuthenticationService.Application.Commands.UpdateCustomer
                     //var upAccount = new Accounts
                     //{
                     //    Email = request.Email,
-                    //    ModifiedDate = DateTime.UtcNow
+                    //    ModifiedDate = DateTime.Now
                     //};
                     //lstAccount.Add(upAccount);
                     upUser.Company = request.CompanyName;
@@ -39,7 +39,7 @@ namespace AuthenticationService.Application.Commands.UpdateCustomer
                     upUser.Phone = request.Phone;
                     upUser.FirstName = request.FirstName;
                     upUser.Accounts.FirstOrDefault().Email = request.Email;
-                    upUser.Accounts.FirstOrDefault().ModifiedDate = DateTime.UtcNow;
+                    upUser.Accounts.FirstOrDefault().ModifiedDate = DateTime.Now;
                     _context.Attach(upUser);
                     _context.Entry(upUser).State = EntityState.Modified;
                     _context.Users.Update(upUser);

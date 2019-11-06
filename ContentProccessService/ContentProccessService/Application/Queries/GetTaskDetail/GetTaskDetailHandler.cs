@@ -27,6 +27,8 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
             var lstTag = new List<TagsViewModel>();
             var lTag = new List<int>();
             var lstTags = _context.TasksTags.Where(x=>x.IdTask == request.IdTask).ToList();
+            var Customer = await _context.Tasks.AsNoTracking().Include(i => i.IdCampaignNavigation).ThenInclude(IdCampaignNavigation => IdCampaignNavigation.IdCustomerNavigation)
+                .FirstOrDefaultAsync(x => x.Id == request.IdTask);
             foreach (var item in lstTags)
             {
                 var tag = new TagsViewModel();
@@ -80,7 +82,9 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                    Id = task.Id,
                    Tags = lstTag,
                    Campaign = campaign,
-                   Tag = lTag
+                   Tag = lTag,
+                   Customer = Customer.IdCampaignNavigation.IdCustomerNavigation.Id
+                  
             };
 
             return taskView;
