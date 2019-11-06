@@ -40,6 +40,7 @@ namespace ContentProccessService.Models
         public ContentModels Content { get; set; }
         public StatusModels Status { get; set; }
         public List<TagsViewModel> Tags { get; set; }
+        public List<int> Tag { get; set; }
         public Comments Comment { get; set; }
         public string Campaign { get; set; }
     }
