@@ -24,10 +24,10 @@ namespace BatchjobService.HangFireService
             var lstTask = _context.Tasks.Where(x => x.Status == 2 || x.Status == 1);
             foreach (var item in lstTask)
             {
-                if (item.Deadline < DateTime.UtcNow)
+                if (item.Deadline < DateTime.Now)
                 {
                     item.Status = 4;
-                    item.ModifiedDate = DateTime.UtcNow;
+                    item.ModifiedDate = DateTime.Now;
                 }
             }
 

@@ -35,8 +35,8 @@ namespace ContentProccessService.Application.Commands.CreateTasks
                         Description = item.Description,
                         PublishTime = item.PublishTime,
                         Title = item.Title,
-                        CreatedDate = DateTime.UtcNow,
-                        //ModifiedDate = DateTime.UtcNow,
+                        CreatedDate = DateTime.Now,
+                        //ModifiedDate = DateTime.Now,
                         Status = 1
                     };
                     contentodbContext.Attach(task);

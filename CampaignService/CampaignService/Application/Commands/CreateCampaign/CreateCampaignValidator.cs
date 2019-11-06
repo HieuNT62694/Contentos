@@ -14,7 +14,7 @@ namespace CampaignService.Application.Commands.CreateCampaign
             RuleFor(x => x.Customer.Id).NotEmpty().WithMessage("Please chooser or add new customers");
             RuleFor(x => x.Description).NotEmpty().WithMessage("Please enter description");
             RuleFor(x => x.Editor.Id).NotEmpty().WithMessage("Please choose Editor");
-            RuleFor(x => x.EndDate).GreaterThan(DateTime.UtcNow).WithMessage("Please choose Enddate greater than date now");
+            RuleFor(x => x.EndDate).GreaterThan(DateTime.Now).WithMessage("Please choose Enddate greater than date now");
         }
     }
 }

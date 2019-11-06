@@ -41,7 +41,7 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
                         IdRole = 5,
                         
                         IsActive = true,
-                        CreatedDate = DateTime.UtcNow
+                        CreatedDate = DateTime.Now
 
                     };
                     var lstAcc = new List<Accounts>();

@@ -26,8 +26,8 @@ namespace ContentProccessService.Application.Commands.CreateTask
             //    Deadline = request.Task.Deadline,
             //    PublishTime = request.Task.PublishTime,
             //    Title = request.Task.Title,
-            //    StartedDate = DateTime.UtcNow,
-            //    ModifiedDate = DateTime.UtcNow,
+            //    StartedDate = DateTime.Now,
+            //    ModifiedDate = DateTime.Now,
             //    Status = 1
             //};
             //contentodbContext.Tasks.Add(task);
@@ -40,7 +40,7 @@ namespace ContentProccessService.Application.Commands.CreateTask
 
                 foreach (var item in request.Task.Tags)
                 {
-                    var tag = new TasksTags { IdTag = item, CreatedDate = DateTime.UtcNow };
+                    var tag = new TasksTags { IdTag = item, CreatedDate = DateTime.Now };
                     Tags.Add(tag);
                 }
                 var task = new Tasks
@@ -51,8 +51,8 @@ namespace ContentProccessService.Application.Commands.CreateTask
                         Description = request.Task.Description,
                         PublishTime = request.Task.PublishTime,
                         Title = request.Task.Title,
-                        CreatedDate = DateTime.UtcNow,
-                        ModifiedDate = DateTime.UtcNow,
+                        CreatedDate = DateTime.Now,
+                        ModifiedDate = DateTime.Now,
                         TasksTags = Tags,
                         Status = 1
                     };

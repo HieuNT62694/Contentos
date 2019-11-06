@@ -38,7 +38,7 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
 
                     foreach (var item in request.Tags)
                     {
-                        var tag = new TasksTags { IdTag = item,ModifiedDate = DateTime.UtcNow};
+                        var tag = new TasksTags { IdTag = item,ModifiedDate = DateTime.Now};
                         var tagReturn = new TagsViewModel { Id = item ,Name = contentodbContext.Tags.FirstOrDefault(x => x.Id == item).Name };
                         Tags.Add(tag);
                         TagsReturn.Add(tagReturn);
@@ -50,7 +50,7 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                     upTask.Deadline = request.Deadline;
                     upTask.PublishTime = request.PublishTime;
                     upTask.TasksTags = Tags;
-                    upTask.ModifiedDate = DateTime.UtcNow;
+                    upTask.ModifiedDate = DateTime.Now;
                     contentodbContext.Attach(upTask);
                     contentodbContext.Entry(upTask).State = EntityState.Modified;
 
@@ -72,14 +72,14 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                 //update with status !=1
                 foreach (var item in request.Tags)
                 {
-                    var tag = new TasksTags { IdTag = item, ModifiedDate = DateTime.UtcNow };
+                    var tag = new TasksTags { IdTag = item, ModifiedDate = DateTime.Now };
                     var tagReturn = new TagsViewModel { Id = item, Name = contentodbContext.Tags.FirstOrDefault(x => x.Id == item).Name };
                     Tags.Add(tag);
                     TagsReturn.Add(tagReturn);
                 }
                 upTask.Deadline = request.Deadline;
                 upTask.PublishTime = request.PublishTime;
-                if (request.Deadline > DateTime.UtcNow)
+                if (request.Deadline > DateTime.Now)
                 {
                     upTask.Status = 2;
                 }
