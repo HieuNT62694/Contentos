@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AuthenticationService.Application.Commands;
 using AuthenticationService.Application.Commands.ChangePassword;
 using AuthenticationService.Application.Commands.CreateCustomer;
+using AuthenticationService.Application.Commands.Notify;
 using AuthenticationService.Application.Commands.UpdateCustomer;
 using AuthenticationService.Application.Commands.UpdateProfile;
 using AuthenticationService.Application.Queries;
@@ -45,7 +46,7 @@ namespace AuthenticationService.Controllers
             return Accepted("Change Success ");
         }
         [HttpPost("Register")]
-        //[Authorize(Roles = "Guest")]
+        ////[Authorize(Roles = "Guest")]
         public async Task<object> Register(RegisterAccountCommands command)
         {
             await Mediator.Send(command);
@@ -121,16 +122,18 @@ namespace AuthenticationService.Controllers
             var result = await Mediator.Send(command);
             if (result == null)
             {
-                return BadRequest();
+                return BadRequest("Update fail");
             }
-		
-		[HttpPost("send-notify")]
-        public async Task<IActionResult> Notify (NotifyCommands Command)
+            return Accepted(result);
+        }
+        [HttpPost("send-notify")]
+        public async Task<IActionResult> Notify(NotifyCommands Command)
+        {
             var result = await Mediator.Send(Command);
             return Accepted(result);
         }
         [HttpGet("Writer/Marketers/{id}")]
-        //[Authorize(Roles = "Marketer")]
+        ////[Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetListWriterByIdMarketer(int id)
         {
             var response = await Mediator.Send(new GetAllWriterByIdMarketerRequest { MarketerId = id });
@@ -141,7 +144,7 @@ namespace AuthenticationService.Controllers
             return Ok(response);
         }
         [HttpGet("customer/editor/{id}")]
-        //[Authorize(Roles = "Marketer")]
+        ////[Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetcustomerByIdEditor(int id)
         {
             var response = await Mediator.Send(new GetCustomerByIdEditorRequest { EditorId = id });
@@ -153,7 +156,7 @@ namespace AuthenticationService.Controllers
 
         }
         [HttpGet("customer-detail/{id}")]
-        //[Authorize(Roles = "Marketer")]
+        ////[Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetcustomerDetail(int id)
         {
             var response = await Mediator.Send(new GetCustomerDetailRequest { IdCustomer = id });
@@ -165,7 +168,7 @@ namespace AuthenticationService.Controllers
 
         }
         [HttpGet("profile/{id}")]
-        //[Authorize(Roles = "Marketer")]
+        ////[Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetProfileUser(int id)
         {
             var response = await Mediator.Send(new GetProfileRequest { IdUser = id });

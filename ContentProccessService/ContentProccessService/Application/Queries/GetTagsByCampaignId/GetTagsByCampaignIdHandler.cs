@@ -20,14 +20,12 @@ namespace ContentProccessService.Application.Queries.GetTagsByCampaignId
         public async Task<List<TagViewModel>> Handle(GetTagsByCampaignIdRequest request, CancellationToken cancellationToken)
         {
             var tmp = await _context.TagsCampaigns.AsNoTracking()
-                .Include(t => t.IdTagNavigation).Where(w => w.IdCampaign == request.CampaignId).ToListAsync();
-
-            List<TagViewModel> ls = new List<TagViewModel>();
-            foreach(var item in tmp)
-            {
-                ls.Add(new TagViewModel { id = item.IdTagNavigation.Id, name = item.IdTagNavigation.Name });
-            }
-            return ls;
+                .Include(t => t.IdTagNavigation).Where(w => w.IdCampaign == request.CampaignId).Select(t=> new TagViewModel
+                { 
+                    id = t.IdTagNavigation.Id,
+                    name = t.IdTagNavigation.Name
+                }).ToListAsync();
+            return tmp;
         }
     }
 }

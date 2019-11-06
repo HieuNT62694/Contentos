@@ -12,10 +12,7 @@ using CampaignService.Application.Queries.GetListCampaignByEditorId;
 using CampaignService.Application.Queries.GetListCampaignByMarketerId;
 using CampaignService.Application.Queries.GetListCampaignByUserId;
 using CampaignService.Application.Queries.GetListCampaignByWriterId;
-using CampaignService.Entities;
-using CampaignService.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CampaignService.Controllers
@@ -45,7 +42,7 @@ namespace CampaignService.Controllers
         [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetListCampaignByUserIdAsync(int id)
         {
-            var response = await Mediator.Send(new GetListCampaignByUserIdRequest {IdCustomer   = id });
+            var response = await Mediator.Send(new GetListCampaignByUserIdRequest { IdCustomer = id });
             if (response.Count() == 0)
             {
                 return BadRequest("Don't have Campaign for Customer");
@@ -69,7 +66,7 @@ namespace CampaignService.Controllers
         [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> PostCampaignAsync(CreateCampaignCommand command)
         {
-            var response= await Mediator.Send(command);
+            var response = await Mediator.Send(command);
             return Accepted(response);
         }
 
@@ -90,14 +87,14 @@ namespace CampaignService.Controllers
         }
 
         [HttpGet("campaigns-basic/writer/{id}")]
-        //[Authorize(Roles = "Editor")]
+        ////[Authorize(Roles = "Editor")]
         public async Task<IActionResult> GetListCampaignByWriterIdAsync(int id)
         {
             var response = await Mediator.Send(new GetListCampaignByWriterIdRequest { IdWriter = id });
             return Ok(response);
         }
         [HttpGet("campaigns-basic/editor/{id}")]
-        //[Authorize(Roles = "Editor")]
+        ////[Authorize(Roles = "Editor")]
         public async Task<IActionResult> GetListCampaignBasicByEditorIdAsync(int id)
         {
             var response = await Mediator.Send(new GetListCampaignBasicByEditorIdRequest { IdEditor = id });

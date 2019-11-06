@@ -23,18 +23,19 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
         {
             if (request.Tags.Count > 0 && !request.Tags.Contains(0))
             {
-                var content = _context.Tasks.AsNoTracking()
+                var content = await _context.Tasks.AsNoTracking()
+               .Include(x => x.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
               .Where(x => x.Status == 7
               && x.Contents.Any(t => t.IsActive == true)
               && x.TasksFanpages.Any(t => t.IdFanpage == 1)
               && x.TasksTags.Any(z => request.Tags.Contains(z.IdTag)))
-              .OrderByDescending(x=>x.PublishTime)
+              .OrderByDescending(x => x.PublishTime)
               .Select(x => new
               {
                   x,
                   Contents = x.Contents.Where(c => c.IsActive == true).FirstOrDefault(),
                   TasksTags = x.TasksTags.ToList()
-              }).ToList();
+              }).ToListAsync();
                 var lstContentReturn = new List<ContentViewer>();
                 foreach (var item in content)
                 {
@@ -54,9 +55,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                         var Tag = new TagsViewModel
                         {
                             Id = item1.IdTag,
-                            Name = _context.Tags.Find(item1.IdTag).Name
-
-
+                            Name = item1.IdTagNavigation.Name
                         };
                         lstTag.Add(Tag);
                     }
@@ -76,6 +75,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
             else
             {
                 var content = _context.Tasks.AsNoTracking()
+              .Include(x => x.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
               .Where(x => x.Status == 7
               && x.Contents.Any(t => t.IsActive == true)
               && x.TasksFanpages.Any(t => t.IdFanpage == 1))
@@ -84,7 +84,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
               {
                   x,
                   Contents = x.Contents.Where(c => c.IsActive == true).FirstOrDefault(),
-                  TasksTags = x.TasksTags.ToList()
+                  //TasksTags = x.TasksTags.ToList()
               }).ToList();
                 var lstContentReturn = new List<ContentViewer>();
                 foreach (var item in content)
@@ -100,12 +100,12 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                         Name = item.Contents.Name
                     };
                     var lstTag = new List<TagsViewModel>();
-                    foreach (var item1 in item.TasksTags)
+                    foreach (var item1 in item.x.TasksTags)
                     {
                         var Tag = new TagsViewModel
                         {
                             Id = item1.IdTag,
-                            Name = _context.Tags.Find(item1.IdTag).Name
+                            Name = item1.IdTagNavigation.Name
                         };
                         lstTag.Add(Tag);
                     }
