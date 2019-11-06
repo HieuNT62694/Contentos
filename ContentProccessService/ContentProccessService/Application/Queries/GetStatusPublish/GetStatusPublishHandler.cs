@@ -21,7 +21,7 @@ namespace ContentProccessService.Application.Queries.GetStatusPublish
         }
         public async Task<List<StatusModelsReturn>> Handle(GetStatusPublishRequest request, CancellationToken cancellationToken)
         {
-            return await Context.StatusTasks.Where(x => x.Id == 5 || x.Id == 6 || x.Id == 7).Select(x =>
+            return await Context.StatusTasks.AsNoTracking().Where(x => x.Id == 5 || x.Id == 6 || x.Id == 7).Select(x =>
            new StatusModelsReturn
            {
                Id = x.Id,

@@ -25,7 +25,11 @@ namespace CampaignService.Application.Queries.GetListCampaignByMarketerId
             var mapper = config.CreateMapper();
 
             var entity = await _context.Campaigns.AsNoTracking()
-                .Include(i => i.TagsCampaigns).Where(w => w.IdMarketer == request.IdMarketer).ToListAsync();
+                .Include(i => i.IdCustomerNavigation)
+                .Include(i => i.TagsCampaigns).ThenInclude(TagsCampaigns => TagsCampaigns.IdTagNavigation)
+                .Include(i => i.StatusNavigation)
+                .Where(w => w.IdMarketer == request.IdMarketer)
+                .ToListAsync();
 
             //Map from entity to model
             List<CampaignData> models = new List<CampaignData>();
@@ -42,26 +46,22 @@ namespace CampaignService.Application.Queries.GetListCampaignByMarketerId
                 //Get Customer Name & Id
                 model.Customer = new Models.Customer();
                 model.Customer.Id = item.IdCustomer;
-                var cus = _context.Users.Find(item.IdCustomer);
-                model.Customer.Name = cus.FirstName + " " + cus.LastName;
+                model.Customer.Name = item.IdCustomerNavigation.FirstName + " " + item.IdCustomerNavigation.LastName;
 
                 //Get Status Name & Id
                 model.Status = new Models.Status();
                 model.Status.Id = item.Status;
-                var stat = _context.StatusCampaigns.Find(item.Status);
-                model.Status.Name = stat.Name;
-                model.Status.Color = stat.Color;
+                model.Status.Name = item.StatusNavigation.Name;
+                model.Status.Color = item.StatusNavigation.Color;
 
                 //Get ListTag
                 List<Tag> ls = new List<Tag>();
                 foreach (var tag in item.TagsCampaigns)
                 {
-                    var cTag = new Tag { Id = tag.IdTag, Name = _context.Tags.Find(tag.IdTag).Name };
+                    var cTag = new Tag { Id = tag.IdTag, Name = tag.IdTagNavigation.Name };
                     ls.Add(cTag);
                 }
-
                 model.listTag = ls;
-
                 models.Add(model);
             }
 

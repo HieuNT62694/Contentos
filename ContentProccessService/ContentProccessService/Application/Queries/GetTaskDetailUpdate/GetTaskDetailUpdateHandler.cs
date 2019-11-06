@@ -20,33 +20,33 @@ namespace ContentProccessService.Application.Queries.GetTaskDetailUpdate
         public async Task<TasksViewModelReturn> Handle(GetTaskDetailUpdateRequest request, CancellationToken cancellationToken)
         {
             var task = await _context.Tasks.AsNoTracking()
+                .Include(x=>x.TasksTags).ThenInclude(TasksTags=> TasksTags.IdTagNavigation)
+                .Include(x=> x.IdWritterNavigation)
+                .Include(x=>x.StatusNavigation)
+                .Include(x=>x.IdCampaignNavigation).ThenInclude(IdCampaignNavigation=> IdCampaignNavigation.IdEditorNavigation)
                 .FirstOrDefaultAsync(x => x.Id == request.IdTask);
-            var edtId = _context.Campaigns.Find(task.IdCampaign).IdEditor;
+            var edtId = task.IdCampaignNavigation.IdEditorNavigation.Id;
             var lstTag = new List<TagsViewModel>();
-            var lstTags = _context.TasksTags.Where(x => x.IdTask == request.IdTask).ToList();
-            foreach (var item in lstTags)
+            //var lstTags = _context.TasksTags.Include(x=>x.IdTagNavigation).Where(x => x.IdTask == request.IdTask).ToList();
+            var lstTagid = new List<int>();
+            foreach (var item in task.TasksTags)
             {
                 var tag = new TagsViewModel();
-                tag.Name = _context.Tags.FirstOrDefault(x => x.Id == item.IdTag).Name;
+                tag.Name = item.IdTagNavigation.Name;
                 tag.Id = item.IdTag;
-                lstTag.Add(tag);
-            }
-            var lstTagid = new List<int>();
-            foreach (var item in lstTags)
-            {
                 lstTagid.Add(item.IdTag);
-            }
-            var wtn = _context.Users.FirstOrDefault(x => x.Id == task.IdWritter);
+                lstTag.Add(tag);
+            } 
             var Writter = new UsersModels
             {
                 Id = task.IdWritter,
-                Name = wtn.FirstName + " " + wtn.LastName
+                Name = task.IdWritterNavigation.FirstName + " " + task.IdWritterNavigation.LastName
             };
             var Status = new StatusModels
             {
                 Id = task.Status,
-                Name = _context.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Name,
-                Color = _context.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Color
+                Name = task.StatusNavigation.Name,
+                Color = task.StatusNavigation.Color
             };
             var taskView = new TasksViewModelReturn()
             {

@@ -25,25 +25,17 @@ namespace AuthenticationService.Application.Queries.GetCustomer
             var list = await _context.Users.AsNoTracking()
                 .Include(x => x.Accounts)
                 .Where(x => x.Accounts.Any(i => i.IdRole == 5))
-                .Where(u => u.IdManager == request.MarketerId).ToListAsync();
-            
-            var lstCustomer = new List<CreateUserModel>();
-            foreach (var item in list)
-            {
-                var User = new CreateUserModel()
+                .Where(u => u.IdManager == request.MarketerId)
+                .Select(x => new CreateUserModel
                 {
-                    Id = item.Id,
-                    FullName = item.FirstName+" "+item.LastName,
-                    Email = item.Accounts.First().Email,
-                    CompanyName = item.Company,
-                    Phone = string.IsNullOrEmpty(item.Phone) == true ? null : item.Phone.Trim()
-                };
-                lstCustomer.Add(User);
-            }
+                    Id = x.Id,
+                    FullName = x.FirstName + " " + x.LastName,
+                    Email = x.Accounts.First().Email,
+                    CompanyName = x.Company,
+                    Phone = string.IsNullOrEmpty(x.Phone) == true ? null : x.Phone.Trim()
 
-            return lstCustomer;
+                }).ToListAsync();
+            return list;
         }
-        
-
     }
 }

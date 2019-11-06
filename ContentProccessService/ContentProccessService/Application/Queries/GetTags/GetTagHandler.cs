@@ -20,14 +20,12 @@ namespace ContentProccessService.Application.Queries.GetTags
 
         public async Task<IEnumerable<TagViewModel>> Handle(GetTagRequest request, CancellationToken cancellationToken)
         {
-            var tags = await _context.Tags.AsNoTracking().ToListAsync();
-            List<TagViewModel> list = new List<TagViewModel>();
-            foreach(var item in tags)
+            var tags = await _context.Tags.AsNoTracking().Select(x=> new TagViewModel
             {
-                list.Add( new TagViewModel { id = item.Id, name = item.Name });
-            }
-
-            return list;
+                id = x.Id,
+                name = x.Name
+            }).ToListAsync();
+            return tags;
         }
     }
 }

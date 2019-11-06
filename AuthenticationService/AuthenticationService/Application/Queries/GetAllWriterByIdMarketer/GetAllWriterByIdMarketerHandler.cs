@@ -25,29 +25,18 @@ namespace AuthenticationService.Application.Queries.GetAllWriterByIdMarketer
                 .Where(x => x.Accounts.Any(i => i.IdRole == 2))
                 .Where(u => u.IdManager == request.MarketerId).Select(x => x.Id)
                 .ToListAsync();
-
             var lstWriter = new List<ListUserModel>();
             foreach (var item1 in list)
             {
                 var listid = await _context.Users.AsNoTracking()
                .Include(x => x.Accounts)
                .Where(x => x.Accounts.Any(i => i.IdRole == 3))
-               .Where(u => u.IdManager == item1).Select(x=>new ListUserModel
+               .Where(u => u.IdManager == item1).Select(x => new ListUserModel
                {
                    Id = x.Id,
                    Name = x.FirstName + " " + x.LastName
                }).ToListAsync();
                 lstWriter.AddRange(listid);
-                //foreach (var item in listid)
-                //{
-                //    var User = new ListUserModel()
-                //    {
-                //        Id = item.Id,
-                //        Name = item.FirstName + " " + item.LastName
-                //    };
-                //    lstWriter.Add(User);
-                //}
-               
             }
             return lstWriter;
         }

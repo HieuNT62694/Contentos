@@ -19,7 +19,7 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
         private readonly IHelperFunction _helper;
 
 
-        public CreateCustomerAccountHandler(ContentoDbContext context,IHelperFunction helper)
+        public CreateCustomerAccountHandler(ContentoDbContext context, IHelperFunction helper)
         {
             _context = context;
             _helper = helper;
@@ -39,7 +39,6 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
                         Email = request.Email,
                         Password = BCrypt.Net.BCrypt.HashPassword(newPassword),
                         IdRole = 5,
-                        
                         IsActive = true,
                         CreatedDate = DateTime.Now
 
@@ -65,19 +64,19 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
                         FullName = request.FirstName + " " + request.LastName,
                         Email = request.Email,
                         CompanyName = request.CompanyName,
-                        Phone = string.IsNullOrEmpty(request.Phone)  ? null : request.Phone.Trim(),
+                        Phone = string.IsNullOrEmpty(request.Phone) ? null : request.Phone.Trim(),
                         Password = newPassword
                     };
                 }
                 return null;
-               
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 transaction.Rollback();
                 return null;
             }
-         
+
         }
         public bool IsEmailUnique(string Email)
         {

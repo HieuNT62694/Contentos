@@ -24,20 +24,15 @@ namespace AuthenticationService.Application.Queries.GetUser
         {
             var lstUser = await _context.Users.AsNoTracking()
                 .Include(x => x.Accounts)
-                .Where(x=>x.Accounts.Any(i=>i.IdRole == 2))
-                .Where(u => u.IdManager == request.IdMarketer).ToListAsync();
-            
-            var lstEditor = new List<ListUserModel>();
-            foreach (var item in lstUser)
-            {
-                var edtUser = new ListUserModel
+                .Where(x => x.Accounts.Any(i => i.IdRole == 2))
+                .Where(u => u.IdManager == request.IdMarketer)
+                .Select(x => new ListUserModel
                 {
-                    Id = item.Id,
-                    Name = item.FirstName+" "+item.LastName
-                };
-                lstEditor.Add(edtUser);
-            }
-            return lstEditor;
+                    Id = x.Id,
+                    Name = x.FirstName + " " + x.LastName
+                })
+                .ToListAsync();
+            return lstUser;
         }
     }
 }
