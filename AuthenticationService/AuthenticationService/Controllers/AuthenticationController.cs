@@ -54,7 +54,7 @@ namespace AuthenticationService.Controllers
 
         }
         [HttpGet("Editors/Marketers/{id}")]
-       [Authorize(Roles = "Marketer")]
+        [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetListEditor(int id)
         {
             var response = await Mediator.Send(new GetUserRequest { IdMarketer = id });
@@ -67,7 +67,7 @@ namespace AuthenticationService.Controllers
         }
 
         [HttpGet("Writers/Editors/{id}")]
-       [Authorize(Roles = "Marketer,Editor")]
+        [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetListWriter(int id)
         {
             var response = await Mediator.Send(new GetWriterRequest { EditorId = id });
@@ -79,7 +79,7 @@ namespace AuthenticationService.Controllers
         }
 
         [HttpGet("Customers/Marketers-Basic/{id}/")]
-       [Authorize(Roles = "Marketer,Editor")]
+        [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetListCustomerBasic(int id)
         {
             var response = await Mediator.Send(new GetCustomerBasicRequest { MarketerId = id });
@@ -87,7 +87,7 @@ namespace AuthenticationService.Controllers
         }
 
         [HttpGet("Customers/Marketers/{id}")]
-       [Authorize(Roles = "Marketer")]
+        [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetListCustomer(int id)
         {
             var response = await Mediator.Send(new GetCustomerRequest { MarketerId = id });
@@ -99,7 +99,7 @@ namespace AuthenticationService.Controllers
         }
 
         [HttpPost("Customers")]
-       [Authorize(Roles = "Marketer")]
+        [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> CreateCustomerAccounts(CreateCustomerAccountCommads command)
         {
             var result = await Mediator.Send(command);
@@ -116,7 +116,7 @@ namespace AuthenticationService.Controllers
 
         }
         [HttpPut("Customers")]
-       [Authorize(Roles = "Marketer")]
+        [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> UpdateCustomerAccounts(UpdateCustomerAccountCommads command)
         {
             var result = await Mediator.Send(command);
@@ -126,9 +126,9 @@ namespace AuthenticationService.Controllers
             }
             return Accepted(result);
         }
-		[HttpPost("send-notify")]
-        public async Task<IActionResult> Notify (NotifyCommands Command) 
-        { 
+        [HttpPost("send-notify")]
+        public async Task<IActionResult> Notify(NotifyCommands Command)
+        {
             var result = await Mediator.Send(Command);
             return Accepted(result);
         }
