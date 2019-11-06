@@ -21,12 +21,14 @@ namespace ContentProccessService.Application.Queries.GetContentDetail
         public async Task<ContentDetailReturn> Handle(GetContentDetailRequest request, CancellationToken cancellationToken)
         {
             var content = await _context.Tasks.AsNoTracking()
+              .Include(x=>x.IdWritterNavigation)
+              .Include(x=>x.TasksTags).ThenInclude(TasksTags=> TasksTags.IdTagNavigation)
               .Where(x => x.Id == request.IdTask)
               .Select(x => new
               {
                   x,
                   Contents = x.Contents.Where(c => c.IsActive == true).FirstOrDefault(),
-                  TasksTags = x.TasksTags.ToList(),
+                 //TasksTags = x.TasksTags.ToList(),
                   
               }).FirstOrDefaultAsync();
             List<string> imgs = getImage(content.Contents.TheContent);
@@ -40,19 +42,18 @@ namespace ContentProccessService.Application.Queries.GetContentDetail
                 Content = content.Contents.TheContent,
                 Name = content.Contents.Name
             };
-            var wtn = _context.Users.Find(content.x.IdWritter);
             var Writter = new UsersModels
             {
                 Id = content.x.IdWritter,
-                Name = wtn.FirstName + " " + wtn.LastName
+                Name = content.x.IdWritterNavigation.FirstName + " " + content.x.IdWritterNavigation.LastName
             };
             var lstTag = new List<TagsViewModel>();
-            foreach (var item in content.TasksTags)
+            foreach (var item in content.x.TasksTags)
             {
                 var Tag = new TagsViewModel
                 {
                     Id = item.IdTag,
-                    Name = _context.Tags.Find(item.IdTag).Name
+                    Name = item.IdTagNavigation.Name
 
 
                 };

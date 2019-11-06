@@ -24,19 +24,14 @@ namespace AuthenticationService.Application.Queries.GetWriter
             var list = await _context.Users.AsNoTracking()
                 .Include(x => x.Accounts)
                 .Where(x => x.Accounts.Any(i => i.IdRole == 3))
-                .Where(u => u.IdManager == request.EditorId).ToListAsync();
-
-            var lstWriter = new List<ListUserModel>();
-            foreach (var item in list)
-            {
-                var User = new ListUserModel()
+                .Where(u => u.IdManager == request.EditorId)
+                .Select(x => new ListUserModel
                 {
-                    Id = item.Id,
-                    Name = item.FirstName + " " + item.LastName
-                };
-                lstWriter.Add(User);
-            }
-            return lstWriter;
+                    Id = x.Id,
+                    Name = x.FirstName + " " + x.LastName
+                })
+                .ToListAsync();
+            return list;
         }
 
     }

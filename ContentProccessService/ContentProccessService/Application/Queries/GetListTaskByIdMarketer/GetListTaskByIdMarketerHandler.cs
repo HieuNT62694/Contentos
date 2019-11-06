@@ -19,7 +19,10 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdMarketer
         }
         public async Task<List<TasksViewModel>> Handle(GetListTaskByIdMarketerRequest request, CancellationToken cancellationToken)
         {
-            var lstIdCampaign = await _context.Campaigns.AsNoTracking().Include(x => x.Tasks).Where(x => x.IdMarketer == request.IdMartketer )
+            var lstIdCampaign = await _context.Campaigns.AsNoTracking()
+                .Include(x => x.Tasks).ThenInclude(Tasks=> Tasks.StatusNavigation)
+                .Include(x=> x.Tasks).ThenInclude(Tasks=> Tasks.IdWritterNavigation)
+                .Where(x => x.IdMarketer == request.IdMartketer )
                 .Select(x => new
                 {
                     x,
@@ -31,17 +34,16 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdMarketer
             {
                 foreach (var itemtask in item.Tasks)
                 {
-                    var wtn = _context.Users.FirstOrDefault(x => x.Id == itemtask.IdWritter);
                     var Writter = new UsersModels
                     {
-                        Id = itemtask.IdWritter,
-                        Name = wtn.FirstName + " " +wtn.LastName
+                        Id = itemtask.IdWritterNavigation.Id,
+                        Name = itemtask.IdWritterNavigation.FirstName + " " +itemtask.IdWritterNavigation.LastName
                     };
                     var Status = new StatusModels
                     {
                         Id = itemtask.Status,
-                        Name = _context.StatusTasks.FirstOrDefault(x => x.Id == itemtask.Status).Name,
-                        Color = _context.StatusTasks.FirstOrDefault(x => x.Id == itemtask.Status).Color
+                        Name = itemtask.StatusNavigation.Name,
+                        Color = itemtask.StatusNavigation.Color
                     };
                     var taskView = new TasksViewModel()
                     {

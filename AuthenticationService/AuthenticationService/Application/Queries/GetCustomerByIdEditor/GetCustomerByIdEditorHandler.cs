@@ -25,20 +25,14 @@ namespace AuthenticationService.Application.Queries.GetCustomerByIdEditor
             var list = await _context.Users.AsNoTracking()
                 .Include(x => x.Accounts)
                 .Where(x => x.Accounts.Any(i => i.IdRole == 5))
-                .Where(u => u.IdManager == idMarketer).ToListAsync();
-
-            var lstCustomer = new List<ListUserModel>();
-            foreach (var item in list)
-            {
-                var User = new ListUserModel()
+                .Where(u => u.IdManager == idMarketer)
+                .Select(x => new ListUserModel
                 {
-                    Id = item.Id,
-                    Name = item.FirstName + " " + item.LastName
-                };
-                lstCustomer.Add(User);
-            }
-
-            return lstCustomer;
+                    Id = x.Id,
+                    Name = x.FirstName + " " + x.LastName
+                })
+                .ToListAsync();
+            return list;
         }
     }
 }

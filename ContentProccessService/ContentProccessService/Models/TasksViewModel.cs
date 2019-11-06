@@ -41,7 +41,6 @@ namespace ContentProccessService.Models
         public StatusModels Status { get; set; }
         public List<TagsViewModel> Tags { get; set; }
         public List<int> Tag { get; set; }
-        public int Customer { get; set; }
         public Comments Comment { get; set; }
         public string Campaign { get; set; }
     }

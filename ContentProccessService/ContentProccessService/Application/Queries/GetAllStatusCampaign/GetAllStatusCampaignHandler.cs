@@ -20,7 +20,7 @@ namespace ContentProccessService.Application.Queries.GetAllStatusCampaign
         }
         public async Task<List<StatusModelsReturn>> Handle(GetAllStatusCampaignRequest request, CancellationToken cancellationToken)
         {
-            return await Context.StatusCampaigns.Select(x =>
+            return await Context.StatusCampaigns.AsNoTracking().Select(x =>
            new StatusModelsReturn
            {
                Id = x.Id,

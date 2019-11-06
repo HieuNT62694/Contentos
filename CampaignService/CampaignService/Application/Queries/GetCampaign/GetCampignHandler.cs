@@ -26,44 +26,39 @@ namespace CampaignService.Application.Queries.GetCampaign
             var mapper = config.CreateMapper();
 
             var entity = await _context.Campaigns.AsNoTracking()
-                .Include(i => i.TagsCampaigns).FirstAsync(x => x.Id == request.IdCampaign);
+                .Include(i => i.TagsCampaigns).ThenInclude(TagsCampaigns => TagsCampaigns.IdTagNavigation)
+                .Include(x => x.IdEditorNavigation)
+                .Include(x => x.IdCustomerNavigation)
+                .Include(x => x.StatusNavigation)
+                .FirstAsync(x => x.Id == request.IdCampaign);
 
             CampaignTaskDetail model = mapper.Map<CampaignTaskDetail>(entity);
 
             //Get Editor Name & Id
             model.Editor = new Models.Editor();
             model.Editor.Id = entity.IdEditor;
-            var edit = _context.Users.Find(entity.IdEditor);
-            model.Editor.Name = edit.FirstName + " " + edit.LastName;
+            model.Editor.Name = entity.IdEditorNavigation.FirstName + " " + entity.IdEditorNavigation.LastName;
 
             //Get Customer Name & Id
             model.Customer = new Models.Customer();
             model.Customer.Id = entity.IdCustomer;
-            var cus = _context.Users.Find(entity.IdCustomer);
-            model.Customer.Name = cus.FirstName + " " + cus.LastName;
+            model.Customer.Name = entity.IdCustomerNavigation.FirstName + " " + entity.IdCustomerNavigation.LastName;
 
             //Get Status Name & Id
             model.Status = new Models.Status();
             model.Status.Id = entity.Status;
-            var stat = _context.StatusCampaigns.Find(entity.Status);
-            model.Status.Name = stat.Name;
-            model.Status.Color = stat.Color;
+            model.Status.Name = entity.StatusNavigation.Name;
+            model.Status.Color = entity.StatusNavigation.Color;
 
             //Get ListTag
             List<Tag> lsfull = new List<Tag>();
-            foreach (var tag in entity.TagsCampaigns)
-            {
-                var cTag = new Tag { Id = tag.IdTag, Name = _context.Tags.Find(tag.IdTag).Name };
-                lsfull.Add(cTag);
-            }
-            //tag full             
             List<int> ls = new List<int>();
             foreach (var tag in entity.TagsCampaigns)
             {
-
+                var cTag = new Tag { Id = tag.IdTag, Name = tag.IdTagNavigation.Name };
                 ls.Add(tag.IdTag);
+                lsfull.Add(cTag);
             }
-
             model.listTag = ls;
             model.TagFull = lsfull;
             return model;

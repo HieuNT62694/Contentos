@@ -20,8 +20,10 @@ namespace CampaignService.Application.Queries.GetListCampaignByWriterId
         }
         public async Task<List<CampaignModels>> Handle(GetListCampaignByWriterIdRequest request, CancellationToken cancellationToken)
         {
-            return await _context.Tasks.AsNoTracking().Include(x => x.IdCampaignNavigation).Where(x => x.IdWritter == request.IdWriter)
-                .Select(x => new CampaignModels { Id = x.IdCampaignNavigation.Id, Name = x.IdCampaignNavigation.Title }).Distinct()
+            return await _context.Tasks.AsNoTracking()
+                .Include(x => x.IdCampaignNavigation).Where(x => x.IdWritter == request.IdWriter)
+                .Select(x => new CampaignModels { Id = x.IdCampaignNavigation.Id, Name = x.IdCampaignNavigation.Title })
+                .Distinct()
                 .ToListAsync();
         }
     }

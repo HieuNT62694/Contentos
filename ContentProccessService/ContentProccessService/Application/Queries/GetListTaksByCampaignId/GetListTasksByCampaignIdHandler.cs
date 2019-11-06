@@ -20,22 +20,23 @@ namespace ContentProccessService.Application.Queries.GetListTaksByCampaignId
         public async Task<List<TasksViewModel>> Handle(GetListTasksByCampaignIdRequest request, CancellationToken cancellationToken)
         {
             var task = await _context.Tasks.AsNoTracking()
+                .Include(x=>x.StatusNavigation)
+                .Include(x=>x.IdWritterNavigation)
                 .Where(x => x.IdCampaign == request.IdCampaign).ToListAsync();
 
             var lstTask = new List<TasksViewModel>();
             foreach (var item in task)
             {
-                var wtn = _context.Users.FirstOrDefault(x => x.Id == item.IdWritter);
                 var Writter = new UsersModels
                 {
-                    Id = item.IdWritter,
-                    Name = wtn.FirstName + " " + wtn.LastName
+                    Id = item.IdWritterNavigation.Id,
+                    Name = item.IdWritterNavigation.FirstName + " " + item.IdWritterNavigation.LastName
                 };
                 var Status = new StatusModels
                 {
                     Id = item.Status,
-                    Name = _context.StatusTasks.FirstOrDefault(x => x.Id == item.Status).Name,
-                    Color = _context.StatusTasks.FirstOrDefault(x => x.Id == item.Status).Color,
+                    Name = item.StatusNavigation.Name,
+                    Color = item.StatusNavigation.Color,
                 };
                 var taskView = new TasksViewModel()
                 {

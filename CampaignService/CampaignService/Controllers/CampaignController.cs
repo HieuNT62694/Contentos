@@ -12,17 +12,14 @@ using CampaignService.Application.Queries.GetListCampaignByEditorId;
 using CampaignService.Application.Queries.GetListCampaignByMarketerId;
 using CampaignService.Application.Queries.GetListCampaignByUserId;
 using CampaignService.Application.Queries.GetListCampaignByWriterId;
-using CampaignService.Entities;
-using CampaignService.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CampaignService.Controllers
 {
     public class CampaignController : BaseController
     {
-        [Authorize(Roles = "Marketer")]
+       [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetListCampaign()
         {
             var response = await Mediator.Send(new GetListCampaignRequest());
@@ -34,7 +31,7 @@ namespace CampaignService.Controllers
         }
 
         [HttpGet("campaigns/{id}")]
-        [Authorize(Roles = "Marketer,Editor")]
+       [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetCampaignDetailAsync(int id)
         {
             var response = await Mediator.Send(new GetCampaignRequest { IdCampaign = id });
@@ -42,7 +39,7 @@ namespace CampaignService.Controllers
         }
 
         [HttpGet("campaigns/customers/{id}")]
-        [Authorize(Roles = "Marketer")]
+       [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetListCampaignByUserIdAsync(int id)
         {
             var response = await Mediator.Send(new GetListCampaignByUserIdRequest {IdCustomer   = id });
@@ -54,7 +51,7 @@ namespace CampaignService.Controllers
         }
 
         [HttpGet("campaigns/marketers/{id}")]
-        [Authorize(Roles = "Marketer")]
+       [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> GetListCampaignByMarketerIdAsync(int id)
         {
             var response = await Mediator.Send(new GetCampaignByMarketerIdRequest { IdMarketer = id });
@@ -66,7 +63,7 @@ namespace CampaignService.Controllers
         }
 
         [HttpPost("campaign")]
-        [Authorize(Roles = "Marketer")]
+       [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> PostCampaignAsync(CreateCampaignCommand command)
         {
             var response= await Mediator.Send(command);
@@ -74,7 +71,7 @@ namespace CampaignService.Controllers
         }
 
         [HttpPut("campaign")]
-        [Authorize(Roles = "Marketer")]
+       [Authorize(Roles = "Marketer")]
         public async Task<IActionResult> PostCampaignAsync(UpdateCampaignCommand command)
         {
             var response = await Mediator.Send(command);
@@ -82,7 +79,7 @@ namespace CampaignService.Controllers
         }
 
         [HttpGet("campaigns/editor/{id}")]
-        [Authorize(Roles = "Editor")]
+       [Authorize(Roles = "Editor")]
         public async Task<IActionResult> GetListCampaignByEditorIdAsync(int id)
         {
             var response = await Mediator.Send(new GetCampaignByEditorIdRequest { IdEditor = id });
@@ -90,14 +87,14 @@ namespace CampaignService.Controllers
         }
 
         [HttpGet("campaigns-basic/writer/{id}")]
-        //[Authorize(Roles = "Editor")]
+        ////[Authorize(Roles = "Editor")]
         public async Task<IActionResult> GetListCampaignByWriterIdAsync(int id)
         {
             var response = await Mediator.Send(new GetListCampaignByWriterIdRequest { IdWriter = id });
             return Ok(response);
         }
         [HttpGet("campaigns-basic/editor/{id}")]
-        //[Authorize(Roles = "Editor")]
+        ////[Authorize(Roles = "Editor")]
         public async Task<IActionResult> GetListCampaignBasicByEditorIdAsync(int id)
         {
             var response = await Mediator.Send(new GetListCampaignBasicByEditorIdRequest { IdEditor = id });

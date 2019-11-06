@@ -18,81 +18,77 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
         }
         public async Task<TasksViewModel> Handle(GetTaskDetailRequest request, CancellationToken cancellationToken)
         {
-            var task = await _context.Tasks.AsNoTracking().Include(i=>i.Contents).ThenInclude(Contents=> Contents.Comments)
+            var task = await _context.Tasks.AsNoTracking()
+                .Include(i=> i.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
+                .Include(i => i.StatusNavigation)
+                .Include(i => i.IdWritterNavigation)
+                .Include(i => i.IdCampaignNavigation).ThenInclude(IdCampaignNavigation => IdCampaignNavigation.IdEditorNavigation)
+                .Include(i => i.Contents).ThenInclude(Contents => Contents.Comments)
                 .FirstOrDefaultAsync(x => x.Id == request.IdTask);
-            var edtId = _context.Campaigns.Find(task.IdCampaign).IdEditor;
+            var edtId = task.IdCampaignNavigation.IdEditorNavigation.Id;
             var content = task.Contents.Where(x => x.IsActive == true).FirstOrDefault();
-            var comment = task.Contents.Where(x => x.IsActive == false && x.Version == (content.Version - 1) ).FirstOrDefault();
-            var campaign = _context.Campaigns.Find(task.IdCampaign).Title;
+            var comment = task.Contents.Where(x => x.IsActive == false && x.Version == (content.Version - 1)).FirstOrDefault();
+            var campaign = task.IdCampaignNavigation.Title;
             var lstTag = new List<TagsViewModel>();
             var lTag = new List<int>();
-            var lstTags = _context.TasksTags.Where(x=>x.IdTask == request.IdTask).ToList();
-            var Customer = await _context.Tasks.AsNoTracking().Include(i => i.IdCampaignNavigation).ThenInclude(IdCampaignNavigation => IdCampaignNavigation.IdCustomerNavigation)
-                .FirstOrDefaultAsync(x => x.Id == request.IdTask);
-            foreach (var item in lstTags)
+            var Writter = new UsersModels();
+            var Status = new StatusModels();
+            var Editor = new UsersModels();
+            //var lstTags = _context.TasksTags.Include(x => x.IdTagNavigation).Where(x => x.IdTask == request.IdTask).ToList();
+            //var Customer = await _context.Tasks.AsNoTracking().Include(i => i.IdCampaignNavigation).ThenInclude(IdCampaignNavigation => IdCampaignNavigation.IdCustomerNavigation)
+            // .FirstOrDefaultAsync(x => x.Id == request.IdTask);
+            foreach (var item in task.TasksTags)
             {
                 var tag = new TagsViewModel();
-                tag.Name = _context.Tags.FirstOrDefault(x => x.Id == item.IdTag).Name;
+                tag.Name = item.IdTagNavigation.Name;
                 tag.Id = item.IdTag;
                 lTag.Add(item.IdTag);
                 lstTag.Add(tag);
             }
-            var wtn = _context.Users.FirstOrDefault(x => x.Id == task.IdWritter);
-            var Writter = new UsersModels
-            {
-                Id = task.IdWritter,
-                Name = wtn.FirstName + " " + wtn.LastName
-            };
-            var Status = new StatusModels
-            {
-                Id = task.Status,
-                Name = _context.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Name,
-                Color = _context.StatusTasks.FirstOrDefault(x => x.Id == task.Status).Color
-            };
-            var etn = _context.Users.FirstOrDefault(x => x.Id == edtId);
-            var Editor = new UsersModels
-            {
-                Id = edtId,
-                Name = etn.FirstName + " " + etn.LastName
-            };
+            Writter.Id = task.IdWritter;
+            Writter.Name = task.IdWritterNavigation.FirstName + " " + task.IdWritterNavigation.LastName;
+            Status.Id = task.Status;
+            Status.Name = task.StatusNavigation.Name;
+            Status.Color = task.StatusNavigation.Color;
+            Editor.Id = edtId;
+            Editor.Name = task.IdCampaignNavigation.IdEditorNavigation.FirstName + " " + task.IdCampaignNavigation.IdEditorNavigation.LastName;
             var Content = new ContentModels
             {
-                Id = content.Id, 
+                Id = content.Id,
                 Content = content.TheContent,
                 Name = content.Name
             };
             var Comment = new Comments();
-                if (comment != null)
+            if (comment != null)
             {
-                Comment.Comment = comment.Comments.FirstOrDefault(x=>x.IsActive == true).Comment;
+                Comment.Comment = comment.Comments.FirstOrDefault(x => x.IsActive == true).Comment;
             }
 
             var taskView = new TasksViewModel()
-               {
-                   Title = task.Title,
-                   Deadline = task.Deadline,
-                   PublishTime = task.PublishTime,
-                   Writer = Writter,
-                   Description = task.Description,
-                   Status = Status,
-                   StartedDate = task.StartDate,
-                   Editor = Editor,
-                   Content = Content,
-                   Comment = Comment,
-                   Id = task.Id,
-                   Tags = lstTag,
-                   Campaign = campaign,
-                   Tag = lTag,
-                   Customer = Customer.IdCampaignNavigation.IdCustomerNavigation.Id
-                  
+            {
+                Title = task.Title,
+                Deadline = task.Deadline,
+                PublishTime = task.PublishTime,
+                Writer = Writter,
+                Description = task.Description,
+                Status = Status,
+                StartedDate = task.StartDate,
+                Editor = Editor,
+                Content = Content,
+                Comment = Comment,
+                Id = task.Id,
+                Tags = lstTag,
+                Campaign = campaign,
+                Tag = lTag,
+
             };
 
             return taskView;
         }
-     
+
     }
-                          
+
 
 }
-    
+
 
