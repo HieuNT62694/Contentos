@@ -11,6 +11,5 @@ namespace BatchjobService.Application.Queries.GetFanpagesByCustomerId
     public class GetFanpagesByCustomerIdRequest : IRequest<List<FanpageViewModel>>
     {
         public int customerId { get; set; }
-        public int channelId { get; set; }
     }
 }

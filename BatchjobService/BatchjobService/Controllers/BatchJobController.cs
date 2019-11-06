@@ -9,6 +9,7 @@ using BatchjobService.Application.Command.UpdateFanpage;
 using BatchjobService.Application.Queries.GetDetailFanpage;
 using BatchjobService.Application.Queries.GetFanpages;
 using BatchjobService.Application.Queries.GetFanpagesByCustomerId;
+using BatchjobService.Application.Queries.GetFanpagesByCustomerIdAndChannelId;
 using BatchjobService.Application.Queries.GetFanpagesByMarketerId;
 using BatchjobService.Entities;
 using BatchjobService.HangFireService;
@@ -35,13 +36,15 @@ namespace BatchjobService.Controllers
         [HttpPost("publish")]
         public IActionResult Index(PublishModels models)
         {
-            _ubfPublish.UpdateStatusBeforePublishing(models.contentId, models.time);
+            _ubfPublish.UpdateStatusBeforePublishing(models.contentId, models.time, models.listTag);
 
-            foreach(var item in models.listFanpage)
+            foreach (var item in models.listFanpage)
             {
                 var fanpage = _context.Fanpages.Include(i => i.IdChannelNavigation).FirstOrDefault(f => f.Id == item).IdChannelNavigation.Id;
                 switch (fanpage)
                 {
+                    case 1 :  PublishContento(item, models.contentId, models.time);
+                        break;
                     case 2 :  PublishFB(item , models.contentId, models.time);
                         break;
                     case 3 :  PublishWP(item, models.contentId, models.time);
@@ -69,9 +72,17 @@ namespace BatchjobService.Controllers
         }
 
         [HttpGet("fanpages/customer/{channelId}/{customerId}")]
-        public async Task<List<FanpageViewModel>> GetFanpageByCustomerIdAsync(int channelId, int customerId)
+        public async Task<List<FanpageViewModel>> GetFanpageByCustomerIdAndChannelIdAsync(int channelId, int customerId)
         {
-            var response = await Mediator.Send(new GetFanpagesByCustomerIdRequest {customerId = customerId , channelId = channelId });
+            var response = await Mediator.Send(new GetFanpagesByCustomerIdAndChannelIdRequest { customerId = customerId , channelId = channelId });
+
+            return response;
+        }
+
+        [HttpGet("fanpages/customer/{customerId}")]
+        public async Task<List<FanpageViewModel>> GetFanpageByCustomerIdAsync(int customerId)
+        {
+            var response = await Mediator.Send(new GetFanpagesByCustomerIdRequest { customerId = customerId});
 
             return response;
         }
@@ -117,7 +128,6 @@ namespace BatchjobService.Controllers
             var task = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
 
             var taskFanpages = _context.TasksFanpages.FirstOrDefault(w => w.IdTask == task.Id && w.IdFanpage == fanpageId);
-            
 
             var jobId = BackgroundJob.Schedule(
                 () => _publish.PublishToFB(fanpageId, contentId),
@@ -169,7 +179,7 @@ namespace BatchjobService.Controllers
             _context.SaveChanges();
         }
 
-        private async Task PublishContento(int fanpageId, int contentId, DateTime time)
+        private void PublishContento(int fanpageId, int contentId, DateTime time)
         {
             var content = _context.Contents.FirstOrDefault(w => w.Id == contentId && w.IsActive == true);
             var task = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
@@ -194,7 +204,7 @@ namespace BatchjobService.Controllers
                 taskFanpages.IdJob = jobId;
                 _context.TasksFanpages.Add(taskFanpages);
             }
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 }

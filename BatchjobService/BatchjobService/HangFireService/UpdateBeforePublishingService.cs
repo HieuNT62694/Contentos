@@ -8,7 +8,7 @@ namespace BatchjobService.HangFireService
 {
     public interface IUpdateBeforePublishingService
     {
-        void UpdateStatusBeforePublishing(int id , DateTime time);
+        void UpdateStatusBeforePublishing(int id , DateTime time, List<int> lstTag);
     }
     public class UpdateBeforePublishingService : IUpdateBeforePublishingService
     {
@@ -17,15 +17,25 @@ namespace BatchjobService.HangFireService
         {
             _context = contentodbContext;
         }
-        public void UpdateStatusBeforePublishing(int id, DateTime time)
+        public void UpdateStatusBeforePublishing(int id, DateTime time, List<int> lstTag)
         {
             var content = _context.Contents.FirstOrDefault(w => w.Id == id && w.IsActive == true);
             var upTask = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
-            if(upTask.Status != 6)
+
+            List<TasksTags> tags = new List<TasksTags>();
+
+            foreach(var item in lstTag)
+            {
+                tags.Add(new TasksTags { IdTag = item });
+            }
+
+            if(upTask.Status <= 6)
             {
                upTask.Status = 6;
                upTask.PublishTime = time;
-               _context.UpdateRange(upTask);
+               upTask.TasksTags = tags;
+
+               _context.Update(upTask);
                _context.SaveChanges();
             }
         }

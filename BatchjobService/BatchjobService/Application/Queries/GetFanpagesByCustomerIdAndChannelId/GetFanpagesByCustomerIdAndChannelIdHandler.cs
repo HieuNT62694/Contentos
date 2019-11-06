@@ -8,24 +8,23 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BatchjobService.Application.Queries.GetFanpagesByCustomerId
+namespace BatchjobService.Application.Queries.GetFanpagesByCustomerIdAndChannelId
 {
-    public class GetFanpagesByCustomerIdHandler : IRequestHandler<GetFanpagesByCustomerIdRequest, List<FanpageViewModel>>
+    public class GetFanpagesByCustomerIdAndChannelIdHandler : IRequestHandler<GetFanpagesByCustomerIdAndChannelIdRequest, List<FanpageViewModel>>
     {
-
         private readonly ContentoDbContext _context;
 
-        public GetFanpagesByCustomerIdHandler(ContentoDbContext context)
+        public GetFanpagesByCustomerIdAndChannelIdHandler(ContentoDbContext context)
         {
             _context = context;
         }
-        public async Task<List<FanpageViewModel>> Handle(GetFanpagesByCustomerIdRequest request, CancellationToken cancellationToken)
+        public async Task<List<FanpageViewModel>> Handle(GetFanpagesByCustomerIdAndChannelIdRequest request, CancellationToken cancellationToken)
         {
-            var fanpages = await _context.Fanpages.Include(i => i.IdChannelNavigation).Where(w => w.IdCustomer == request.customerId).ToListAsync();
+            var fanpages = await _context.Fanpages.Include(i => i.IdChannelNavigation).Where(w => w.IdCustomer == request.customerId && w.IdChannel == request.channelId).ToListAsync();
 
             List<FanpageViewModel> listFanpages = new List<FanpageViewModel>();
 
-            if(fanpages == null)
+            if (fanpages == null)
             {
                 return listFanpages;
             }
