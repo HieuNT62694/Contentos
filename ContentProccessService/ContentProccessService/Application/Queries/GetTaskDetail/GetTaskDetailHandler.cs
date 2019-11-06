@@ -25,12 +25,14 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
             var comment = task.Contents.Where(x => x.IsActive == false && x.Version == (content.Version - 1) ).FirstOrDefault();
             var campaign = _context.Campaigns.Find(task.IdCampaign).Title;
             var lstTag = new List<TagsViewModel>();
+            var lTag = new List<int>();
             var lstTags = _context.TasksTags.Where(x=>x.IdTask == request.IdTask).ToList();
             foreach (var item in lstTags)
             {
                 var tag = new TagsViewModel();
                 tag.Name = _context.Tags.FirstOrDefault(x => x.Id == item.IdTag).Name;
                 tag.Id = item.IdTag;
+                lTag.Add(item.IdTag);
                 lstTag.Add(tag);
             }
             var wtn = _context.Users.FirstOrDefault(x => x.Id == task.IdWritter);
@@ -77,8 +79,9 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                    Comment = Comment,
                    Id = task.Id,
                    Tags = lstTag,
-                   Campaign = campaign
-               };
+                   Campaign = campaign,
+                   Tag = lTag
+            };
 
             return taskView;
         }
