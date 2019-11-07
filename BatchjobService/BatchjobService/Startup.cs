@@ -14,6 +14,7 @@ using NSwag.Generation.Processors.Security;
 using System;
 using System.Linq;
 using MediatR;
+using Steeltoe.Discovery.Client;
 
 namespace BatchjobService
 {
@@ -49,6 +50,7 @@ namespace BatchjobService
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+            services.AddDiscoveryClient(Configuration);
             //Add timer service
 
             services.AddOpenApiDocument(config =>
@@ -99,6 +101,7 @@ namespace BatchjobService
             //{
             //    await context.Response.WriteAsync("Hello World!");
             //});
+            app.UseDiscoveryClient();
             app.UseHttpsRedirection();
             app.UseMvc();
             app.UseOpenApi();
