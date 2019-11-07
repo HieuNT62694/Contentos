@@ -61,6 +61,7 @@ namespace CampaignService.Application.Queries.GetListCampaignByMarketerId
                     var cTag = new Tag { Id = tag.IdTag, Name = tag.IdTagNavigation.Name };
                     ls.Add(cTag);
                 }
+                model.StartedDate = item.CreatedDate;
                 model.listTag = ls;
                 models.Add(model);
             }
