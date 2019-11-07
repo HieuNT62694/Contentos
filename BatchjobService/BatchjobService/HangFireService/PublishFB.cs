@@ -12,8 +12,8 @@ namespace BatchjobService.HangFireService
 {
     public interface IPublishFBService
     {
-        Task PublishToContento(int contentId);
-        Task PublishToWP(int id);
+        Task PublishToContento(int taskId);
+        Task PublishToWP(int fanpageId, int contentId);
         Task PublishToFB(int fanpageId, int contentId);
     }
     public class PublishFB : IPublishFBService
@@ -62,9 +62,10 @@ namespace BatchjobService.HangFireService
 
 
 
-        public async Task PublishToWP(int id)
+        public async Task PublishToWP(int fanpageId, int contentId)
         {
-            var content = _context.Contents.FirstOrDefault(w => w.Id == id && w.IsActive == true);
+            var fanpage = _context.Fanpages.FirstOrDefault(f => f.Id == fanpageId && f.IsActive == true);
+            var content = _context.Contents.FirstOrDefault(w => w.Id == contentId && w.IsActive == true);
             var upTask = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
             if(upTask.Status != 7)
             {
@@ -74,13 +75,12 @@ namespace BatchjobService.HangFireService
             }
             Wordpress wordpress = new Wordpress();
 
-            await wordpress.PublishSimplePost(content);
+            await wordpress.PublishSimplePost(content, fanpage.Token);
         }
 
-        public async Task PublishToContento(int contentId)
+        public async Task PublishToContento(int taskId)
         {
-            var content = _context.Contents.FirstOrDefault(w => w.Id == contentId && w.IsActive == true);
-            var task = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
+            var task = _context.Tasks.FirstOrDefault(x => x.Id == taskId);
 
             if (task.Status != 7)
             {

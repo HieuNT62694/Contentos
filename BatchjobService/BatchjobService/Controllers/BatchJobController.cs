@@ -155,7 +155,7 @@ namespace BatchjobService.Controllers
         private void PublishWP(int fanpageId, int contentId, DateTime time, int taskId)
         {
             var jobId = BackgroundJob.Schedule(
-                () => _publish.PublishToWP(contentId),
+                () => _publish.PublishToWP(fanpageId, contentId),
                 time);
 
             var taskFanpages = new TasksFanpages();
