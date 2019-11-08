@@ -25,7 +25,7 @@ namespace AuthenticationService.Application.Commands.UpdateProfile
             {
                 var upUser = _context.Accounts.Include(i => i.IdUserNavigation).FirstOrDefault(x => x.IdUserNavigation.Id == request.Id);
                 if (upUser != null)
-                { 
+                {
                     upUser.IdUserNavigation.Company = request.CompanyName;
                     upUser.IdUserNavigation.LastName = request.LastName;
                     upUser.IdUserNavigation.Phone = request.Phone;
@@ -46,7 +46,8 @@ namespace AuthenticationService.Application.Commands.UpdateProfile
                         Phone = string.IsNullOrEmpty(upUser.IdUserNavigation.Phone) == true ? null : upUser.IdUserNavigation.Phone.Trim(),
                         Id = upUser.IdUserNavigation.Id,
                         Age = upUser.IdUserNavigation.Age,
-                        Gender = upUser.IdUserNavigation.Gender
+                        Gender = upUser.IdUserNavigation.Gender,
+                        FullName = upUser.IdUserNavigation.FirstName + " " + upUser.IdUserNavigation.LastName
                     };
                     transaction.Commit();
                     return returnResult;

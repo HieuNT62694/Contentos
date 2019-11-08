@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AuthenticationService.Application.Commands;
 using AuthenticationService.Application.Commands.ChangePassword;
+using AuthenticationService.Application.Commands.CheckOldPassword;
 using AuthenticationService.Application.Commands.CreateCustomer;
 using AuthenticationService.Application.Commands.Notify;
 using AuthenticationService.Application.Commands.UpdateCustomer;
@@ -44,6 +45,16 @@ namespace AuthenticationService.Controllers
                 return BadRequest("Change Password Fail");
             }
             return Accepted("Change Success ");
+        }
+        [HttpPost("check-password")]
+        public async Task<IActionResult> CheckPassword(CheckOldPasswordCommands commands)
+        {
+            var response = await Mediator.Send(commands);
+            if (response == false)
+            {
+                return BadRequest("Password Was Wrong");
+            }
+            return Accepted("Right Password");
         }
         [HttpPost("Register")]
         ////[Authorize(Roles = "Guest")]
