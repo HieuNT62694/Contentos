@@ -62,6 +62,7 @@ namespace CampaignService.Application.Queries.GetListCampaign
                     var cTag = new Tag { Id = tag.IdTag, Name = tag.IdTagNavigation.Name };
                     ls.Add(cTag);
                 }
+                model.StartedDate = item.CreatedDate;
                 model.listTag = ls;
                 returnResult.Add(model);
             }
