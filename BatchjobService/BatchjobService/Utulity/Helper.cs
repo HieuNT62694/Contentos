@@ -1,9 +1,14 @@
 ﻿using HtmlAgilityPack;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using WordPressPCL;
+using WordPressPCL.Models;
 
 namespace BatchjobService.Utulity
 {
@@ -28,6 +33,45 @@ namespace BatchjobService.Utulity
             }
 
             return listImg;
+        }
+
+        public static async Task<bool> FBTokenValidate(string token)
+        {
+            using (var http = new HttpClient())
+            {
+                var httpResponse = await http.GetAsync("https://graph.facebook.com/me?access_token=" + token);
+
+                var httpContent = await httpResponse.Content.ReadAsStringAsync();
+
+                var results = JsonConvert.DeserializeObject<dynamic>(httpContent);
+
+                if (results["error"] != null)
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        public static async Task<bool> WPTokenValidate(string token)
+        {
+            try
+            {
+                var handler = new JwtSecurityTokenHandler();
+                var iis = handler.ReadToken(token).Issuer;
+                var host = iis + "/wp-json/";
+                var client = new WordPressClient(host);
+
+                client.AuthMethod = AuthMethod.JWT;
+                client.SetJWToken(token);
+
+                return await client.IsValidJWToken();
+            }
+            catch
+            {
+                return false;
+            } 
         }
     }
 }

@@ -15,11 +15,11 @@ namespace BatchjobService.Utulity
 
             var handler = new JwtSecurityTokenHandler();
             var iis = handler.ReadToken(token).Issuer;
-            var client = new WordPressClient(iis + "/wp-json/");
+            var host = iis + "/wp-json/";
+            var client = new WordPressClient(host);
 
             client.AuthMethod = AuthMethod.JWT;
             client.SetJWToken(token);
-            //await client.RequestJWToken("admin", "admin");
 
 
             var post = new Post

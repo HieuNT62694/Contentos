@@ -15,6 +15,7 @@ using BatchjobService.Application.Queries.GetTaskFanpageByContentId;
 using BatchjobService.Entities;
 using BatchjobService.HangFireService;
 using BatchjobService.Models;
+using BatchjobService.Utulity;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -106,6 +107,18 @@ namespace BatchjobService.Controllers
         [HttpPost("fanpages")]
         public async Task<IActionResult> CreateFanpageAsync(CreateFanpageCommand createFanpageCommand)
         {
+            bool check = true;
+            switch (createFanpageCommand.channelId)
+            {
+                case 2: check = await Helper.FBTokenValidate(createFanpageCommand.token);
+                    break;
+                case 3: check = await Helper.WPTokenValidate(createFanpageCommand.token);
+                    break;
+            }
+            if (!check)
+            {
+                return Conflict();
+            }
             var response = await Mediator.Send(createFanpageCommand);
             return Accepted(response);
         }
@@ -113,6 +126,20 @@ namespace BatchjobService.Controllers
         [HttpPut("fanpages")]
         public async Task<IActionResult> UpdateFanpageAsync(UpdateFanpageCommand updateFanpageCommand)
         {
+            bool check = true;
+            switch (updateFanpageCommand.channelId)
+            {
+                case 2:
+                    check = await Helper.FBTokenValidate(updateFanpageCommand.token);
+                    break;
+                case 3:
+                    check = await Helper.WPTokenValidate(updateFanpageCommand.token);
+                    break;
+            }
+            if (!check)
+            {
+                return Conflict();
+            }
             var response = await Mediator.Send(updateFanpageCommand);
             return Accepted(response);
         }
@@ -169,7 +196,7 @@ namespace BatchjobService.Controllers
         private void PublishContento(int fanpageId, int contentId, DateTime time, int taskId)
         {
             var jobId = BackgroundJob.Schedule(
-                () => _publish.PublishToContento(contentId),
+                () => _publish.PublishToContento(taskId),
                 time);
 
             var taskFanpages = new TasksFanpages();
