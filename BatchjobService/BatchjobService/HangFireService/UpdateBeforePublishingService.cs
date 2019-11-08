@@ -49,8 +49,6 @@ namespace BatchjobService.HangFireService
                _context.TasksTags.AddRange(tags);
                _context.SaveChanges();
             }
-
-
         }
     }
 }
