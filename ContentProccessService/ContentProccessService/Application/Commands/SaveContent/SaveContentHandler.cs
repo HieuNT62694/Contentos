@@ -26,7 +26,7 @@ namespace ContentProccessService.Application.Commands.SaveContent
                 var upContent = _context.Contents.AsNoTracking().FirstOrDefault(x=>x.Id == request.Id);
                 upContent.TheContent = request.Content;
                 upContent.Name = request.Name;
-                upContent.ModifiedDate = DateTime.Now;
+                upContent.ModifiedDate = DateTime.UtcNow;
                 _context.Attach(upContent);
                 _context.Entry(upContent).State = EntityState.Modified;
                 await _context.SaveChangesAsync(cancellationToken);

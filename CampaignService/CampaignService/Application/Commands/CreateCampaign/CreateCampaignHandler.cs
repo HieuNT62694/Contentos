@@ -42,7 +42,7 @@ namespace CampaignService.Application.Commands.CreateCampaign
                     IdEditor = request.Editor.Id,
                     Description = request.Description,
                     Title = request.Title,
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = DateTime.UtcNow,
                     Status = 1,
                     IdMarketer = request.IdMarketer,
                     TagsCampaigns = Tags

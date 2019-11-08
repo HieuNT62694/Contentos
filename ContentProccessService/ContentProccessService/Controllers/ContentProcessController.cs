@@ -232,9 +232,9 @@ namespace ContentProccessService.Controllers
             //CookieOptions option = new CookieOptions();
 
             //if (expireTime.HasValue)
-            //    option.Expires = DateTime.Now.AddMinutes(expireTime.Value);
+            //    option.Expires = DateTime.UtcNow.AddMinutes(expireTime.Value);
             //else
-            //    option.Expires = DateTime.Now.AddMilliseconds(10);
+            //    option.Expires = DateTime.UtcNow.AddMilliseconds(10);
 
             //Response.Cookies.Append(key, value, option);
             var cookieOptions = new CookieOptions()
@@ -242,7 +242,7 @@ namespace ContentProccessService.Controllers
                 Path = "/",
                 HttpOnly = false,
                 IsEssential = true, //<- there
-                Expires = DateTime.Now.AddYears(1),
+                Expires = DateTime.UtcNow.AddYears(1),
                 SameSite = SameSiteMode.None
             };
             if (string.IsNullOrEmpty(value))
@@ -250,9 +250,9 @@ namespace ContentProccessService.Controllers
                 value = "0";
             }
             if (expireTime.HasValue)
-                cookieOptions.Expires = DateTime.Now.AddMonths(expireTime.Value);
+                cookieOptions.Expires = DateTime.UtcNow.AddMonths(expireTime.Value);
             else
-                cookieOptions.Expires = DateTime.Now.AddYears(1);
+                cookieOptions.Expires = DateTime.UtcNow.AddYears(1);
             Response.Cookies.Append(key, value, cookieOptions);
         }
         [HttpGet("content-detail/viewer/{id}")]

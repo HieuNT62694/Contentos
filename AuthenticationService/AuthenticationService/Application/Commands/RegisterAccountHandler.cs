@@ -31,7 +31,7 @@ namespace AuthenticationService.Application.Commands
                         Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                         IdRole = 4,
                         IsActive = true,
-                        CreatedDate = DateTime.Now
+                        CreatedDate = DateTime.UtcNow
 
                     };
                     var lstAcc = new List<Accounts>();

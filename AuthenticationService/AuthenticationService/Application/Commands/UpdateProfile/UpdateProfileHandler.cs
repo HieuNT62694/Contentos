@@ -32,7 +32,7 @@ namespace AuthenticationService.Application.Commands.UpdateProfile
                     upUser.IdUserNavigation.FirstName = request.FirstName;
                     upUser.IdUserNavigation.Age = request.Age;
                     upUser.IdUserNavigation.Gender = request.Gender;
-                    upUser.ModifiedDate = DateTime.Now;
+                    upUser.ModifiedDate = DateTime.UtcNow;
                     _context.Attach(upUser);
                     _context.Entry(upUser).State = EntityState.Modified;
                     _context.Accounts.Update(upUser);

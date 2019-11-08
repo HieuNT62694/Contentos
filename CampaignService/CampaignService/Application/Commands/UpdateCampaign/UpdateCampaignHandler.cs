@@ -37,7 +37,7 @@ namespace CampaignService.Application.Commands.UpdateCampaign
                 upCampaign.Description = request.Description;
 
                 upCampaign.Title = request.Title;
-                upCampaign.ModifiedDate = DateTime.Now;
+                upCampaign.ModifiedDate = DateTime.UtcNow;
 
                 var upTags = new List<TagsCampaigns>();
 

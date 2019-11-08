@@ -40,7 +40,7 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
                         Password = BCrypt.Net.BCrypt.HashPassword(newPassword),
                         IdRole = 5,
                         IsActive = true,
-                        CreatedDate = DateTime.Now
+                        CreatedDate = DateTime.UtcNow
 
                     };
                     var lstAcc = new List<Accounts>();

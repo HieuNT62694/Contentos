@@ -26,8 +26,8 @@ namespace ContentProccessService.Application.Commands.CreateTask
             //    Deadline = request.Task.Deadline,
             //    PublishTime = request.Task.PublishTime,
             //    Title = request.Task.Title,
-            //    StartedDate = DateTime.Now,
-            //    ModifiedDate = DateTime.Now,
+            //    StartedDate = DateTime.UtcNow,
+            //    ModifiedDate = DateTime.UtcNow,
             //    Status = 1
             //};
             //contentodbContext.Tasks.Add(task);
@@ -40,7 +40,7 @@ namespace ContentProccessService.Application.Commands.CreateTask
 
                 foreach (var item in request.Task.Tags)
                 {
-                    var tag = new TasksTags { IdTag = item, CreatedDate = DateTime.Now };
+                    var tag = new TasksTags { IdTag = item, CreatedDate = DateTime.UtcNow };
                     Tags.Add(tag);
                 }
                 var task = new Tasks
@@ -51,8 +51,8 @@ namespace ContentProccessService.Application.Commands.CreateTask
                         Description = request.Task.Description,
                         PublishTime = request.Task.PublishTime,
                         Title = request.Task.Title,
-                        CreatedDate = DateTime.Now,
-                        ModifiedDate = DateTime.Now,
+                        CreatedDate = DateTime.UtcNow,
+                        ModifiedDate = DateTime.UtcNow,
                         TasksTags = Tags,
                         Status = 1
                     };
@@ -95,7 +95,7 @@ namespace ContentProccessService.Application.Commands.CreateTask
                 if (upStatus.Status == 1)
                 {
                     upStatus.Status = 2;
-                    upStatus.CreatedDate = DateTime.Now;
+                    upStatus.CreatedDate = DateTime.UtcNow;
                     contentodbContext.Attach(upStatus);
                     contentodbContext.Entry(upStatus).Property(x => x.Status).IsModified = true;
                     await contentodbContext.SaveChangesAsync(cancellationToken);

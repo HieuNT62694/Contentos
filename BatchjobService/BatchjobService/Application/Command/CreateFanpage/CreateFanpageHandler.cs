@@ -29,7 +29,7 @@ namespace BatchjobService.Application.Command.CreateFanpage
             fanpage.IdMarketer = request.marketerId;
             fanpage.IsActive = true;
             fanpage.Token = request.token;
-            fanpage.ModifiedDate = DateTime.Now;
+            fanpage.ModifiedDate = DateTime.UtcNow;
             fanpage.Name = request.name;
 
             _context.Add(fanpage);

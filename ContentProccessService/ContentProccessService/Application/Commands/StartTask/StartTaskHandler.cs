@@ -25,7 +25,7 @@ namespace ContentProccessService.Application.Commands.StartTask
             {
                 var newContent = new Contents
                 {
-                    CreatedDate = DateTime.Now,
+                    CreatedDate = DateTime.UtcNow,
                     Version = 1,
                     IdTask = request.IdTask,
                     IsActive = true
@@ -33,7 +33,7 @@ namespace ContentProccessService.Application.Commands.StartTask
                 _context.Contents.Add(newContent);
                 var upTask = _context.Tasks.AsNoTracking().Include(y => y.Contents).FirstOrDefault(x => x.Id == request.IdTask);
                 upTask.Status = 2;
-                upTask.StartDate = DateTime.Now;
+                upTask.StartDate = DateTime.UtcNow;
                 _context.Attach(upTask);
                 _context.Entry(upTask).State = EntityState.Modified;
                 await _context.SaveChangesAsync(cancellationToken);

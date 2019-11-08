@@ -33,7 +33,7 @@ namespace ContentProccessService.Application.Commands.ApproveRejectContent
                     var upContent = contentodbContext.Contents.FirstOrDefault(y => y.Id == request.IdContent);
                     upContent.TheContent = request.Comments;
                     upContent.Name = request.Name;
-                    upContent.ModifiedDate = DateTime.Now;
+                    upContent.ModifiedDate = DateTime.UtcNow;
                     contentodbContext.Attach(upContent);
                     contentodbContext.Entry(upContent).State = EntityState.Modified;
                 }
@@ -49,7 +49,7 @@ namespace ContentProccessService.Application.Commands.ApproveRejectContent
                     {
                         Comment = request.Comments,
                         IdContent = request.IdContent,
-                        CreatedDate = DateTime.Now,
+                        CreatedDate = DateTime.UtcNow,
                         IsActive = true,
                         
                     };
@@ -64,7 +64,7 @@ namespace ContentProccessService.Application.Commands.ApproveRejectContent
                     var addContent = new Contents();
                     addContent.IdTask = upContent.IdTask;
                     addContent.IsActive = true;
-                    addContent.CreatedDate = DateTime.Now;
+                    addContent.CreatedDate = DateTime.UtcNow;
                     //addContent.IdComment = addComment.Id;
                     addContent.Version = upContent.Version + 1;
                     addContent.TheContent = upContent.TheContent;

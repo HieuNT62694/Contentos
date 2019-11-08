@@ -38,7 +38,7 @@ namespace FBTest
                 { "access_token", _accessToken },
                 { "message", postText }
                 //{ "published", "false" },
-                //{ "scheduled_publish_time", ((int)DateTime.Now.Subtract(new DateTime(1970, 1, 1)).TotalSeconds + 600).ToString()}//,
+                //{ "scheduled_publish_time", ((int)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds + 600).ToString()}//,
                 // { "formatting", "MARKDOWN" } // doesn't work
             };
 

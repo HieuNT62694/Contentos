@@ -27,8 +27,8 @@ namespace ContentProccessService.Application.Commands.CreateListTaskChannel
                 {
                     IdFanpage = item.IdChannel,
                     IdTask = item.IdTask,
-                    ModifiedDate = DateTime.Now,
-                    CreatedDate = DateTime.Now,
+                    ModifiedDate = DateTime.UtcNow,
+                    CreatedDate = DateTime.UtcNow,
                 };
                 contentodbContext.Attach(taskchannel);
                 //contentodbContext.TasksChannels.Add(taskchannel);

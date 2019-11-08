@@ -28,7 +28,7 @@ namespace BatchjobService.Application.Command.UpdateFanpage
             }
             fanpage.IsActive = true;
             fanpage.Token = request.token;
-            fanpage.ModifiedDate = DateTime.Now;
+            fanpage.ModifiedDate = DateTime.UtcNow;
             fanpage.Name = request.name;
 
             _context.Update(fanpage);

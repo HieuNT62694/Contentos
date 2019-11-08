@@ -25,7 +25,7 @@ namespace ContentProccessService.Application.Commands.SubmitContent
                 var upContent = _context.Contents.AsNoTracking().FirstOrDefault(x => x.Id == request.IdContent);
                 upContent.TheContent = request.Content;
                 upContent.Name = request.Name;
-                upContent.ModifiedDate = DateTime.Now;
+                upContent.ModifiedDate = DateTime.UtcNow;
                 _context.Attach(upContent);
                 _context.Entry(upContent).State = EntityState.Modified;
                 var upTask = _context.Tasks.AsNoTracking().FirstOrDefault(x => x.Id == request.IdTask);
