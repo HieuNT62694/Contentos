@@ -22,7 +22,9 @@ namespace ContentProccessService.Application.Queries.GetListTaksByCampaignId
             var task = await _context.Tasks.AsNoTracking()
                 .Include(x=>x.StatusNavigation)
                 .Include(x=>x.IdWritterNavigation)
-                .Where(x => x.IdCampaign == request.IdCampaign).ToListAsync();
+                .Where(x => x.IdCampaign == request.IdCampaign)
+                .OrderByDescending(x => x.CreatedDate)
+                .ToListAsync();
 
             var lstTask = new List<TasksViewModel>();
             foreach (var item in task)

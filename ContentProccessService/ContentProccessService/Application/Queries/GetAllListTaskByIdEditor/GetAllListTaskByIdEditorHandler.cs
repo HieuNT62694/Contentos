@@ -27,6 +27,7 @@ namespace ContentProccessService.Application.Queries.GetAllListTaskByIdEditor
                 .Include(t => t.IdCampaignNavigation)
                 .Include(g => g.StatusNavigation)
                 .Include(f => f.Contents)
+                .OrderByDescending(x=>x.CreatedDate)
                 .Where(t => t.IdCampaignNavigation.IdEditor == request.IdEditor).ToListAsync();
 
             foreach (var item in ls)

@@ -25,7 +25,9 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdWriter
                 .Include(t => t.IdCampaignNavigation)
                 .Include(g => g.StatusNavigation)
                 .Include(f => f.Contents)
-                .Where(x => x.IdWritter == request.IdWriter).ToListAsync();
+                .Where(x => x.IdWritter == request.IdWriter)
+                .OrderByDescending(x => x.CreatedDate)
+                .ToListAsync();
 
             foreach (var item in ls)
             {

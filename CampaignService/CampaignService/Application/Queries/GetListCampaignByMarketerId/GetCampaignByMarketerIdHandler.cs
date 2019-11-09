@@ -28,6 +28,7 @@ namespace CampaignService.Application.Queries.GetListCampaignByMarketerId
                 .Include(i => i.IdCustomerNavigation)
                 .Include(i => i.TagsCampaigns).ThenInclude(TagsCampaigns => TagsCampaigns.IdTagNavigation)
                 .Include(i => i.StatusNavigation)
+                .OrderByDescending(i => i.CreatedDate)
                 .Where(w => w.IdMarketer == request.IdMarketer)
                 .ToListAsync();
 

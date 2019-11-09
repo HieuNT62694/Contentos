@@ -23,6 +23,7 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdMarketer
                 .Include(x => x.Tasks).ThenInclude(Tasks=> Tasks.StatusNavigation)
                 .Include(x=> x.Tasks).ThenInclude(Tasks=> Tasks.IdWritterNavigation)
                 .Where(x => x.IdMarketer == request.IdMartketer )
+                .OrderByDescending(x => x.CreatedDate)
                 .Select(x => new
                 {
                     x,

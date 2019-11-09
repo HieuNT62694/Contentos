@@ -29,6 +29,7 @@ namespace CampaignService.Application.Queries.GetListCampaignByUserId
                 .Include(i => i.TagsCampaigns).ThenInclude(TagsCampaigns => TagsCampaigns.IdTagNavigation)
                 .Include(i => i.StatusNavigation)
                 .Include(i => i.TagsCampaigns)
+                .OrderByDescending(i => i.CreatedDate)
                 .Where(w => w.IdCustomer == request.IdCustomer)
                 .ToListAsync();
             

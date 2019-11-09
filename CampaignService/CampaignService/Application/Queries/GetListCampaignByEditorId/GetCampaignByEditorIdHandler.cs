@@ -29,6 +29,7 @@ namespace CampaignService.Application.Queries.GetListCampaignByEditorId
                 .Include(i => i.TagsCampaigns).ThenInclude(TagsCampaigns=> TagsCampaigns.IdTagNavigation)
                 .Include(i=>i.StatusNavigation)
                 .Where(w => w.IdEditor == request.IdEditor)
+                .OrderByDescending(i=>i.CreatedDate)
                 .ToListAsync();
 
             //Map from entity to model
