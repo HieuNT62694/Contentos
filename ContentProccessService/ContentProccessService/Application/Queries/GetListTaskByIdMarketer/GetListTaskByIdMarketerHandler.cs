@@ -23,11 +23,10 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdMarketer
                 .Include(x => x.Tasks).ThenInclude(Tasks=> Tasks.StatusNavigation)
                 .Include(x=> x.Tasks).ThenInclude(Tasks=> Tasks.IdWritterNavigation)
                 .Where(x => x.IdMarketer == request.IdMartketer )
-                .OrderByDescending(x => x.CreatedDate)
                 .Select(x => new
                 {
                     x,
-                    Tasks = x.Tasks.Where(i => i.Status == 5 || i.Status == 6 ||i.Status == 7 ).ToList()
+                    Tasks = x.Tasks.Where(i => i.Status == 5 || i.Status == 6 ||i.Status == 7 ).OrderBy(i=>i.PublishTime).ToList()
                 })
                 .ToListAsync();
             var lstTask = new List<TasksViewModel>();
