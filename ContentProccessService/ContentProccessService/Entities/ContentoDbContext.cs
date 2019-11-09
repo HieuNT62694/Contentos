@@ -21,6 +21,7 @@ namespace ContentProccessService.Entities
         public virtual DbSet<Comments> Comments { get; set; }
         public virtual DbSet<Contents> Contents { get; set; }
         public virtual DbSet<Fanpages> Fanpages { get; set; }
+        public virtual DbSet<FanpagesTags> FanpagesTags { get; set; }
         public virtual DbSet<FavoritesContents> FavoritesContents { get; set; }
         public virtual DbSet<Notifys> Notifys { get; set; }
         public virtual DbSet<Personalizations> Personalizations { get; set; }
@@ -40,7 +41,8 @@ namespace ContentProccessService.Entities
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=34.87.31.23;Database=ContentoDb;User ID=sa;Password=Hieunguyen1@;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer("Server=35.247.179.28;Database=ContentoDb;User ID=sa;Password=Hieu@123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=True;Connection Timeout=30;");
             }
         }
 
@@ -110,6 +112,10 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.StartDate)
+                    .HasColumnName("start_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Status).HasColumnName("status");
@@ -190,6 +196,8 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
+                entity.Property(e => e.IsAds).HasColumnName("is_ads");
+
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
                     .HasColumnType("datetime");
@@ -222,6 +230,10 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnName("modified_date")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.Name)
                     .HasColumnName("name")
                     .HasMaxLength(250);
@@ -241,6 +253,32 @@ namespace ContentProccessService.Entities
                     .WithMany(p => p.Fanpages)
                     .HasForeignKey(d => d.IdMarketer)
                     .HasConstraintName("FK_fanpage_marketer");
+            });
+
+            modelBuilder.Entity<FanpagesTags>(entity =>
+            {
+                entity.HasKey(e => new { e.IdFanpage, e.IdTag })
+                    .HasName("PK__fanpages__94D0161C3F4CB722");
+
+                entity.ToTable("fanpages_tags");
+
+                entity.Property(e => e.IdFanpage).HasColumnName("id_fanpage");
+
+                entity.Property(e => e.IdTag).HasColumnName("id_tag");
+
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
+                entity.HasOne(d => d.IdFanpageNavigation)
+                    .WithMany(p => p.FanpagesTags)
+                    .HasForeignKey(d => d.IdFanpage)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_channel_tags_channels");
+
+                entity.HasOne(d => d.IdTagNavigation)
+                    .WithMany(p => p.FanpagesTags)
+                    .HasForeignKey(d => d.IdTag)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_channel_tags_tags");
             });
 
             modelBuilder.Entity<FavoritesContents>(entity =>

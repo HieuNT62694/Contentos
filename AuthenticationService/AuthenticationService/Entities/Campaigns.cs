@@ -21,6 +21,7 @@ namespace AuthenticationService.Entities
         public DateTime? EndDate { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
+        public DateTime? StartDate { get; set; }
 
         public virtual Users IdCustomerNavigation { get; set; }
         public virtual Users IdEditorNavigation { get; set; }

@@ -7,6 +7,7 @@ namespace BatchjobService.Entities
     {
         public Fanpages()
         {
+            FanpagesTags = new HashSet<FanpagesTags>();
             TasksFanpages = new HashSet<TasksFanpages>();
         }
 
@@ -23,6 +24,7 @@ namespace BatchjobService.Entities
 
         public virtual Channels IdChannelNavigation { get; set; }
         public virtual Users IdMarketerNavigation { get; set; }
+        public virtual ICollection<FanpagesTags> FanpagesTags { get; set; }
         public virtual ICollection<TasksFanpages> TasksFanpages { get; set; }
     }
 }

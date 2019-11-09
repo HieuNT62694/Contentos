@@ -30,7 +30,7 @@ namespace CampaignService.Application.Queries.GetCampaign
                 .Include(x => x.IdEditorNavigation)
                 .Include(x => x.IdCustomerNavigation)
                 .Include(x => x.StatusNavigation)
-                .FirstAsync(x => x.Id == request.IdCampaign);
+                .FirstOrDefaultAsync(x => x.Id == request.IdCampaign);
 
             CampaignTaskDetail model = mapper.Map<CampaignTaskDetail>(entity);
 

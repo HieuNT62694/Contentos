@@ -7,6 +7,7 @@ namespace ContentProccessService.Entities
     {
         public Fanpages()
         {
+            FanpagesTags = new HashSet<FanpagesTags>();
             TasksFanpages = new HashSet<TasksFanpages>();
         }
 
@@ -19,9 +20,11 @@ namespace ContentProccessService.Entities
         public string Password { get; set; }
         public bool? IsActive { get; set; }
         public int? IdCustomer { get; set; }
+        public DateTime? ModifiedDate { get; set; }
 
         public virtual Channels IdChannelNavigation { get; set; }
         public virtual Users IdMarketerNavigation { get; set; }
+        public virtual ICollection<FanpagesTags> FanpagesTags { get; set; }
         public virtual ICollection<TasksFanpages> TasksFanpages { get; set; }
     }
 }

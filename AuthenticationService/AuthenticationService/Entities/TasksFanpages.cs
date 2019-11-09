@@ -7,7 +7,7 @@ namespace AuthenticationService.Entities
     {
         public int IdTask { get; set; }
         public int IdFanpage { get; set; }
-        public int? IdJob { get; set; }
+        public string IdJob { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
 

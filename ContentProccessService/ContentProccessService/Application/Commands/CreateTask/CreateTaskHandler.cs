@@ -95,7 +95,7 @@ namespace ContentProccessService.Application.Commands.CreateTask
                 if (upStatus.Status == 1)
                 {
                     upStatus.Status = 2;
-                    upStatus.CreatedDate = DateTime.UtcNow;
+                    upStatus.StartDate = DateTime.UtcNow;
                     contentodbContext.Attach(upStatus);
                     contentodbContext.Entry(upStatus).Property(x => x.Status).IsModified = true;
                     await contentodbContext.SaveChangesAsync(cancellationToken);

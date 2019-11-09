@@ -31,6 +31,7 @@ namespace CampaignService.Application.Queries.GetListCampaign
                 .Include(i => i.TagsCampaigns).ThenInclude(TagsCampaigns => TagsCampaigns.IdTagNavigation)
                 .Include(i => i.IdCustomerNavigation)
                 .Include(i => i.StatusNavigation)
+                .OrderByDescending(i=>i.CreatedDate)
                 .ToListAsync();
 
             foreach (var item in listCampaign)
@@ -62,7 +63,7 @@ namespace CampaignService.Application.Queries.GetListCampaign
                     var cTag = new Tag { Id = tag.IdTag, Name = tag.IdTagNavigation.Name };
                     ls.Add(cTag);
                 }
-                model.StartedDate = item.CreatedDate;
+                model.StartedDate = item.StartDate;
                 model.listTag = ls;
                 returnResult.Add(model);
             }
