@@ -5,6 +5,7 @@ using AuthenticationService.Application.Commands.ChangePassword;
 using AuthenticationService.Application.Commands.CheckOldPassword;
 using AuthenticationService.Application.Commands.CreateCustomer;
 using AuthenticationService.Application.Commands.Notify;
+using AuthenticationService.Application.Commands.SaveToken;
 using AuthenticationService.Application.Commands.UpdateCustomer;
 using AuthenticationService.Application.Commands.UpdateProfile;
 using AuthenticationService.Application.Queries;
@@ -12,6 +13,7 @@ using AuthenticationService.Application.Queries.GetAllWriterByIdMarketer;
 using AuthenticationService.Application.Queries.GetCustomer;
 using AuthenticationService.Application.Queries.GetCustomerByIdEditor;
 using AuthenticationService.Application.Queries.GetcustomerDetail;
+using AuthenticationService.Application.Queries.GetNotify;
 using AuthenticationService.Application.Queries.GetProfile;
 using AuthenticationService.Application.Queries.GetUser;
 using AuthenticationService.Application.Queries.GetWriter;
@@ -140,8 +142,12 @@ namespace AuthenticationService.Controllers
         [HttpPost("send-notify")]
         public async Task<IActionResult> Notify(NotifyCommands Command)
         {
-            var result = await Mediator.Send(Command);
-            return Accepted(result);
+            var response = await Mediator.Send(Command);
+            if (response == null)
+            {
+                return BadRequest("Something went wrong, Please check recieverId and token");
+            }
+            return Ok(response);
         }
         [HttpGet("Writer/Marketers/{id}")]
         ////[Authorize(Roles = "Marketer")]
@@ -200,5 +206,30 @@ namespace AuthenticationService.Controllers
             }
             return Accepted(result);
         }
+
+        [HttpPost("Tokens")]
+        //[Authorize(Roles = "Marketer,Editor")]
+        public async Task<IActionResult> SaveToken(SaveTokenCommands command)
+        {
+            var result = await Mediator.Send(command);
+              if (result== null)
+            {
+                return BadRequest("Token exits already");
+            }
+            return Accepted(result);
+        }
+
+        [HttpGet("Notify/User/{id}")]
+        //[Authorize(Roles = "Marketer,Editor")]
+        public async Task<IActionResult> GetListNotifyByUser(int id)
+        {
+            var response = await Mediator.Send(new GetNotifysRequest { UserId = id });
+            if (response.Count == 0)
+            {
+                return BadRequest("Don't have Notify For Marketer");
+            }
+            return Ok(response);
+        }
+
     }
 }

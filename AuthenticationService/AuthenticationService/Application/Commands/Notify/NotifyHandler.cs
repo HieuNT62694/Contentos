@@ -6,14 +6,89 @@ using Newtonsoft.Json;
 using System.Text;
 using System.IO;
 using System.Net;
+using AuthenticationService.Models;
+using AuthenticationService.Entities;
+using AuthenticationService.Common;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace AuthenticationService.Application.Commands.Notify
 {
-    public class NotifyHandler : IRequestHandler<NotifyCommands,bool>
+    public class NotifyHandler : IRequestHandler<NotifyCommands, NotifyModel>
     {
-        public async Task<bool> Handle(NotifyCommands request, CancellationToken cancellationToken)
+        private readonly ContentoDbContext _context;
+        private readonly IHelperFunction _helper;
+
+        public NotifyHandler(ContentoDbContext context, IHelperFunction helper)
         {
-          
+            _context = context;
+            _helper = helper;
+        }
+
+        public async Task<NotifyModel> Handle(NotifyCommands request, CancellationToken cancellationToken)
+        {
+            var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var token = await GetTokenAsync(request.Reciever);
+                if (token != null)
+                {
+                    bool isSendNotify = SendNotify(request,token);
+                    if (isSendNotify)
+                    {
+                        var newNotify = new Notifys
+                        {
+                            //Sender = request.Sender,
+                            //Reciever = request.Reciever,
+                            IdToken = token.Id,
+                            Messager = request.Messenger,
+                            Title = request.Title,
+                            Date = DateTime.UtcNow
+
+                        };
+
+                        _context.Notifys.Add(newNotify);
+                        await _context.SaveChangesAsync();
+                        transaction.Commit();
+                        return new NotifyModel
+                        {
+                            Id = _context.Notifys.AsNoTracking().OrderByDescending(x => x.Id).First().Id,
+                            Title = newNotify.Title,
+                            Messager = newNotify.Messager,
+                            // đợi chỉnh sửa database
+                            //Reviever = newNotify.Reciever,
+                            //Sender = newNotify.Sender,
+                            //TokenId = newNotify.TokenId,
+                            //IdObject = newNotify.IdObject,
+                            //TypeSend = newNotify.TypeSend
+                        };
+                    }
+                    return null;
+                }
+                else
+                {
+                    return null;
+                }
+
+            }
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                return null;
+            }
+        }
+
+        public async Task<Tokens> GetTokenAsync(int RecieverId)
+        {
+            var token = await _context.Tokens.AsNoTracking()
+                .FirstOrDefaultAsync(x => x.IdUser == RecieverId);
+            return token;
+
+        }
+
+        public bool SendNotify(NotifyCommands request, Tokens tokens)
+        {
             try
             {
                 WebRequest tRequest = WebRequest.Create("https://fcm.googleapis.com/fcm/send");
@@ -25,19 +100,20 @@ namespace AuthenticationService.Application.Commands.Notify
                 tRequest.ContentType = "application/json";
                 var payload = new
                 {
-                    to = "cKddtT0riAU:APA91bHks4sUqORwyF3c0gCaTWaLJbSUNe2CLCyj4yqPaWD5woBoPCqXHulDsHiA7zrDMJ5gK_vZ6UNObq_hX3oKQGz6v9G1N1nKP93XsTJCdODohyGBkNjSIMkcqZo8GL8CFKuTZun6",
+                    //to = "cKddtT0riAU:APA91bHks4sUqORwyF3c0gCaTWaLJbSUNe2CLCyj4yqPaWD5woBoPCqXHulDsHiA7zrDMJ5gK_vZ6UNObq_hX3oKQGz6v9G1N1nKP93XsTJCdODohyGBkNjSIMkcqZo8GL8CFKuTZun6",
+                    to = tokens.Token,
                     priority = "high",
                     content_available = true,
                     notification = new
                     {
-                        body = "Test",
-                        title = "Test",
+                        body = request.Messenger,
+                        title = request.Title,
                         badge = 1
                     },
-                    data = new
-                    {
-                        image = "Conmeongu",
-                    },
+                    //data = new
+                    //{
+                    //    image = "Conmeongu",
+                    //},
 
                 };
 
@@ -54,8 +130,12 @@ namespace AuthenticationService.Application.Commands.Notify
                             if (dataStreamResponse != null) using (StreamReader tReader = new StreamReader(dataStreamResponse))
                                 {
                                     String sResponseFromServer = tReader.ReadToEnd();
-                                    Console.WriteLine(sResponseFromServer);
+                                    return true;
                                 }
+                            else
+                            {
+                                return false;
+                            }
                         }
                     }
 
@@ -67,9 +147,7 @@ namespace AuthenticationService.Application.Commands.Notify
 
                 string str = ex.Message;
             }
-            return true;
-
-           
+            return false;
         }
     }
 }
