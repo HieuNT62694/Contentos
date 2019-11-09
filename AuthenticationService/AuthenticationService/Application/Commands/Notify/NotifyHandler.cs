@@ -18,12 +18,10 @@ namespace AuthenticationService.Application.Commands.Notify
     public class NotifyHandler : IRequestHandler<NotifyCommands, NotifyModel>
     {
         private readonly ContentoDbContext _context;
-        private readonly IHelperFunction _helper;
 
-        public NotifyHandler(ContentoDbContext context, IHelperFunction helper)
+        public NotifyHandler(ContentoDbContext context)
         {
             _context = context;
-            _helper = helper;
         }
 
         public async Task<NotifyModel> Handle(NotifyCommands request, CancellationToken cancellationToken)

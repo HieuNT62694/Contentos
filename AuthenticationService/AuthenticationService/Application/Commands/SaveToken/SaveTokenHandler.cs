@@ -14,12 +14,10 @@ namespace AuthenticationService.Application.Commands.SaveToken
     public class SaveTokenHandler : IRequestHandler<SaveTokenCommands, UserToken>
     {
         private readonly ContentoDbContext _context;
-        private readonly IHelperFunction _helper;
 
-        public SaveTokenHandler(ContentoDbContext context, IHelperFunction helper)
+        public SaveTokenHandler(ContentoDbContext context)
         {
             _context = context;
-            _helper = helper;
         }
 
         public async Task<UserToken> Handle(SaveTokenCommands request, CancellationToken cancellationToken)
