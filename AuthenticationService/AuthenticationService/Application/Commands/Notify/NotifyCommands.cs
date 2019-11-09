@@ -1,19 +1,29 @@
-﻿using MediatR;
+﻿using AuthenticationService.Models;
+using MediatR;
 using System.ComponentModel.DataAnnotations;
 
 namespace AuthenticationService.Application.Commands.Notify
 {
-    public class NotifyCommands : IRequest<bool>
+    public class NotifyCommands : IRequest<NotifyModel>
     {
      
         [Required]
-        public string To { get; set; }
+        public string Sender { get; set; }
+
+        [Required]
+        public int Reciever { get; set; }
+
+        [Required]
+        public int IdObject { get; set; }
+
+        [Required]
+        public string TypeSend { get; set; }
 
         [Required]
         public string Title { get; set; }
 
         [Required]
-        public string Body { get; set; }
+        public string Messenger { get; set; }
 
 
     }
