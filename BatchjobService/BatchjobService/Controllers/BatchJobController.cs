@@ -11,6 +11,7 @@ using BatchjobService.Application.Queries.GetFanpages;
 using BatchjobService.Application.Queries.GetFanpagesByCustomerId;
 using BatchjobService.Application.Queries.GetFanpagesByCustomerIdAndChannelId;
 using BatchjobService.Application.Queries.GetFanpagesByMarketerId;
+using BatchjobService.Application.Queries.GetListFanpageByTags;
 using BatchjobService.Application.Queries.GetTaskFanpageByContentId;
 using BatchjobService.Entities;
 using BatchjobService.HangFireService;
@@ -77,6 +78,14 @@ namespace BatchjobService.Controllers
         public async Task<EditViewModel> GetDetailFanpageAsync(int id)
         {
             var response = await Mediator.Send(new GetDetailFanpageRequest { Id = id });
+
+            return response;
+        }
+
+        [HttpPost("fanpage/tags")]
+        public async Task<List<FanpageViewModel>> GetListFanpageByTagsAsync(List<int> id)
+        {
+            var response = await Mediator.Send(new GetListFanpageByTagsRequest { lstTags = id });
 
             return response;
         }
