@@ -20,7 +20,10 @@ namespace BatchjobService.Application.Queries.GetFanpagesByCustomerIdAndChannelI
         }
         public async Task<List<FanpageViewModel>> Handle(GetFanpagesByCustomerIdAndChannelIdRequest request, CancellationToken cancellationToken)
         {
-            var fanpages = await _context.Fanpages.Include(i => i.IdChannelNavigation).Where(w => w.IdCustomer == request.customerId && w.IdChannel == request.channelId).ToListAsync();
+            var fanpages = await _context.Fanpages
+                .Include(i => i.IdChannelNavigation)
+                .Include(i => i.FanpagesTags).ThenInclude(FanpagesTags => FanpagesTags.IdTagNavigation)
+                .Where(w => w.IdCustomer == request.CustomerId && w.IdChannel == request.ChannelId).ToListAsync();
 
             List<FanpageViewModel> listFanpages = new List<FanpageViewModel>();
 
@@ -33,21 +36,36 @@ namespace BatchjobService.Application.Queries.GetFanpagesByCustomerIdAndChannelI
             {
                 FanpageViewModel model = new FanpageViewModel();
 
-                model.id = fanpage.Id;
-                model.name = fanpage.Name;
-                model.channel = new Channel { id = fanpage.IdChannelNavigation.Id, name = fanpage.IdChannelNavigation.Name };
+                model.Id = fanpage.Id;
+                model.Name = fanpage.Name;
+                model.Channel = new Channel { Id = fanpage.IdChannelNavigation.Id, Name = fanpage.IdChannelNavigation.Name };
                 if (fanpage.IdCustomer != null)
                 {
                     var customer = _context.Users.Find(fanpage.IdCustomer);
-                    model.customer = new Customer { id = customer.Id, name = customer.FirstName + " " + customer.LastName };
+                    model.Customer = new Customer { Id = customer.Id, Name = customer.FirstName + " " + customer.LastName };
                 }
                 else
                 {
-                    model.customer = new Customer { id = 0, name = "" };
+                    model.Customer = new Customer { Id = 0, Name = "" };
                 }
 
-                model.modifiedDate = fanpage.ModifiedDate;
+                model.ModifiedDate = fanpage.ModifiedDate;
+                var lstTag = new List<int>();
+                var returnTags = new List<TagModel>();
+                foreach (var item in fanpage.FanpagesTags)
+                {
+                    var returnTag = new TagModel
+                    {
 
+                        Id = item.IdTag,
+                        Name = item.IdTagNavigation.Name
+                    };
+                    returnTags.Add(returnTag);
+                    lstTag.Add(item.IdTag);
+                }
+
+                model.Tags = returnTags;
+                model.TagId = lstTag;
                 listFanpages.Add(model);
             }
 

@@ -9,6 +9,6 @@ namespace BatchjobService.Application.Queries.GetDetailFanpage
 {
     public class GetDetailFanpageRequest : IRequest<EditViewModel>
     { 
-        public int id { get; set; }
+        public int Id { get; set; }
     }
 }

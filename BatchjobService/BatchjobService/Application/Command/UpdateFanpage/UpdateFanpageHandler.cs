@@ -1,6 +1,7 @@
 ﻿using BatchjobService.Entities;
 using BatchjobService.Models;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,42 +20,72 @@ namespace BatchjobService.Application.Command.UpdateFanpage
         }
         public async Task<FanpageViewModel> Handle(UpdateFanpageCommand request, CancellationToken cancellationToken)
         {
-            Fanpages fanpage = _context.Fanpages.Find(request.fanpageId);
-
-            fanpage.IdChannel = request.channelId;
-            if (request.customerId > 0)
+            var transaction = _context.Database.BeginTransaction();
+            try
             {
-                fanpage.IdCustomer = request.customerId;
+                Fanpages fanpage = _context.Fanpages.Include(x => x.FanpagesTags).FirstOrDefault(x => x.Id == request.FanpageId);
+
+                fanpage.IdChannel = request.ChannelId;
+                if (request.CustomerId > 0)
+                {
+                    fanpage.IdCustomer = request.CustomerId;
+                }
+                fanpage.IsActive = true;
+                fanpage.Token = request.Token;
+                fanpage.ModifiedDate = DateTime.UtcNow;
+                fanpage.Name = request.Name;
+                var lstTag = new List<FanpagesTags>();
+                var returnTags = new List<TagModel>();
+                foreach (var item in request.Tags)
+                {
+                    var tag = new FanpagesTags
+                    {
+                        IdTag = item,
+                        IdFanpage = request.FanpageId
+                    };
+                    var returnTag = new TagModel
+                    {
+
+                        Id = item,
+                        Name = _context.Tags.Find(item).Name
+                    };
+                    returnTags.Add(returnTag);
+                    lstTag.Add(tag);
+                }
+                _context.FanpagesTags.RemoveRange(fanpage.FanpagesTags);
+                _context.FanpagesTags.AddRange(lstTag);
+                _context.Update(fanpage);
+
+                await _context.SaveChangesAsync();
+                transaction.Commit();
+                _context.Entry(fanpage).Reference(p => p.IdChannelNavigation).Load();
+
+                FanpageViewModel model = new FanpageViewModel();
+
+                model.Id = fanpage.Id;
+                model.Name = fanpage.Name;
+                model.Channel = new Channel { Id = fanpage.IdChannelNavigation.Id, Name = fanpage.IdChannelNavigation.Name };
+                if (fanpage.IdCustomer != null)
+                {
+                    var customer = _context.Users.Find(fanpage.IdCustomer);
+                    model.Customer = new Customer { Id = customer.Id, Name = customer.FirstName + " " + customer.LastName };
+                }
+                else
+                {
+                    model.Customer = new Customer { Id = 0, Name = "" };
+                }
+
+                model.ModifiedDate = fanpage.ModifiedDate;
+                model.Tags = returnTags;
+                model.TagId = request.Tags;
+                return model;
             }
-            fanpage.IsActive = true;
-            fanpage.Token = request.token;
-            fanpage.ModifiedDate = DateTime.UtcNow;
-            fanpage.Name = request.name;
-
-            _context.Update(fanpage);
-
-            await _context.SaveChangesAsync();
-
-            _context.Entry(fanpage).Reference(p => p.IdChannelNavigation).Load();
-
-            FanpageViewModel model = new FanpageViewModel();
-
-            model.id = fanpage.Id;
-            model.name = fanpage.Name;
-            model.channel = new Channel { id = fanpage.IdChannelNavigation.Id, name = fanpage.IdChannelNavigation.Name };
-            if (fanpage.IdCustomer != null)
+            catch (Exception)
             {
-                var customer = _context.Users.Find(fanpage.IdCustomer);
-                model.customer = new Customer { id = customer.Id, name = customer.FirstName + " " + customer.LastName };
+                transaction.Rollback();
+                return null;
             }
-            else
-            {
-                model.customer = new Customer { id = 0, name = "" };
-            }
-
-            model.modifiedDate = fanpage.ModifiedDate;
-
-            return model;
+          
         }
     }
 }

@@ -9,6 +9,6 @@ namespace BatchjobService.Application.Queries.GetFanpages
 {
     public class GetFanpagesRequest : IRequest<List<FanpageViewModel>>
     {
-        public int id { get; set; }
+        public int Id { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace BatchjobService.Application.Queries.GetFanpagesByMarketerId
 {
     public class GetFanpagesByMarketerIdRequest : IRequest<List<FanpageViewModel>>
     {
-        public int marketerId { get; set; }
-        public int channelId { get; set; }
+        public int MarketerId { get; set; }
+        public int ChannelId { get; set; }
     }
 }

@@ -7,11 +7,13 @@ namespace BatchjobService.Models
 {
     public class EditViewModel
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public int channel { get; set; }
-        public int customer { get; set; } = 0;
-        public DateTime? modifiedDate { get; set; }
-        public string token { get; set; } = "";
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Channel { get; set; }
+        public int Customer { get; set; } = 0;
+        public DateTime? ModifiedDate { get; set; }
+        public string Token { get; set; } = "";
+        public List<TagModel> Tags { get; set; }
+        public List<int> TagId { get; set; }
     }
 }

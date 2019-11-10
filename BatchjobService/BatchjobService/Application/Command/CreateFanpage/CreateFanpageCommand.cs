@@ -9,10 +9,11 @@ namespace BatchjobService.Application.Command.CreateFanpage
 {
     public class CreateFanpageCommand : IRequest<FanpageViewModel>
     {
-        public int channelId { get; set; } = 0;
-        public int customerId { get; set; } = 0;
-        public int marketerId { get; set; } = 0;
-        public string name { get; set; }
-        public string token { get; set; }
+        public int ChannelId { get; set; } = 0;
+        public int CustomerId { get; set; } = 0;
+        public int MarketerId { get; set; } = 0;
+        public string Name { get; set; }
+        public string Token { get; set; }
+        public List<int> Tags { get; set; }
     }
 }

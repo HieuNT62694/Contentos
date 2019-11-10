@@ -7,23 +7,30 @@ namespace BatchjobService.Models
 {
     public class FanpageViewModel
     {
-        public int id { get; set; }
-        public string name { get; set; }
-        public Channel channel { get; set; }
-        public Customer customer { get; set; }
-        public DateTime? modifiedDate { get; set; }
-        public string token { get; set; } = "";
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public Channel Channel { get; set; }
+        public Customer Customer { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public string Token { get; set; } = "";
+        public List<TagModel> Tags { get; set; }
+        public List<int> TagId { get; set; }
     }
 
     public class Channel
     {
-        public int id { get; set; }
-        public string name { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
     public class Customer
     {
-        public int id { get; set; }
-        public string name { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+    public class TagModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

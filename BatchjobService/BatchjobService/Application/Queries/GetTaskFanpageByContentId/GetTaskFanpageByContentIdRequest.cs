@@ -8,6 +8,6 @@ namespace BatchjobService.Application.Queries.GetTaskFanpageByContentId
 {
     public class GetTaskFanpageByContentIdRequest : IRequest<Dictionary<string, List<int>>>
     {
-        public int id { get; set; }
+        public int Id { get; set; }
     }
 }

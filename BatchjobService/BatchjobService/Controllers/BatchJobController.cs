@@ -68,7 +68,7 @@ namespace BatchjobService.Controllers
         [HttpGet("fanpages/{id}")]
         public async Task<List<FanpageViewModel>> GetAllFanpageAsync(int id)
         {
-            var response = await Mediator.Send(new GetFanpagesRequest {id = id});
+            var response = await Mediator.Send(new GetFanpagesRequest {Id = id});
 
             return response;
         }
@@ -76,7 +76,7 @@ namespace BatchjobService.Controllers
         [HttpGet("fanpage-detail/{id}")]
         public async Task<EditViewModel> GetDetailFanpageAsync(int id)
         {
-            var response = await Mediator.Send(new GetDetailFanpageRequest { id = id });
+            var response = await Mediator.Send(new GetDetailFanpageRequest { Id = id });
 
             return response;
         }
@@ -84,7 +84,7 @@ namespace BatchjobService.Controllers
         [HttpGet("fanpages/customer/{channelId}/{customerId}")]
         public async Task<List<FanpageViewModel>> GetFanpageByCustomerIdAndChannelIdAsync(int channelId, int customerId)
         {
-            var response = await Mediator.Send(new GetFanpagesByCustomerIdAndChannelIdRequest { customerId = customerId , channelId = channelId });
+            var response = await Mediator.Send(new GetFanpagesByCustomerIdAndChannelIdRequest { CustomerId = customerId , ChannelId = channelId });
 
             return response;
         }
@@ -92,7 +92,7 @@ namespace BatchjobService.Controllers
         [HttpGet("fanpages/customer/{customerId}")]
         public async Task<List<FanpageViewModel>> GetFanpageByCustomerIdAsync(int customerId)
         {
-            var response = await Mediator.Send(new GetFanpagesByCustomerIdRequest { customerId = customerId});
+            var response = await Mediator.Send(new GetFanpagesByCustomerIdRequest { CustomerId = customerId});
 
             return response;
         }
@@ -100,7 +100,7 @@ namespace BatchjobService.Controllers
         [HttpGet("fanpages/marketer/{channelId}/{marketerId}")]
         public async Task<List<FanpageViewModel>> GetFanpageByMarketerIdAsync(int channelId, int marketerId)
         {
-            var response = await Mediator.Send(new GetFanpagesByMarketerIdRequest { marketerId = marketerId, channelId = channelId });
+            var response = await Mediator.Send(new GetFanpagesByMarketerIdRequest { MarketerId = marketerId, ChannelId = channelId });
             return response;
         }
 
@@ -108,11 +108,11 @@ namespace BatchjobService.Controllers
         public async Task<IActionResult> CreateFanpageAsync(CreateFanpageCommand createFanpageCommand)
         {
             bool check = true;
-            switch (createFanpageCommand.channelId)
+            switch (createFanpageCommand.ChannelId)
             {
-                case 2: check = await Helper.FBTokenValidate(createFanpageCommand.token);
+                case 2: check = await Helper.FBTokenValidate(createFanpageCommand.Token);
                     break;
-                case 3: check = await Helper.WPTokenValidate(createFanpageCommand.token);
+                case 3: check = await Helper.WPTokenValidate(createFanpageCommand.Token);
                     break;
             }
             if (!check)
@@ -127,13 +127,13 @@ namespace BatchjobService.Controllers
         public async Task<IActionResult> UpdateFanpageAsync(UpdateFanpageCommand updateFanpageCommand)
         {
             bool check = true;
-            switch (updateFanpageCommand.channelId)
+            switch (updateFanpageCommand.ChannelId)
             {
                 case 2:
-                    check = await Helper.FBTokenValidate(updateFanpageCommand.token);
+                    check = await Helper.FBTokenValidate(updateFanpageCommand.Token);
                     break;
                 case 3:
-                    check = await Helper.WPTokenValidate(updateFanpageCommand.token);
+                    check = await Helper.WPTokenValidate(updateFanpageCommand.Token);
                     break;
             }
             if (!check)
@@ -161,7 +161,7 @@ namespace BatchjobService.Controllers
         [HttpGet("taskfanpages/content/{id}")]
         public async Task<IActionResult> GetTaskFanpagesAsync(int id)
         {
-            var response = await Mediator.Send(new GetTaskFanpageByContentIdRequest { id = id });
+            var response = await Mediator.Send(new GetTaskFanpageByContentIdRequest { Id = id });
             return Ok(response);
         }
 

@@ -19,7 +19,7 @@ namespace BatchjobService.Application.Queries.GetTaskFanpageByContentId
         }
         public async Task<Dictionary<string, List<int>>> Handle(GetTaskFanpageByContentIdRequest request, CancellationToken cancellationToken)
         {
-            var content = _context.Contents.FirstOrDefault(w => w.Id == request.id && w.IsActive == true);
+            var content = _context.Contents.FirstOrDefault(w => w.Id == request.Id && w.IsActive == true);
             var task = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
             var fanpages = await _context.TasksFanpages.Where(w => w.IdTask == task.Id).Include(i => i.IdFanpageNavigation).ToListAsync();
 

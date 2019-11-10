@@ -19,45 +19,76 @@ namespace BatchjobService.Application.Command.CreateFanpage
         }
         public async Task<FanpageViewModel> Handle(CreateFanpageCommand request, CancellationToken cancellationToken)
         {
-            Fanpages fanpage = new Fanpages();
-
-            fanpage.IdChannel = request.channelId;
-            if(request.customerId > 0)
+            var transaction = _context.Database.BeginTransaction();
+            try
             {
-                fanpage.IdCustomer = request.customerId;
+                Fanpages fanpage = new Fanpages();
+
+                fanpage.IdChannel = request.ChannelId;
+                if (request.CustomerId > 0)
+                {
+                    fanpage.IdCustomer = request.CustomerId;
+                }
+                var lstTag = new List<FanpagesTags>();
+                var returnTags = new List<TagModel>();
+                foreach (var item in request.Tags)
+                {
+                    var tag = new FanpagesTags
+                    {
+                        IdTag = item
+                    };
+                    var returnTag = new TagModel
+                    {
+
+                        Id = item,
+                        Name = _context.Tags.Find(item).Name
+                    };
+                    returnTags.Add(returnTag);
+                    lstTag.Add(tag);
+                }
+                fanpage.IdMarketer = request.MarketerId;
+                fanpage.IsActive = true;
+                fanpage.Token = request.Token;
+                fanpage.ModifiedDate = DateTime.UtcNow;
+                fanpage.Name = request.Name;
+                fanpage.FanpagesTags = lstTag;
+
+                _context.Add(fanpage);
+
+                await _context.SaveChangesAsync();
+                transaction.Commit();
+
+                _context.Entry(fanpage).GetDatabaseValues();
+                _context.Entry(fanpage).Reference(p => p.IdChannelNavigation).Load();
+
+                FanpageViewModel model = new FanpageViewModel();
+
+
+                model.Id = fanpage.Id;
+                model.Name = fanpage.Name;
+                model.Channel = new Channel { Id = fanpage.IdChannelNavigation.Id, Name = fanpage.IdChannelNavigation.Name };
+                if (fanpage.IdCustomer != null)
+                {
+                    var customer = _context.Users.Find(fanpage.IdCustomer);
+                    model.Customer = new Customer { Id = customer.Id, Name = customer.FirstName + " " + customer.LastName };
+                }
+                else
+                {
+                    model.Customer = new Customer { Id = 0, Name = "" };
+                }
+                model.Tags = returnTags;
+                model.TagId = request.Tags;
+                model.ModifiedDate = fanpage.ModifiedDate;
+
+                return model;
             }
-            fanpage.IdMarketer = request.marketerId;
-            fanpage.IsActive = true;
-            fanpage.Token = request.token;
-            fanpage.ModifiedDate = DateTime.UtcNow;
-            fanpage.Name = request.name;
-
-            _context.Add(fanpage);
-
-            await _context.SaveChangesAsync();
-
-            _context.Entry(fanpage).GetDatabaseValues();
-            _context.Entry(fanpage).Reference(p => p.IdChannelNavigation).Load();
-
-            FanpageViewModel model = new FanpageViewModel();
-
-
-            model.id = fanpage.Id;
-            model.name = fanpage.Name;
-            model.channel = new Channel { id = fanpage.IdChannelNavigation.Id, name = fanpage.IdChannelNavigation.Name };
-            if (fanpage.IdCustomer != null)
+            catch (Exception)
             {
-                var customer = _context.Users.Find(fanpage.IdCustomer);
-                model.customer = new Customer { id = customer.Id, name = customer.FirstName + " " + customer.LastName };
-            }
-            else
-            {
-                model.customer = new Customer { id = 0, name = "" };
-            }
 
-            model.modifiedDate = fanpage.ModifiedDate;
-
-            return model;
+                transaction.Rollback();
+                return null;
+            }
+          
         }
     }
 }
