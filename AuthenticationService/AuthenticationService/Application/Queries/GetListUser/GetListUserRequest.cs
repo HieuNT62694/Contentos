@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AuthenticationService.Models;
+using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Application.Queries.GetListUser
 {
-    public class GetListUserRequest : IRequest
+    public class GetListUserRequest : IRequest<List<UserAdminModels>>
     {
     }
 }

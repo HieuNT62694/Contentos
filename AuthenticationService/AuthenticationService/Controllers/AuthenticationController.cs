@@ -4,6 +4,7 @@ using AuthenticationService.Application.Commands;
 using AuthenticationService.Application.Commands.ChangePassword;
 using AuthenticationService.Application.Commands.CheckOldPassword;
 using AuthenticationService.Application.Commands.CreateCustomer;
+using AuthenticationService.Application.Commands.CreateUser;
 using AuthenticationService.Application.Commands.Notify;
 using AuthenticationService.Application.Commands.SaveToken;
 using AuthenticationService.Application.Commands.UpdateCustomer;
@@ -13,6 +14,7 @@ using AuthenticationService.Application.Queries.GetAllWriterByIdMarketer;
 using AuthenticationService.Application.Queries.GetCustomer;
 using AuthenticationService.Application.Queries.GetCustomerByIdEditor;
 using AuthenticationService.Application.Queries.GetcustomerDetail;
+using AuthenticationService.Application.Queries.GetListUser;
 using AuthenticationService.Application.Queries.GetNotify;
 using AuthenticationService.Application.Queries.GetProfile;
 using AuthenticationService.Application.Queries.GetUser;
@@ -206,6 +208,16 @@ namespace AuthenticationService.Controllers
             }
             return Accepted(result);
         }
+        [HttpGet("user/admin")]
+        public async Task<IActionResult> GetListUserAdmin(GetListUserRequest request)
+        {
+            var result = await Mediator.Send(request);
+            if (result.Count == 0)
+            {
+                return NoContent();
+            }
+            return Accepted(result);
+        }
 
         [HttpPost("Tokens")]
         //[Authorize(Roles = "Marketer,Editor")]
@@ -229,6 +241,29 @@ namespace AuthenticationService.Controllers
                 return BadRequest("Don't have Notify For Marketer");
             }
             return Ok(response);
+        }
+        [HttpPost("user")]
+        //[Authorize(Roles = "Marketer")]
+        public async Task<IActionResult> CreateUserAccounts(CreateUserCommands command)
+        {
+            var result = await Mediator.Send(command);
+           
+            if (result == null)
+            {
+                return BadRequest("Duplicate Email !!");
+            }
+            //Create exchange
+            Producer producer = new Producer();
+            MessageAccountDTO messageDTO = new MessageAccountDTO
+            {
+                FullName = result.FullName,
+                Password = result.Password,
+                Email = result.Email
+            };
+            producer.PublishMessage(message: JsonConvert.SerializeObject(messageDTO), "AccountToEmail");
+            result.Password = null;
+            return Accepted(result);
+
         }
 
     }
