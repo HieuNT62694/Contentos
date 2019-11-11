@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BatchjobService.Application.Queries.GetListFanpageByTags
 {
-    public class GetListFanpageByTagsRequest : IRequest<List<FanpageViewModel>>
+    public class GetListFanpageByTagsRequest : IRequest<Dictionary<string, List<int>>>
     {
         public List<int> lstTags { get; set; }
     }

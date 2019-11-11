@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BatchjobService.Application.Queries.GetListFanpageByTags
 {
-    public class GetListFanpageByTagsHandler : IRequestHandler<GetListFanpageByTagsRequest, List<FanpageViewModel>>
+    public class GetListFanpageByTagsHandler : IRequestHandler<GetListFanpageByTagsRequest, Dictionary<string, List<int>>>
     {
         private readonly ContentoDbContext _context;
 
@@ -18,13 +18,16 @@ namespace BatchjobService.Application.Queries.GetListFanpageByTags
         {
             _context = context;
         }
-        public async Task<List<FanpageViewModel>> Handle(GetListFanpageByTagsRequest request, CancellationToken cancellationToken)
+        public async Task<Dictionary<string, List<int>>> Handle(GetListFanpageByTagsRequest request, CancellationToken cancellationToken)
         {
             var fanpages = await _context.Fanpages
                 .Include(i => i.IdChannelNavigation)
                 .Include(i => i.FanpagesTags).ThenInclude(FanpagesTags => FanpagesTags.IdTagNavigation).ToListAsync();
 
-            List<FanpageViewModel> listFanpages = new List<FanpageViewModel>();
+            Dictionary<string, List<int>> result = new Dictionary<string, List<int>>();
+            List<int> lstContento = new List<int>();
+            List<int> lstFB = new List<int>();
+            List<int> lstWP = new List<int>();
 
             foreach (var fanpage in fanpages)
             {
@@ -42,42 +45,26 @@ namespace BatchjobService.Application.Queries.GetListFanpageByTags
                 {
                     continue;
                 }
-                FanpageViewModel model = new FanpageViewModel();
 
-                model.Id = fanpage.Id;
-                model.Name = fanpage.Name;
-                model.Channel = new Channel { Id = fanpage.IdChannelNavigation.Id, Name = fanpage.IdChannelNavigation.Name };
-                if (fanpage.IdCustomer != null)
+                switch (fanpage.IdChannel)
                 {
-                    var customer = _context.Users.Find(fanpage.IdCustomer);
-                    model.Customer = new Customer { Id = customer.Id, Name = customer.FirstName + " " + customer.LastName };
+                    case 1:
+                        lstContento.Add(fanpage.Id);
+                        break;
+                    case 2:
+                        lstFB.Add(fanpage.Id);
+                        break;
+                    case 3:
+                        lstWP.Add(fanpage.Id);
+                        break;
                 }
-                else
-                {
-                    model.Customer = new Customer { Id = 0, Name = "" };
-                }
-
-                model.ModifiedDate = fanpage.ModifiedDate;
-                var lstTag = new List<int>();
-                var returnTags = new List<TagModel>();
-                foreach (var item in fanpage.FanpagesTags)
-                {
-                    var returnTag = new TagModel
-                    {
-
-                        Id = item.IdTag,
-                        Name = item.IdTagNavigation.Name
-                    };
-                    returnTags.Add(returnTag);
-                    lstTag.Add(item.IdTag);
-                }
-
-                model.Tags = returnTags;
-                model.TagId = lstTag;
-                listFanpages.Add(model);
             }
 
-            return listFanpages;
+            result.Add("Contento", lstContento);
+            result.Add("Facebook", lstFB);
+            result.Add("Wordpress", lstWP);
+
+            return result;
         }
     }
 }
