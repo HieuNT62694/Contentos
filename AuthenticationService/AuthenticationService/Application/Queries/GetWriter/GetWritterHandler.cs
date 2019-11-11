@@ -23,7 +23,7 @@ namespace AuthenticationService.Application.Queries.GetWriter
         {
             var list = await _context.Users.AsNoTracking()
                 .Include(x => x.Accounts)
-                .Where(x => x.Accounts.Any(i => i.IdRole == 3))
+                .Where(x => x.Accounts.Any(i => i.IdRole == 3) && x.IsActive == true)
                 .Where(u => u.IdManager == request.EditorId)
                 .Select(x => new ListUserModel
                 {

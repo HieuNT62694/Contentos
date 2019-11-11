@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AuthenticationService.Application.Queries.GetListUser
+namespace AuthenticationService.Application.Queries.GetListEditorBasic
 {
-    public class GetListUserRequest : IRequest<List<UserAdminModels>>
+    public class GetListEditorBasicRequest :  IRequest<List<ListUserModel>>
     {
     }
 }

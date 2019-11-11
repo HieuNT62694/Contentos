@@ -11,7 +11,7 @@ namespace AuthenticationService.RabbitMQ
     {
         public void PublishMessage(string message, string exch)
         {
-            var factory = new ConnectionFactory() { HostName = "35.240.195.137" };
+            var factory = new ConnectionFactory() { HostName = "34.87.59.19" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {

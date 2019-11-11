@@ -80,7 +80,7 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
         }
         public bool IsEmailUnique(string Email)
         {
-            return _context.Accounts.Where(x => x.Email == Email).Any();
+            return _context.Accounts.Where(x => x.Email == Email && x.IsActive == true).Any();
 
         }
     }
