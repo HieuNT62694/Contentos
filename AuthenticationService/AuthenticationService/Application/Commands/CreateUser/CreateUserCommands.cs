@@ -22,6 +22,6 @@ namespace AuthenticationService.Application.Commands.CreateUser
         public string Phone { get; set; }
         public string Company { get; set; }
         public int Role { get; set; }
-        public int IdManager { get; set; }
+        public List<int> IdManager { get; set; }
     }
 }

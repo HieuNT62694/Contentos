@@ -51,12 +51,37 @@ namespace AuthenticationService.Application.Commands.CreateUser
                         Age = request.Age,
                         Gender = request.Gender ?? 1,
                         Phone = request.Phone,
-                        IdManager = request.IdManager,
                         Company = request.Company,
                         Accounts = lstAcc
                     };
+                    if (request.IdManager == null)
+                    {
+                        newUser.IdManager = null;
+                    }
+                    else if (request.IdManager.Count == 1 && (request.Role == 2 || request.Role == 3))
+                    {
+                        newUser.IdManager = request.IdManager.FirstOrDefault();
+                    }
                     _context.Users.Add(newUser);
                     await _context.SaveChangesAsync(cancellationToken);
+                    if (request.IdManager != null)
+                    {
+                        if (request.IdManager.Count >= 1 && request.Role == 1)
+                        {
+                            foreach (var item in request.IdManager)
+                            {
+                                var acc = _context.Users.FirstOrDefault(x => x.Id == item);
+                                if (acc != null)
+                                {
+                                    acc.IdManager = newUser.Id;
+                                    _context.Users.Update(acc);
+                                }
+                                await _context.SaveChangesAsync(cancellationToken);
+                            }
+
+                        }
+                    }
+                  
                     transaction.Commit();
                     var returnAcc = new UserAdminModels
                     {
@@ -84,7 +109,7 @@ namespace AuthenticationService.Application.Commands.CreateUser
         }
         public bool IsEmailUnique(string Email)
         {
-            return _context.Accounts.Where(x => x.Email == Email).Any();
+            return _context.Accounts.Where(x => x.Email == Email && x.IsActive == true).Any();
 
         }
     }

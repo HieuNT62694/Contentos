@@ -22,7 +22,7 @@ namespace AuthenticationService.Application.Queries.GetAllWriterByIdMarketer
         public async Task<List<ListUserModel>> Handle(GetAllWriterByIdMarketerRequest request, CancellationToken cancellationToken)
         {
             var list = await _context.Users.AsNoTracking()
-                .Where(x => x.Accounts.Any(i => i.IdRole == 2))
+                .Where(x => x.Accounts.Any(i => i.IdRole == 2) && x.IsActive == true)
                 .Where(u => u.IdManager == request.MarketerId).Select(x => x.Id)
                 .ToListAsync();
             var lstWriter = new List<ListUserModel>();
@@ -30,7 +30,7 @@ namespace AuthenticationService.Application.Queries.GetAllWriterByIdMarketer
             {
                 var listid = await _context.Users.AsNoTracking()
                .Include(x => x.Accounts)
-               .Where(x => x.Accounts.Any(i => i.IdRole == 3))
+               .Where(x => x.Accounts.Any(i => i.IdRole == 3) && x.IsActive == true)
                .Where(u => u.IdManager == item1).Select(x => new ListUserModel
                {
                    Id = x.Id,

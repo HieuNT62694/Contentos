@@ -24,7 +24,7 @@ namespace AuthenticationService.Application.Queries.GetCustomerByIdEditor
             var idMarketer = _context.Users.Find(request.EditorId).IdManager;
             var list = await _context.Users.AsNoTracking()
                 .Include(x => x.Accounts)
-                .Where(x => x.Accounts.Any(i => i.IdRole == 5))
+                .Where(x => x.Accounts.Any(i => i.IdRole == 5) && x.IsActive == true)
                 .Where(u => u.IdManager == idMarketer)
                 .Select(x => new ListUserModel
                 {

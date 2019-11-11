@@ -24,7 +24,7 @@ namespace AuthenticationService.Application.Queries.GetUser
         {
             var lstUser = await _context.Users.AsNoTracking()
                 .Include(x => x.Accounts)
-                .Where(x => x.Accounts.Any(i => i.IdRole == 2))
+                .Where(x => x.Accounts.Any(i => i.IdRole == 2) && x.IsActive == true)
                 .Where(u => u.IdManager == request.IdMarketer)
                 .Select(x => new ListUserModel
                 {
