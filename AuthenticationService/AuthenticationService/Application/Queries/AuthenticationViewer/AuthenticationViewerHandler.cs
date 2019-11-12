@@ -2,7 +2,6 @@
 using AuthenticationService.Entities;
 using AuthenticationService.Models;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,25 +9,25 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AuthenticationService.Application.Queries
+namespace AuthenticationService.Application.Queries.AuthenticationViewer
 {
-    public class AuthenticationHandler : IRequestHandler<AuthenticationRequest, LoginSuccessViewModel>
+    public class AuthenticationViewerHandler : IRequestHandler<AuthenticationViewerRequest, LoginSuccessViewModel>
     {
         private readonly IHelperFunction _helper;
         private readonly ContentoDbContext _context;
 
-        public AuthenticationHandler(IHelperFunction helper, ContentoDbContext context)
+        public AuthenticationViewerHandler(IHelperFunction helper, ContentoDbContext context)
         {
 
             _helper = helper;
             _context = context;
         }
 
-        public async Task<LoginSuccessViewModel> Handle(AuthenticationRequest request, CancellationToken cancellationToken)
+        public async Task<LoginSuccessViewModel> Handle(AuthenticationViewerRequest request, CancellationToken cancellationToken)
         {
             var accounts = await _context.Accounts.AsNoTracking()
-                .FirstOrDefaultAsync(x => x.Email == request.Email && x.IsActive == true && (x.IdRole == 1 || x.IdRole == 2 || x.IdRole == 3 || x.IdRole == 6));
-           
+                .FirstOrDefaultAsync(x => x.Email == request.Email && x.IsActive == true && x.IdRole == 4);
+
             bool checkPassword = false;
             if (accounts != null)
             {
@@ -49,7 +48,7 @@ namespace AuthenticationService.Application.Queries
 
                         return resultReturn;
                     }
-                
+
             }
             return null;
         }

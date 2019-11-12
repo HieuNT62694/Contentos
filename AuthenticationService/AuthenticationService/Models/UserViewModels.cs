@@ -91,5 +91,28 @@ namespace AuthenticationService.Models
         public int? Id { get; set; }
         public string Name { get; set; }
     }
+    public class UserDetailModels
+    {
+        public int Id { get; set; }
+        public string Email { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string CompanyName { get; set; }
+        public string Phone { get; set; }
+        public int? Gender { get; set; }
+        public int? Age { get; set; }
+        public RoleModel Role { get; set; }
+        public bool? IsActive { get; set; }
+        public List<int> IdMarketer { get; set; }
+        public List<int> IdEditor { get; set; }
+        public List<int> IdWriter { get; set; }
+        public List<ListUserModel> ChoiceMarketer { get; set; }
+        public List<ListUserModel> ChoiceEditor { get; set; }
+        public List<ListUserModel> ChoiceWriter { get; set; }
+        public List<ListUserModel> Marketer { get; set; }
+        public List<ListUserModel> Editor { get; set; }
+        public List<ListUserModel> Writer { get; set; }
+    }
+    
 
 }

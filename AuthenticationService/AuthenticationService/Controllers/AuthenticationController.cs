@@ -10,12 +10,15 @@ using AuthenticationService.Application.Commands.Notify;
 using AuthenticationService.Application.Commands.SaveToken;
 using AuthenticationService.Application.Commands.UpdateCustomer;
 using AuthenticationService.Application.Commands.UpdateProfile;
+using AuthenticationService.Application.Commands.UpdateUser;
 using AuthenticationService.Application.Queries;
+using AuthenticationService.Application.Queries.AuthenticationViewer;
 using AuthenticationService.Application.Queries.GetAllWriterByIdMarketer;
 using AuthenticationService.Application.Queries.GetCustomer;
 using AuthenticationService.Application.Queries.GetCustomerByIdEditor;
 using AuthenticationService.Application.Queries.GetcustomerDetail;
 using AuthenticationService.Application.Queries.GetListEditorBasic;
+using AuthenticationService.Application.Queries.GetListEditorForWriter;
 using AuthenticationService.Application.Queries.GetListMarketerBasic;
 using AuthenticationService.Application.Queries.GetListUser;
 using AuthenticationService.Application.Queries.GetListViewer;
@@ -23,6 +26,7 @@ using AuthenticationService.Application.Queries.GetListWriterBasic;
 using AuthenticationService.Application.Queries.GetNotify;
 using AuthenticationService.Application.Queries.GetProfile;
 using AuthenticationService.Application.Queries.GetUser;
+using AuthenticationService.Application.Queries.GetUserDetail;
 using AuthenticationService.Application.Queries.GetWriter;
 using AuthenticationService.Entities;
 using AuthenticationService.Models;
@@ -37,6 +41,16 @@ namespace AuthenticationService.Controllers
     {
         [HttpPost("Login")]
         public async Task<IActionResult> Login(AuthenticationRequest queries)
+        {
+            var response = await Mediator.Send(queries);
+            if (response == null)
+            {
+                return BadRequest("Invalid User Name of Password");
+            }
+            return Ok(response);
+        }
+        [HttpPost("Login-Viewer")]
+        public async Task<IActionResult> LoginViewer(AuthenticationViewerRequest queries)
         {
             var response = await Mediator.Send(queries);
             if (response == null)
@@ -218,7 +232,7 @@ namespace AuthenticationService.Controllers
         public async Task<IActionResult> SaveToken(SaveTokenCommands command)
         {
             var result = await Mediator.Send(command);
-              if (result== null)
+            if (result == null)
             {
                 return BadRequest("Token exits already");
             }
@@ -237,9 +251,9 @@ namespace AuthenticationService.Controllers
             return Ok(response);
         }
         [HttpGet("user/admin")]
-        public async Task<IActionResult> GetListUserAdmin(GetListUserRequest request)
+        public async Task<IActionResult> GetListUserAdmin()
         {
-            var result = await Mediator.Send(request);
+            var result = await Mediator.Send(new GetListUserRequest { });
             if (result.Count == 0)
             {
                 return NoContent();
@@ -249,7 +263,7 @@ namespace AuthenticationService.Controllers
         [HttpGet("viewer/admin")]
         public async Task<IActionResult> GetListViewerAdmin()
         {
-            var result = await Mediator.Send(new GetListViewerRequest{ });
+            var result = await Mediator.Send(new GetListViewerRequest { });
             if (result.Count == 0)
             {
                 return NoContent();
@@ -261,7 +275,7 @@ namespace AuthenticationService.Controllers
         public async Task<IActionResult> CreateUserAccounts(CreateUserCommands command)
         {
             var result = await Mediator.Send(command);
-           
+
             if (result == null)
             {
                 return BadRequest("Duplicate Email !!");
@@ -335,6 +349,50 @@ namespace AuthenticationService.Controllers
             return Accepted(result);
 
         }
+        [HttpGet("User-Detail/{id}")]
+        //[Authorize(Roles = "Marketer,Editor")]
+        public async Task<IActionResult> GetUserDetail(int id)
+        {
+            var response = await Mediator.Send(new GetUserDetailRequest { Id = id });
+            if (response == null)
+            {
+                return NoContent();
+            }
+            return Ok(response);
+        }
+        [HttpPut("user")]
+        //[Authorize(Roles = "Marketer")]
+        public async Task<IActionResult> UpdateUserAccounts(UpdateUserCommands command)
+        {
+            var result = await Mediator.Send(command);
 
+            if (result == null)
+            {
+                return BadRequest("Create Fail !!");
+            }
+            //Create exchange
+            //Producer producer = new Producer();
+            //MessageAccountDTO messageDTO = new MessageAccountDTO
+            //{
+            //    FullName = result.FullName,
+            //    Password = result.Password,
+            //    Email = result.Email
+            //};
+            //producer.PublishMessage(message: JsonConvert.SerializeObject(messageDTO), "AccountToEmail");
+            //result.Password = null;
+            return Accepted(result);
+
+        }
+        [HttpGet("Editor-Basic-Writer")]
+        //[Authorize(Roles = "Marketer,Editor")]
+        public async Task<IActionResult> GetListEditorWriterBasic()
+        {
+            var response = await Mediator.Send(new GetListEditorForWriterRequest { });
+            if (response.Count == 0)
+            {
+                return NoContent();
+            }
+            return Ok(response);
+        }
     }
 }

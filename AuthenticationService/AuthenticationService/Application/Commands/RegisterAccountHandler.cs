@@ -24,15 +24,26 @@ namespace AuthenticationService.Application.Commands
             {
                 if (!IsEmailUnique(request.Email))
                 {
-
+                    var lstTasacc = new List<TasksAccounts>();
+                    foreach (var item in request.Tags)
+                    {
+                        var tskAcc = new TasksAccounts
+                        {
+                            IdTask = item,
+                            CreatedDate = DateTime.UtcNow,
+                        };
+                        lstTasacc.Add(tskAcc);
+                    }
+                   
                     var newAccount = new Accounts
                     {
                         Email = request.Email,
                         Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                         IdRole = 4,
                         IsActive = true,
-                        CreatedDate = DateTime.UtcNow
-
+                        CreatedDate = DateTime.UtcNow,
+                        TasksAccounts = lstTasacc
+                        
                     };
                     var lstAcc = new List<Accounts>();
                     lstAcc.Add(newAccount);

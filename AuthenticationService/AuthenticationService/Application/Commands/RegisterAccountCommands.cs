@@ -27,6 +27,7 @@ namespace AuthenticationService.Application.Commands
         public int? Age { get; set; }
         [Required]
         public string Phone { get; set; }
+        public List<int> Tags { get; set; }
 
     }
 }

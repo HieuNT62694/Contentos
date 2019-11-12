@@ -54,40 +54,67 @@ namespace AuthenticationService.Application.Commands.CreateUser
                         Company = request.Company,
                         Accounts = lstAcc
                     };
-                    if (request.IdManager == null)
+                    if (request.IdMarketer != null)
                     {
-                        newUser.IdManager = null;
+                        if (request.IdMarketer.Count == 1 && request.Role == 2)
+                        {
+                            newUser.IdManager = request.IdMarketer.FirstOrDefault();
+                        }
                     }
-                    else if (request.IdManager.Count == 1 && (request.Role == 2 || request.Role == 3))
+                    if (request.IdEditor != null)
                     {
-                        newUser.IdManager = request.IdManager.FirstOrDefault();
+                        if (request.IdEditor.Count == 1 && request.Role == 3)
+                        {
+                            newUser.IdManager = request.IdEditor.FirstOrDefault();
+                        }
                     }
                     _context.Users.Add(newUser);
                     await _context.SaveChangesAsync(cancellationToken);
-                    if (request.IdManager != null)
+                    if (request.IdWriter != null)
                     {
-                        if (request.IdManager.Count >= 1 && request.Role == 1)
+                        if (request.IdWriter.Count >= 1 && request.Role == 2)
                         {
-                            foreach (var item in request.IdManager)
-                            {
-                                var acc = _context.Users.FirstOrDefault(x => x.Id == item);
-                                if (acc != null)
-                                {
-                                    acc.IdManager = newUser.Id;
-                                    _context.Users.Update(acc);
-                                }
-                                await _context.SaveChangesAsync(cancellationToken);
-                            }
+                            //foreach (var item in request.IdWriter)
+                            //{
+                            //    var acc = _context.Users.FirstOrDefault(x => x.Id == item);
+                            //    if (acc != null)
+                            //    {
+                            //        acc.IdManager = newUser.Id;
+                            //        _context.Users.Update(acc);
+                            //    }
+                            //    await _context.SaveChangesAsync(cancellationToken);
+                            //}
+                            _context.Users.Where(x => request.IdWriter.Contains(x.Id)).ToList().ForEach(x => x.IdManager = newUser.Id);
+                            await _context.SaveChangesAsync(cancellationToken);
 
                         }
                     }
-                  
+                    if (request.IdEditor != null)
+                    {
+                        if (request.IdEditor.Count >= 1 && request.Role == 1)
+                        {
+                            //foreach (var item in request.IdEditor)
+                            //{
+                            //    var acc = _context.Users.FirstOrDefault(x => x.Id == item);
+                            //    if (acc != null)
+                            //    {
+                            //        acc.IdManager = newUser.Id;
+                            //        _context.Users.Update(acc);
+                            //    }
+                            //    await _context.SaveChangesAsync(cancellationToken);
+                            //}
+                            _context.Users.Where(x => request.IdEditor.Contains(x.Id)).ToList().ForEach(x => x.IdManager = newUser.Id);
+                            await _context.SaveChangesAsync(cancellationToken);
+
+                        }
+                    }
+
                     transaction.Commit();
                     var returnAcc = new UserAdminModels
                     {
                         Id = newUser.Id,
                         Role = new RoleModel { Id = newAccount.IdRole, Name = _context.Roles.Find(newAccount.IdRole).Role },
-                        Age = newUser.Age ,
+                        Age = newUser.Age,
                         Email = newAccount.Email,
                         CompanyName = newUser.Company,
                         FullName = newUser.FirstName + " " + newUser.LastName,

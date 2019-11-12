@@ -28,6 +28,28 @@ namespace AuthenticationService.Application.Commands.DeleteUser
                 var upUser = await _context.Users.Include(x => x.Accounts).FirstOrDefaultAsync(x => x.Id == request.Id);
                 upUser.IsActive = request.IsActive;
                 upUser.Accounts.FirstOrDefault().IsActive = request.IsActive;
+                if (upUser.Accounts.FirstOrDefault().IdRole == 1)
+                {
+                    _context.Users
+                   .Include(x => x.Accounts)
+                   .Where(x => x.Accounts.Any(i => i.IdRole == 2) && x.IsActive == true && x.IdManager == request.Id)
+                   .ToList().ForEach(x => x.IdManager = null);
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+                else if (upUser.Accounts.FirstOrDefault().IdRole == 2)
+                {
+                    upUser.IdManager = null;
+                    _context.Users
+                   .Include(x => x.Accounts)
+                   .Where(x => x.Accounts.Any(i => i.IdRole == 3) && x.IsActive == true && x.IdManager == request.Id)
+                   .ToList().ForEach(x => x.IdManager = null);
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+                else if (upUser.Accounts.FirstOrDefault().IdRole == 3)
+                {
+                    upUser.IdManager = null;
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
                 _context.Attach(upUser);
                 _context.Entry(upUser).State = EntityState.Modified;
                 _context.Users.Update(upUser);
