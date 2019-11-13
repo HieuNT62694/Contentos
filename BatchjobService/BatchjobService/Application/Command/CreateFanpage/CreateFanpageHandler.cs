@@ -52,6 +52,7 @@ namespace BatchjobService.Application.Command.CreateFanpage
                 fanpage.ModifiedDate = DateTime.UtcNow;
                 fanpage.Name = request.Name;
                 fanpage.FanpagesTags = lstTag;
+                fanpage.Link = request.Link;
 
                 _context.Add(fanpage);
 
@@ -79,6 +80,7 @@ namespace BatchjobService.Application.Command.CreateFanpage
                 model.Tags = returnTags;
                 model.TagId = request.Tags;
                 model.ModifiedDate = fanpage.ModifiedDate;
+                model.Link = request.Link;
 
                 return model;
             }

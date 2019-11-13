@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AuthenticationService.Controllers;
+using BatchjobService.Application.Command.CheckToken;
 using BatchjobService.Application.Command.CreateFanpage;
 using BatchjobService.Application.Command.DeleteFanpage;
 using BatchjobService.Application.Command.UpdateFanpage;
@@ -124,7 +125,7 @@ namespace BatchjobService.Controllers
         [HttpPost("fanpages")]
         public async Task<IActionResult> CreateFanpageAsync(CreateFanpageCommand createFanpageCommand)
         {
-            bool check = true;
+            string check = "";
             switch (createFanpageCommand.ChannelId)
             {
                 case 2: check = await Helper.FBTokenValidate(createFanpageCommand.Token);
@@ -132,18 +133,41 @@ namespace BatchjobService.Controllers
                 case 3: check = await Helper.WPTokenValidate(createFanpageCommand.Token);
                     break;
             }
-            if (!check)
+            if (check == "")
             {
                 return Conflict();
             }
+            createFanpageCommand.Link = check;
             var response = await Mediator.Send(createFanpageCommand);
             return Accepted(response);
+        }
+
+        [HttpPost("fanpages/token")]
+        public async Task<IActionResult> CheckTokenAsync(CheckToken checkToken)
+        {
+            string check = "";
+            switch (checkToken.ChannelId)
+            {
+                case 2:
+                    check = await Helper.FBTokenValidate(checkToken.Token);
+                    break;
+                case 3:
+                    check = await Helper.WPTokenValidate(checkToken.Token);
+                    break;
+            }
+            if (check == "")
+            {
+                return Conflict();
+            }
+            Dictionary<string, string> values = new Dictionary<string, string>();
+            values.Add("link", check);
+            return Accepted(values);
         }
 
         [HttpPut("fanpages")]
         public async Task<IActionResult> UpdateFanpageAsync(UpdateFanpageCommand updateFanpageCommand)
         {
-            bool check = true;
+            string check = "";
             switch (updateFanpageCommand.ChannelId)
             {
                 case 2:
@@ -153,10 +177,11 @@ namespace BatchjobService.Controllers
                     check = await Helper.WPTokenValidate(updateFanpageCommand.Token);
                     break;
             }
-            if (!check)
+            if (check == "")
             {
                 return Conflict();
             }
+            updateFanpageCommand.Link = check;
             var response = await Mediator.Send(updateFanpageCommand);
             return Accepted(response);
         }
