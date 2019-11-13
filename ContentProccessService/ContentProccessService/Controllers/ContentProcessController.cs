@@ -34,6 +34,9 @@ using ContentProccessService.Application.Queries.GetContentDetail;
 using ContentProccessService.Application.Queries.GetAllListStatus;
 using ContentProccessService.Application.Queries.GetAllStatusCampaign;
 using ContentProccessService.Application.Queries.GetStatusPublish;
+using AuthenticationService.Application.Queries.GetAds;
+using ContentProccessService.Application.Queries.GetTrend;
+using ContentProccessService.Application.Queries.GetPersonalization;
 
 namespace ContentProccessService.Controllers
 {
@@ -283,5 +286,39 @@ namespace ContentProccessService.Controllers
             var response = await Mediator.Send(new GetStatusPublishRequest());
             return Ok(response);
         }
+
+        [HttpGet("content/ads")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetAds(int IdFanpage)
+        {
+            var response = await Mediator.Send(new GetAdsRequest() { IdFanpage = IdFanpage });
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Please check fanpage id");
+            }
+
+        }
+
+        [HttpGet("content/trends")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetTrends(int IdFanpage)
+        {
+            var response = await Mediator.Send(new GetTrendRequest() { IdFanpage = IdFanpage });
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Please check fanpage id");
+            }
+
+        }
+
+       
     }
 }
