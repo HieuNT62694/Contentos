@@ -8,7 +8,6 @@ namespace BatchjobService.Entities
         public Tasks()
         {
             Contents = new HashSet<Contents>();
-            TasksAccounts = new HashSet<TasksAccounts>();
             TasksFanpages = new HashSet<TasksFanpages>();
             TasksTags = new HashSet<TasksTags>();
         }
@@ -29,7 +28,6 @@ namespace BatchjobService.Entities
         public virtual Users IdWritterNavigation { get; set; }
         public virtual StatusTasks StatusNavigation { get; set; }
         public virtual ICollection<Contents> Contents { get; set; }
-        public virtual ICollection<TasksAccounts> TasksAccounts { get; set; }
         public virtual ICollection<TasksFanpages> TasksFanpages { get; set; }
         public virtual ICollection<TasksTags> TasksTags { get; set; }
     }

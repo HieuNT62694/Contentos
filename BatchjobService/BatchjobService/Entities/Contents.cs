@@ -16,6 +16,7 @@ namespace BatchjobService.Entities
         public string Name { get; set; }
         public string TheContent { get; set; }
         public int? Version { get; set; }
+        public int? Interaction { get; set; }
         public bool? IsAds { get; set; }
         public bool? IsActive { get; set; }
         public DateTime? CreatedDate { get; set; }

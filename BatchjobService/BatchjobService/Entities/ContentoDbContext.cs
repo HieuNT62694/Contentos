@@ -31,7 +31,6 @@ namespace BatchjobService.Entities
         public virtual DbSet<Tags> Tags { get; set; }
         public virtual DbSet<TagsCampaigns> TagsCampaigns { get; set; }
         public virtual DbSet<Tasks> Tasks { get; set; }
-        public virtual DbSet<TasksAccounts> TasksAccounts { get; set; }
         public virtual DbSet<TasksFanpages> TasksFanpages { get; set; }
         public virtual DbSet<TasksTags> TasksTags { get; set; }
         public virtual DbSet<Tokens> Tokens { get; set; }
@@ -194,6 +193,8 @@ namespace BatchjobService.Entities
 
                 entity.Property(e => e.IdTask).HasColumnName("id_task");
 
+                entity.Property(e => e.Interaction).HasColumnName("interaction");
+
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
                 entity.Property(e => e.IsAds).HasColumnName("is_ads");
@@ -230,6 +231,8 @@ namespace BatchjobService.Entities
 
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
 
+                entity.Property(e => e.Link).HasColumnName("link");
+
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
                     .HasColumnType("datetime");
@@ -258,7 +261,7 @@ namespace BatchjobService.Entities
             modelBuilder.Entity<FanpagesTags>(entity =>
             {
                 entity.HasKey(e => new { e.IdFanpage, e.IdTag })
-                    .HasName("PK__fanpages__94D0161C3F4CB722");
+                    .HasName("PK__fanpages__94D0161CA0585902");
 
                 entity.ToTable("fanpages_tags");
 
@@ -352,15 +355,17 @@ namespace BatchjobService.Entities
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.IsChosen).HasColumnName("is_chosen");
+
+                entity.Property(e => e.IsSuggestion).HasColumnName("is_suggestion");
+
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Percentage).HasColumnName("percentage");
 
-                entity.Property(e => e.TimeInteraction)
-                    .HasColumnName("time_interaction")
-                    .HasDefaultValueSql("((0))");
+                entity.Property(e => e.TimeInteraction).HasColumnName("time_interaction");
 
                 entity.HasOne(d => d.IdTagNavigation)
                     .WithMany(p => p.Personalizations)
@@ -506,39 +511,6 @@ namespace BatchjobService.Entities
                     .WithMany(p => p.Tasks)
                     .HasForeignKey(d => d.Status)
                     .HasConstraintName("FK_TaskStatus");
-            });
-
-            modelBuilder.Entity<TasksAccounts>(entity =>
-            {
-                entity.HasKey(e => new { e.IdAccount, e.IdTask });
-
-                entity.ToTable("tasks_accounts");
-
-                entity.Property(e => e.IdAccount).HasColumnName("id_account");
-
-                entity.Property(e => e.IdTask).HasColumnName("id_task");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnName("created_date")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.IsActive).HasColumnName("is_active");
-
-                entity.Property(e => e.ModifiedDate)
-                    .HasColumnName("modified_date")
-                    .HasColumnType("datetime");
-
-                entity.HasOne(d => d.IdAccountNavigation)
-                    .WithMany(p => p.TasksAccounts)
-                    .HasForeignKey(d => d.IdAccount)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TasksAccountToAccount");
-
-                entity.HasOne(d => d.IdTaskNavigation)
-                    .WithMany(p => p.TasksAccounts)
-                    .HasForeignKey(d => d.IdTask)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TasksAccountToTask");
             });
 
             modelBuilder.Entity<TasksFanpages>(entity =>
