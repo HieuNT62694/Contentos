@@ -6,6 +6,7 @@ using AuthenticationService.Controllers;
 using BatchjobService.Application.Command.CreateFanpage;
 using BatchjobService.Application.Command.DeleteFanpage;
 using BatchjobService.Application.Command.UpdateFanpage;
+using BatchjobService.Application.Queries.GetContentByFanpageId;
 using BatchjobService.Application.Queries.GetDetailFanpage;
 using BatchjobService.Application.Queries.GetFanpages;
 using BatchjobService.Application.Queries.GetFanpagesByCustomerId;
@@ -110,6 +111,13 @@ namespace BatchjobService.Controllers
         public async Task<List<FanpageViewModel>> GetFanpageByMarketerIdAsync(int channelId, int marketerId)
         {
             var response = await Mediator.Send(new GetFanpagesByMarketerIdRequest { MarketerId = marketerId, ChannelId = channelId });
+            return response;
+        }
+
+        [HttpGet("contents/fanpages/{id}")]
+        public async Task<List<ContentModel>> GetContentByFanpageIdAsync(int id)
+        {
+            var response = await Mediator.Send(new GetContentByFanpageIdRequest { id = id });
             return response;
         }
 
