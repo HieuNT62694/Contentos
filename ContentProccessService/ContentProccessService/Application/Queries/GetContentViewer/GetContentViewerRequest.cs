@@ -11,5 +11,6 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
     public class GetContentViewerRequest : IRequest<List<ContentViewer>>
     {
         public List<int> Tags { get; set; }
+        public int? Id { get; set; }
     }
 }

@@ -21,6 +21,7 @@ namespace CampaignService.Entities
         public bool? IsActive { get; set; }
         public int? IdCustomer { get; set; }
         public DateTime? ModifiedDate { get; set; }
+        public string Link { get; set; }
 
         public virtual Channels IdChannelNavigation { get; set; }
         public virtual Users IdMarketerNavigation { get; set; }

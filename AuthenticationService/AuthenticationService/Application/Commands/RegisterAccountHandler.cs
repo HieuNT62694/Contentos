@@ -1,5 +1,6 @@
 ﻿using AuthenticationService.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,26 +25,27 @@ namespace AuthenticationService.Application.Commands
             {
                 if (!IsEmailUnique(request.Email))
                 {
-                    var lstTasacc = new List<TasksAccounts>();
-                    foreach (var item in request.Tags)
+                    var lstTasacc = new List<Personalizations>();
+
+                    var tags = _context.Tags.AsNoTracking().Select(x=>x.Id).ToList();
+                    foreach (var item in tags)
                     {
-                        var tskAcc = new TasksAccounts
+                        var tskAcc = new Personalizations
                         {
-                            IdTask = item,
+                            IdTag = item,
                             CreatedDate = DateTime.UtcNow,
+                            IsChosen = false
                         };
                         lstTasacc.Add(tskAcc);
                     }
-                   
+                    lstTasacc.Where(x => request.Tags.Contains(x.IdTag)).ToList().ForEach(x => x.IsChosen = true);
                     var newAccount = new Accounts
                     {
                         Email = request.Email,
                         Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                         IdRole = 4,
                         IsActive = true,
-                        CreatedDate = DateTime.UtcNow,
-                        TasksAccounts = lstTasacc
-                        
+                        CreatedDate = DateTime.UtcNow                        
                     };
                     var lstAcc = new List<Accounts>();
                     lstAcc.Add(newAccount);
@@ -55,7 +57,8 @@ namespace AuthenticationService.Application.Commands
                         Age = request.Age,
                         Gender = request.Gender,
                         Phone = request.Phone,
-                        Accounts = lstAcc
+                        Accounts = lstAcc,
+                        Personalizations = lstTasacc
                     };
                     _context.Users.Add(newUser);
                     //await _context.SaveChangesAsync(cancellationToken);

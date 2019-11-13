@@ -202,14 +202,14 @@ namespace ContentProccessService.Controllers
         }
         [HttpGet("content/viewer")]
         //[Authorize(Roles = "")]
-        public async Task<IActionResult> GetContent()
+        public async Task<IActionResult> GetContent(int? id)
         {
             //string cookieValueFromContext = _httpContextAccessor.HttpContext.Request.Cookies["test"];
             var cookieValueFromReq = Request.Cookies["CCTT"];
-            if (cookieValueFromReq != null)
+            var request = new GetContentViewerRequest();
+            if (id == null && cookieValueFromReq != null)
             {
                 var lstIdtag = cookieValueFromReq.Replace('[',' ').Replace(']',' ').Trim().Split(",");
-                var request = new GetContentViewerRequest();
                 var lstid = new List<int>();
                 foreach (var item in lstIdtag)
                 {
@@ -221,6 +221,14 @@ namespace ContentProccessService.Controllers
                 var response = await Mediator.Send(request);
                 return Ok(response);
             }
+            else if (id != null)
+            {
+                request.Id = id;
+                request.Tags = new List<int>();
+                var response = await Mediator.Send(request);
+                return Ok(response);
+            }
+            
             //string[] lstvalue = cookieValueFromReq.Values.AllKeys;
             //var response = await Mediator.Send(request);
             return BadRequest("Please give me Cookie");
