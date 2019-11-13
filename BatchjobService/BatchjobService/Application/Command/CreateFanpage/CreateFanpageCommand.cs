@@ -15,5 +15,7 @@ namespace BatchjobService.Application.Command.CreateFanpage
         public string Name { get; set; }
         public string Token { get; set; }
         public List<int> Tags { get; set; }
+
+        public string Link { get; set; }
     }
 }

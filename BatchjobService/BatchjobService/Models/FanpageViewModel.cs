@@ -15,6 +15,7 @@ namespace BatchjobService.Models
         public string Token { get; set; } = "";
         public List<TagModel> Tags { get; set; }
         public List<int> TagId { get; set; }
+        public string Link { get; set; }
     }
 
     public class Channel

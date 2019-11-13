@@ -15,5 +15,6 @@ namespace BatchjobService.Application.Command.UpdateFanpage
         public string Name { get; set; }
         public string Token { get; set; }
         public List<int> Tags { get; set; }
+        public string Link { get; set; }
     }
 }

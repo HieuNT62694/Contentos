@@ -35,7 +35,7 @@ namespace BatchjobService.Utulity
             return listImg;
         }
 
-        public static async Task<bool> FBTokenValidate(string token)
+        public static async Task<string> FBTokenValidate(string token)
         {
             using (var http = new HttpClient())
             {
@@ -47,14 +47,15 @@ namespace BatchjobService.Utulity
 
                 if (results["error"] != null)
                 {
-                    return false;
+                    return "";
                 }
+                string url = "https://www.facebook.com/" + results["id"];
 
-                return true;
+                return url;
             }
         }
 
-        public static async Task<bool> WPTokenValidate(string token)
+        public static async Task<string> WPTokenValidate(string token)
         {
             try
             {
@@ -66,11 +67,18 @@ namespace BatchjobService.Utulity
                 client.AuthMethod = AuthMethod.JWT;
                 client.SetJWToken(token);
 
-                return await client.IsValidJWToken();
+                if (await client.IsValidJWToken())
+                {
+                    return iis;
+                }
+                else
+                {
+                    return "";
+                }
             }
             catch
             {
-                return false;
+                return "";
             } 
         }
     }

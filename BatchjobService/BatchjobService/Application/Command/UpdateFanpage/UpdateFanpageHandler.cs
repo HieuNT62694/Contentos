@@ -34,6 +34,7 @@ namespace BatchjobService.Application.Command.UpdateFanpage
                 fanpage.Token = request.Token;
                 fanpage.ModifiedDate = DateTime.UtcNow;
                 fanpage.Name = request.Name;
+                fanpage.Link = request.Link;
                 var lstTag = new List<FanpagesTags>();
                 var returnTags = new List<TagModel>();
                 foreach (var item in request.Tags)
@@ -78,6 +79,7 @@ namespace BatchjobService.Application.Command.UpdateFanpage
                 model.ModifiedDate = fanpage.ModifiedDate;
                 model.Tags = returnTags;
                 model.TagId = request.Tags;
+                model.Link = request.Link;
                 return model;
             }
             catch (Exception)
