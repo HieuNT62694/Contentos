@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: contentprocess-79895b78f7-csftw
+  name: contentprocess-b6d9f5c68-jd2pm
 spec:
   type: ClusterIP
   selector:

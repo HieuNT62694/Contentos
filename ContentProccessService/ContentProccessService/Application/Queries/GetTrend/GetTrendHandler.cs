@@ -22,30 +22,44 @@ namespace ContentProccessService.Application.Queries.GetTrend
 
         public async Task<List<ContentViewer>> Handle(GetTrendRequest request, CancellationToken cancellationToken)
         {
-            var contents = await _context.Contents.AsNoTracking()
-                .Include(c => c.IdTaskNavigation)
-                .Include(c => c.IdTaskNavigation.TasksFanpages)
-                .Include(c => c.IdTaskNavigation.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
-                .Where(c => c.IdTaskNavigation.TasksFanpages.Any(t => t.IdFanpage == request.IdFanpage))
-                .Where(c => c.IsActive == true)
-                .Where(c => c.Interaction != 0)
-                .OrderByDescending(c => c.Interaction).Take(20).ToListAsync();
+            //var contents = await _context.Tasks.AsNoTracking()
+            //    .Include(c => c.)
+            //    .Include(c => c.IdTaskNavigation.TasksFanpages)
+            //    .Include(c => c.IdTaskNavigation.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
+            //    .Where(c => c.IdTaskNavigation.TasksFanpages.Any(t => t.IdFanpage == request.IdFanpage))
+            //    .Where(c => c.IsActive == true)
+            //    .Where(c => c.Interaction != 0)
+            //    .OrderByDescending(c => c.Interaction).Take(20).ToListAsync();
+
+            var contents=  await _context.Tasks.AsNoTracking()
+              .Include(x => x.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
+             .Where(x => x.Status == 7
+             && x.Contents.Any(t => t.IsActive == true)
+             && x.TasksFanpages.Any(t => t.IdFanpage == 1)
+             && x.Interaction != 0)
+             .OrderByDescending(x => x.Interaction).Take(20)
+             .Select(x => new
+             {
+                 x,
+                 Contents = x.Contents.Where(c => c.IsActive == true).FirstOrDefault(),
+                 TasksTags = x.TasksTags.ToList()
+             }).ToListAsync();
 
             var lstContentReturn = new List<ContentViewer>();
             foreach (var item in contents)
             {
-                List<string> imgs = getImage(item.TheContent);
+                List<string> imgs = getImage(item.Contents.TheContent);
                 if (imgs.Count == 0)
                 {
                     imgs.Add("https://marketingland.com/wp-content/ml-loads/2015/11/content-marketing-idea-lightbulb-ss-1920.jpg");
                 }
                 var Cnt = new ContentModels
                 {
-                    Id = item.Id,
-                    Name = item.Name
+                    Id = item.Contents.Id,
+                    Name = item.Contents.Name
                 };
                 var lstTag = new List<TagsViewModel>();
-                foreach (var item1 in item.IdTaskNavigation.TasksTags)
+                foreach (var item1 in item.TasksTags)
                 {
                     var Tag = new TagsViewModel
                     {
@@ -56,8 +70,8 @@ namespace ContentProccessService.Application.Queries.GetTrend
                 }
                 var ContentReturn = new ContentViewer
                 {
-                    IdTask = item.IdTaskNavigation.Id,
-                    PublishTime = item.IdTaskNavigation.PublishTime,
+                    IdTask = item.x.Id,
+                    PublishTime = item.x.PublishTime,
                     Contents = Cnt,
                     Image = imgs,
                     ListTags = lstTag

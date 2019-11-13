@@ -9,6 +9,5 @@ namespace ContentProccessService.Application.Queries.GetTrend
 {
     public class GetTrendRequest : IRequest<List<ContentViewer>>
     {
-        public int IdFanpage;
     }
 }

@@ -30,6 +30,7 @@ namespace ContentProccessService.Application.Commands.SubmitContent
                 _context.Entry(upContent).State = EntityState.Modified;
                 var upTask = _context.Tasks.AsNoTracking().FirstOrDefault(x => x.Id == request.IdTask);
                 upTask.Status = 3;
+                upTask.ModifiedDate = DateTime.UtcNow;
                 _context.Attach(upTask);
                 _context.Entry(upTask).State = EntityState.Modified;
                 await _context.SaveChangesAsync(cancellationToken);

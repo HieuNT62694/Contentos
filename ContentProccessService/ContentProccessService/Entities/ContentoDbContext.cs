@@ -193,11 +193,7 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.IdTask).HasColumnName("id_task");
 
-                entity.Property(e => e.Interaction).HasColumnName("interaction");
-
                 entity.Property(e => e.IsActive).HasColumnName("is_active");
-
-                entity.Property(e => e.IsAds).HasColumnName("is_ads");
 
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")
@@ -465,6 +461,10 @@ namespace ContentProccessService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.AdsDate)
+                    .HasColumnName("ads_date")
+                    .HasColumnType("datetime");
+
                 entity.Property(e => e.CreatedDate)
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
@@ -478,6 +478,10 @@ namespace ContentProccessService.Entities
                 entity.Property(e => e.IdCampaign).HasColumnName("id_campaign");
 
                 entity.Property(e => e.IdWritter).HasColumnName("id_writter");
+
+                entity.Property(e => e.Interaction).HasColumnName("interaction");
+
+                entity.Property(e => e.IsAds).HasColumnName("is_ads");
 
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnName("modified_date")

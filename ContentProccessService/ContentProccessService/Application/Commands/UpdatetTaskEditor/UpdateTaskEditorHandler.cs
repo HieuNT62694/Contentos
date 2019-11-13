@@ -79,6 +79,7 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                 }
                 upTask.Deadline = request.Deadline;
                 upTask.PublishTime = request.PublishTime;
+                upTask.ModifiedDate = DateTime.UtcNow;
                 if (request.Deadline > DateTime.UtcNow)
                 {
                     upTask.Status = 2;

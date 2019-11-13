@@ -9,6 +9,5 @@ namespace AuthenticationService.Application.Queries.GetAds
 
     public class GetAdsRequest : IRequest<List<ContentViewer>>
     {
-        public int IdFanpage;
     }
 }

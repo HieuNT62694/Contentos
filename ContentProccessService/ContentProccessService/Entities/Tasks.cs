@@ -19,6 +19,9 @@ namespace ContentProccessService.Entities
         public string Description { get; set; }
         public DateTime? Deadline { get; set; }
         public DateTime? StartDate { get; set; }
+        public int? Interaction { get; set; }
+        public DateTime? AdsDate { get; set; }
+        public bool? IsAds { get; set; }
         public DateTime? PublishTime { get; set; }
         public int? Status { get; set; }
         public DateTime? CreatedDate { get; set; }

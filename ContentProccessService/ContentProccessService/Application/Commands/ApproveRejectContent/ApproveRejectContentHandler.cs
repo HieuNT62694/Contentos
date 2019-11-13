@@ -28,6 +28,7 @@ namespace ContentProccessService.Application.Commands.ApproveRejectContent
                     //change status task
                     var upStatus = contentodbContext.Tasks.AsNoTracking().FirstOrDefault(y => y.Id == request.IdTask);
                     upStatus.Status = 5;
+                    upStatus.ModifiedDate = DateTime.UtcNow;
                     contentodbContext.Attach(upStatus);
                     contentodbContext.Entry(upStatus).Property(x => x.Status).IsModified = true;
                     var upContent = contentodbContext.Contents.FirstOrDefault(y => y.Id == request.IdContent);
@@ -42,6 +43,7 @@ namespace ContentProccessService.Application.Commands.ApproveRejectContent
                     //change status task
                     var upStatus = contentodbContext.Tasks.AsNoTracking().FirstOrDefault(y => y.Id == request.IdTask);
                     upStatus.Status = 2;
+                    upStatus.ModifiedDate = DateTime.UtcNow;
                     contentodbContext.Attach(upStatus);
                     contentodbContext.Entry(upStatus).Property(x => x.Status).IsModified = true;
                     // add commment

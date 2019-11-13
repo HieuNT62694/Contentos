@@ -297,9 +297,9 @@ namespace ContentProccessService.Controllers
 
         [HttpGet("content/ads")]
         //[Authorize(Roles = "")]
-        public async Task<IActionResult> GetAds(int IdFanpage)
+        public async Task<IActionResult> GetAds()
         {
-            var response = await Mediator.Send(new GetAdsRequest() { IdFanpage = IdFanpage });
+            var response = await Mediator.Send(new GetAdsRequest() { });
             if (response != null)
             {
                 return Ok(response);
@@ -313,9 +313,9 @@ namespace ContentProccessService.Controllers
 
         [HttpGet("content/trends")]
         //[Authorize(Roles = "")]
-        public async Task<IActionResult> GetTrends(int IdFanpage)
+        public async Task<IActionResult> GetTrends()
         {
-            var response = await Mediator.Send(new GetTrendRequest() { IdFanpage = IdFanpage });
+            var response = await Mediator.Send(new GetTrendRequest() { });
             if (response != null)
             {
                 return Ok(response);

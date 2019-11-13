@@ -44,20 +44,20 @@ namespace ContentProccessService.Application.Commands.CreateTask
                     Tags.Add(tag);
                 }
                 var task = new Tasks
-                    {
-                        IdCampaign = request.Task.IdCampaign,
-                        IdWritter = request.Task.IdWriter,
-                        Deadline = request.Task.Deadline,
-                        Description = request.Task.Description,
-                        PublishTime = request.Task.PublishTime,
-                        Title = request.Task.Title,
-                        CreatedDate = DateTime.UtcNow,
-                        ModifiedDate = DateTime.UtcNow,
-                        TasksTags = Tags,
-                        Status = 1
-                    };
-                    contentodbContext.Attach(task);
-                    contentodbContext.Tasks.Add(task);
+                {
+                    IdCampaign = request.Task.IdCampaign,
+                    IdWritter = request.Task.IdWriter,
+                    Deadline = request.Task.Deadline,
+                    Description = request.Task.Description,
+                    PublishTime = request.Task.PublishTime,
+                    Title = request.Task.Title,
+                    CreatedDate = DateTime.UtcNow,
+                    TasksTags = Tags,
+                    Interaction = 0,
+                    Status = 1
+                };
+                contentodbContext.Attach(task);
+                contentodbContext.Tasks.Add(task);
                 await contentodbContext.SaveChangesAsync(cancellationToken);
                 var ReturnTags = new List<TagsViewModel>();
 
@@ -100,7 +100,7 @@ namespace ContentProccessService.Application.Commands.CreateTask
                     contentodbContext.Entry(upStatus).Property(x => x.Status).IsModified = true;
                     await contentodbContext.SaveChangesAsync(cancellationToken);
                 }
-              
+
                 transaction.Commit();
                 return taskModel;
             }
