@@ -24,10 +24,10 @@ namespace AuthenticationService.Application.Queries.GetListUser
             var lstUser = await _context.Accounts.AsNoTracking()
                .Include(x => x.IdUserNavigation)
                .Include(x=>x.IdRoleNavigation)
-               .Where(x=>x.IdRole != 4)
+               .Where(x=>x.IdRole != 4 && x.IdRole != 5 && x.IdRole != 6)
                .Select(x => new UserAdminModels
                {
-                   Id = x.Id,
+                   Id = x.IdUserNavigation.Id,
                    FullName = x.IdUserNavigation.FirstName + " " + x.IdUserNavigation.LastName,
                    Age = x.IdUserNavigation.Age,
                    CompanyName  = x.IdUserNavigation.Company,

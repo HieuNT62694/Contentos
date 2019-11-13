@@ -365,9 +365,7 @@ namespace AuthenticationService.Entities
 
                 entity.Property(e => e.Percentage).HasColumnName("percentage");
 
-                entity.Property(e => e.TimeInteraction)
-                    .HasColumnName("time_interaction")
-                    .HasDefaultValueSql("((0))");
+                entity.Property(e => e.TimeInteraction).HasColumnName("time_interaction");
 
                 entity.HasOne(d => d.IdTagNavigation)
                     .WithMany(p => p.Personalizations)

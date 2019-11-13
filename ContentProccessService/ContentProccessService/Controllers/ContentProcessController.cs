@@ -36,7 +36,7 @@ using ContentProccessService.Application.Queries.GetAllStatusCampaign;
 using ContentProccessService.Application.Queries.GetStatusPublish;
 using AuthenticationService.Application.Queries.GetAds;
 using ContentProccessService.Application.Queries.GetTrend;
-using ContentProccessService.Application.Queries.GetPersonalization;
+using ContentProccessService.Application.Commands.CountClickContent;
 
 namespace ContentProccessService.Controllers
 {
@@ -326,7 +326,14 @@ namespace ContentProccessService.Controllers
             }
 
         }
+        [HttpPut("count-content")]
+        //[Authorize(Roles = "Writer")]
+        public async Task<IActionResult> CountClickCotent(CountClickContentCommands command)
+        {
+            await Mediator.Send(command);
+            return Accepted("Successfull!!");
+        }
 
-       
+
     }
 }

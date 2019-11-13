@@ -106,9 +106,9 @@ namespace AuthenticationService.Models
         public List<int> IdMarketer { get; set; }
         public List<int> IdEditor { get; set; }
         public List<int> IdWriter { get; set; }
-        public List<ListUserModel> ChoiceMarketer { get; set; }
-        public List<ListUserModel> ChoiceEditor { get; set; }
-        public List<ListUserModel> ChoiceWriter { get; set; }
+        public List<int> ChoiceMarketer { get; set; }
+        public List<int> ChoiceEditor { get; set; }
+        public List<int> ChoiceWriter { get; set; }
         public List<ListUserModel> Marketer { get; set; }
         public List<ListUserModel> Editor { get; set; }
         public List<ListUserModel> Writer { get; set; }

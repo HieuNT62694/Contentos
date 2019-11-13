@@ -34,7 +34,9 @@ namespace AuthenticationService.Application.Commands
                         {
                             IdTag = item,
                             CreatedDate = DateTime.UtcNow,
-                            IsChosen = false
+                            IsChosen = false,
+                            TimeInteraction = 0
+
                         };
                         lstTasacc.Add(tskAcc);
                     }

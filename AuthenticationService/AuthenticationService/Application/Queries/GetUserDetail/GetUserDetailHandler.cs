@@ -61,7 +61,7 @@ namespace AuthenticationService.Application.Queries.GetUserDetail
                 list.AddRange(choiceEditor);
                 returnUser.Editor = list;
                 returnUser.IdEditor = list.Count == 0 ? null : list.Select(x=>x.Id).ToList();
-                returnUser.ChoiceEditor = choiceEditor;
+                returnUser.ChoiceEditor = choiceEditor.Count == 0 ? null : choiceEditor.Select(x => x.Id).ToList();
             }
             if (upUser.IdRoleNavigation.Id == 2)
             {
@@ -85,7 +85,7 @@ namespace AuthenticationService.Application.Queries.GetUserDetail
                 .ToListAsync();
                 returnUser.Marketer = list;
                 returnUser.IdMarketer = list.Count == 0 ? null : list.Select(x => x.Id).ToList();
-                returnUser.ChoiceMarketer = choiceMarketer;
+                returnUser.ChoiceMarketer = choiceMarketer.Count == 0 ? null : choiceMarketer.Select(x => x.Id).ToList();
                 //Writer
                 var list2 = await _context.Users.AsNoTracking()
               .Include(x => x.Accounts)
@@ -108,13 +108,13 @@ namespace AuthenticationService.Application.Queries.GetUserDetail
                 list2.AddRange(choiceWriter);
                 returnUser.Writer = list2;
                 returnUser.IdWriter = list2.Count == 0 ? null : list2.Select(x => x.Id).ToList();
-                returnUser.ChoiceWriter = choiceWriter;
+                returnUser.ChoiceWriter = choiceWriter.Count == 0 ? null : choiceWriter.Select(x => x.Id).ToList();
             }
             if (upUser.IdRoleNavigation.Id == 3)
             {
                 var list = await _context.Users.AsNoTracking()
                .Include(x => x.Accounts)
-               .Where(x => x.Accounts.Any(i => i.IdRole == 2) && x.IdManager == null && x.IsActive == true)
+               .Where(x => x.Accounts.Any(i => i.IdRole == 2)  && x.IsActive == true)
                .Select(x => new ListUserModel
                {
                    Id = x.Id,
@@ -133,7 +133,7 @@ namespace AuthenticationService.Application.Queries.GetUserDetail
                 list.AddRange(choiceEditor);
                 returnUser.Editor = list;
                 returnUser.IdEditor = list.Count == 0 ? null : list.Select(x => x.Id).ToList();
-                returnUser.ChoiceEditor = choiceEditor;
+                returnUser.ChoiceEditor = choiceEditor.Count == 0 ? null : choiceEditor.Select(x => x.Id).ToList();
             }
             return returnUser;
         }
