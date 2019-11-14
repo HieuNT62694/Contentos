@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Application.Commands
 {
-    public class RegisterAccountCommands : IRequest
+    public class RegisterAccountCommands : IRequest<bool>
     {
         [Required]
         [EmailAddress]
@@ -21,11 +21,8 @@ namespace AuthenticationService.Application.Commands
         public string LastName { get; set; }
         [Required]
         public string FirstName { get; set; }
-        [Required]
         public int? Gender { get; set; }
-        [Required]
         public int? Age { get; set; }
-        [Required]
         public string Phone { get; set; }
         public List<int> Tags { get; set; }
 

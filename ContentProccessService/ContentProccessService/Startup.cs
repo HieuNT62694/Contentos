@@ -39,10 +39,11 @@ namespace ContentProccessService
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>())
-                .AddJsonOptions(options => {
-                options.SerializerSettings.ReferenceLoopHandling =
-                    Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-            });
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling =
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
 
             //add Dbcontext
             services.AddDbContext<ContentoDbContext>(options =>
@@ -80,8 +81,10 @@ namespace ContentProccessService
             //addd cors
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
-                builder.WithOrigins("http://localhost:8080", "http://contento-fe.s3-website-ap-southeast-1.amazonaws.com", "http://localhost", "http://contento-news.s3-website-ap-southeast-1.amazonaws.com", "http://localhost:8081")
-                       .AllowAnyMethod()
+                builder.WithOrigins("http://localhost:8080", "http://contento-fe.s3-website-ap-southeast-1.amazonaws.com", "http://localhost", "http://contento-news.s3-website-ap-southeast-1.amazonaws.com", "http://localhost:8081"
+     , "http://contento-admin.s3-website-ap-southeast-1.amazonaws.com"
+     , "http://contento-view.s3-website-ap-southeast-1.amazonaws.com")
+        .AllowAnyMethod()
                        .AllowAnyHeader()
                        .AllowCredentials();
             }));

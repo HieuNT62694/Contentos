@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Application.Commands
 {
-    public class RegisterAccountHandler : IRequestHandler<RegisterAccountCommands>
+    public class RegisterAccountHandler : IRequestHandler<RegisterAccountCommands,bool>
     {
         private readonly ContentoDbContext _context;
 
@@ -18,7 +18,7 @@ namespace AuthenticationService.Application.Commands
             _context = context;
         }
 
-        public async Task<Unit> Handle(RegisterAccountCommands request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(RegisterAccountCommands request, CancellationToken cancellationToken)
         {
             var transaction = _context.Database.BeginTransaction();
             try
@@ -40,7 +40,11 @@ namespace AuthenticationService.Application.Commands
                         };
                         lstTasacc.Add(tskAcc);
                     }
-                    lstTasacc.Where(x => request.Tags.Contains(x.IdTag)).ToList().ForEach(x => x.IsChosen = true);
+                    if (request.Tags != null)
+                    {
+                        lstTasacc.Where(x => request.Tags.Contains(x.IdTag)).ToList().ForEach(x => x.IsChosen = true);
+                    }
+
                     var newAccount = new Accounts
                     {
                         Email = request.Email,
@@ -64,15 +68,17 @@ namespace AuthenticationService.Application.Commands
                     };
                     _context.Users.Add(newUser);
                     //await _context.SaveChangesAsync(cancellationToken);
+                    await _context.SaveChangesAsync(cancellationToken);
+                    transaction.Commit();
+                    return true;
                 }
-                await _context.SaveChangesAsync(cancellationToken);
-                transaction.Commit();
-                return Unit.Value;
+               
+                return false;
             }
             catch(Exception e)
             {
                 transaction.Rollback();
-                return Unit.Value;
+                return false;
 
             }
          

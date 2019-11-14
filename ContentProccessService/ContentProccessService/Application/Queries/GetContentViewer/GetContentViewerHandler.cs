@@ -75,54 +75,106 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
             if (request.Id != null)
             {
                 var lstTag1 = await _context.Personalizations.Where(x => x.IdUser == request.Id && x.IsChosen == true).Select(x => x.IdTag).ToListAsync();
-                var content = await _context.Tasks.AsNoTracking()
-              .Include(x => x.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
-             .Where(x => x.Status == 7
-             && x.Contents.Any(t => t.IsActive == true)
-             && x.TasksFanpages.Any(t => t.IdFanpage == 1)
-             && x.TasksTags.Any(z => lstTag1.Contains(z.IdTag)))
-             .OrderByDescending(x => x.PublishTime)
-             .Select(x => new
-             {
-                 x,
-                 Contents = x.Contents.Where(c => c.IsActive == true).FirstOrDefault(),
-                 TasksTags = x.TasksTags.ToList()
-             }).ToListAsync();
-                var lstContentReturn = new List<ContentViewer>();
-                foreach (var item in content)
+                if (lstTag1.Count == 0 )
                 {
-                    List<string> imgs = getImage(item.Contents.TheContent);
-                    if (imgs.Count == 0)
+                    var content = _context.Tasks.AsNoTracking()
+              .Include(x => x.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
+              .Where(x => x.Status == 7
+              && x.Contents.Any(t => t.IsActive == true)
+              && x.TasksFanpages.Any(t => t.IdFanpage == 1))
+              .OrderByDescending(x => x.PublishTime)
+              .Select(x => new
+              {
+                  x,
+                  Contents = x.Contents.Where(c => c.IsActive == true).FirstOrDefault(),
+                  //TasksTags = x.TasksTags.ToList()
+              }).ToList();
+                    var lstContentReturn = new List<ContentViewer>();
+                    foreach (var item in content)
                     {
-                        imgs.Add("https://marketingland.com/wp-content/ml-loads/2015/11/content-marketing-idea-lightbulb-ss-1920.jpg");
-                    }
-                    var Cnt = new ContentModels
-                    {
-                        Id = item.Contents.Id,
-                        Name = item.Contents.Name
-                    };
-                    var lstTag = new List<TagsViewModel>();
-                    foreach (var item1 in item.TasksTags)
-                    {
-                        var Tag = new TagsViewModel
+                        List<string> imgs = getImage(item.Contents.TheContent);
+                        if (imgs.Count == 0)
                         {
-                            Id = item1.IdTag,
-                            Name = item1.IdTagNavigation.Name
+                            imgs.Add("https://marketingland.com/wp-content/ml-loads/2015/11/content-marketing-idea-lightbulb-ss-1920.jpg");
+                        }
+                        var Cnt = new ContentModels
+                        {
+                            Id = item.Contents.Id,
+                            Name = item.Contents.Name
                         };
-                        lstTag.Add(Tag);
+                        var lstTag = new List<TagsViewModel>();
+                        foreach (var item1 in item.x.TasksTags)
+                        {
+                            var Tag = new TagsViewModel
+                            {
+                                Id = item1.IdTag,
+                                Name = item1.IdTagNavigation.Name
+                            };
+                            lstTag.Add(Tag);
+                        }
+                        var ContentReturn = new ContentViewer
+                        {
+                            IdTask = item.x.Id,
+                            PublishTime = item.x.PublishTime,
+                            Contents = Cnt,
+                            Image = imgs,
+                            ListTags = lstTag
+                        };
+                        lstContentReturn.Add(ContentReturn);
                     }
-                    var ContentReturn = new ContentViewer
-                    {
-                        IdTask = item.x.Id,
-                        PublishTime = item.x.PublishTime,
-                        Contents = Cnt,
-                        Image = imgs,
-                        ListTags = lstTag
-                    };
-                    lstContentReturn.Add(ContentReturn);
-                }
 
-                return lstContentReturn;
+                    return lstContentReturn;
+                }
+                else {
+                    var content = await _context.Tasks.AsNoTracking()
+            .Include(x => x.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
+           .Where(x => x.Status == 7
+           && x.Contents.Any(t => t.IsActive == true)
+           && x.TasksFanpages.Any(t => t.IdFanpage == 1)
+           && x.TasksTags.Any(z => lstTag1.Contains(z.IdTag)))
+           .OrderByDescending(x => x.PublishTime)
+           .Select(x => new
+           {
+               x,
+               Contents = x.Contents.Where(c => c.IsActive == true).FirstOrDefault(),
+               TasksTags = x.TasksTags.ToList()
+           }).ToListAsync();
+                    var lstContentReturn = new List<ContentViewer>();
+                    foreach (var item in content)
+                    {
+                        List<string> imgs = getImage(item.Contents.TheContent);
+                        if (imgs.Count == 0)
+                        {
+                            imgs.Add("https://marketingland.com/wp-content/ml-loads/2015/11/content-marketing-idea-lightbulb-ss-1920.jpg");
+                        }
+                        var Cnt = new ContentModels
+                        {
+                            Id = item.Contents.Id,
+                            Name = item.Contents.Name
+                        };
+                        var lstTag = new List<TagsViewModel>();
+                        foreach (var item1 in item.TasksTags)
+                        {
+                            var Tag = new TagsViewModel
+                            {
+                                Id = item1.IdTag,
+                                Name = item1.IdTagNavigation.Name
+                            };
+                            lstTag.Add(Tag);
+                        }
+                        var ContentReturn = new ContentViewer
+                        {
+                            IdTask = item.x.Id,
+                            PublishTime = item.x.PublishTime,
+                            Contents = Cnt,
+                            Image = imgs,
+                            ListTags = lstTag
+                        };
+                        lstContentReturn.Add(ContentReturn);
+                    }
+
+                    return lstContentReturn;
+                }
             }
             else
             {

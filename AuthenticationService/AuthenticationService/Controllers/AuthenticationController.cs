@@ -83,8 +83,12 @@ namespace AuthenticationService.Controllers
         ////[Authorize(Roles = "Guest")]
         public async Task<object> Register(RegisterAccountCommands command)
         {
-            await Mediator.Send(command);
-            return Accepted("Create Successful !!");
+           var response = await Mediator.Send(command);
+            if (response)
+            {
+                return Accepted("Create Successful !!");
+            }
+            return BadRequest("Create Fail !!");
 
         }
         [HttpGet("Editors/Marketers/{id}")]
