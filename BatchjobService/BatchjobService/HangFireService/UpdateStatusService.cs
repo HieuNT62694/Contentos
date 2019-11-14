@@ -21,8 +21,9 @@ namespace BatchjobService.HangFireService
         }
         public  void UpdateStatus()
         {
-            var lstTask = _context.Tasks.Where(x => x.Status == 2 || x.Status == 1);
-            foreach (var item in lstTask)
+            var lstTask = _context.Tasks;
+            var lstTaskUpdateStatus = lstTask.Where(x => x.Status == 2 || x.Status == 1);
+            foreach (var item in lstTaskUpdateStatus)
             {
                 if (item.Deadline < DateTime.UtcNow)
                 {
@@ -30,8 +31,17 @@ namespace BatchjobService.HangFireService
                     item.ModifiedDate = DateTime.UtcNow;
                 }
             }
-
-            _context.UpdateRange(lstTask);
+            var lstTaskUpdateIsAds = lstTask.Where(x => x.Status == 7 || x.IsAds == true);
+            foreach (var item in lstTaskUpdateIsAds)
+            {
+                if(item.AdsDate < DateTime.UtcNow)
+                {
+                    item.IsAds = false;
+                    item.AdsDate = null;
+                }
+            }
+            _context.UpdateRange(lstTaskUpdateStatus);
+            _context.UpdateRange(lstTaskUpdateIsAds);
             _context.SaveChanges();
         }
     }

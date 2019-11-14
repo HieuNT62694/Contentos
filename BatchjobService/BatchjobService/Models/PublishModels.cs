@@ -11,5 +11,7 @@ namespace BatchjobService.Models
         public List<int> listTag;
         public int contentId;
         public DateTime time;
+        public DateTime? adsTime;
+        public bool isAds = false;
     }
 }

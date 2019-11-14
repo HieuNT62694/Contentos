@@ -56,7 +56,7 @@ namespace BatchjobService.Controllers
                 var fanpage = fanpages.FirstOrDefault(f => f.Id == item).IdChannelNavigation.Id;
                 switch (fanpage)
                 {
-                    case 1 :  PublishContento(item, models.contentId, models.time, task.Id);
+                    case 1 :  PublishContento(item, models.contentId, models.time, task.Id, models.isAds, models.adsTime);
                         break;
                     case 2 :  PublishFB(item , models.contentId, models.time, task.Id);
                         break;
@@ -235,12 +235,11 @@ namespace BatchjobService.Controllers
             _context.SaveChanges();
         }
 
-        private void PublishContento(int fanpageId, int contentId, DateTime time, int taskId)
+        private void PublishContento(int fanpageId, int contentId, DateTime time, int taskId, bool isAds, DateTime? adsTime)
         {
             var jobId = BackgroundJob.Schedule(
-                () => _publish.PublishToContento(taskId),
+                () => _publish.PublishToContento(taskId, isAds, adsTime),
                 time);
-
             var taskFanpages = new TasksFanpages();
             taskFanpages.IdFanpage = fanpageId;
             taskFanpages.IdTask = taskId;
