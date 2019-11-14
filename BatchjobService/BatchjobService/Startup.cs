@@ -15,6 +15,7 @@ using System;
 using System.Linq;
 using MediatR;
 using Steeltoe.Discovery.Client;
+using BatchjobService.Application.Recommandation;
 
 namespace BatchjobService
 {
@@ -40,6 +41,11 @@ namespace BatchjobService
             services.AddScoped<IUpdateStatusService, UpdateStatusService>();
             services.AddScoped<IPublishFBService, PublishFB>();
             services.AddScoped<IUpdateBeforePublishingService, UpdateBeforePublishingService>();
+            //and scoped
+            services.AddScoped<IModel, Model>();
+            services.AddScoped<IRun, Run>();
+            services.AddScoped<IAlgorithmn, Algorithmn>();
+            services.AddScoped<IAlgorithmDataLogic, AlgorithmDataLogic>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddMediatR(typeof(Startup).Assembly);
@@ -96,6 +102,7 @@ namespace BatchjobService
             app.UseHangfireDashboard();
             //RecurringJob.AddOrUpdate("UpdateStatusDeadline", () => service.UpdateStatus(), "0 10 * * *", TimeZoneInfo.Utc);
             RecurringJob.AddOrUpdate<IUpdateStatusService>("UpdateStatusDeadline", context => context.UpdateStatus(), "* 17 * * *", TimeZoneInfo.Utc);
+            RecurringJob.AddOrUpdate<IRun>("UpdateStatusDeadline", context => context.Handle(), "* 17 * * *", TimeZoneInfo.Utc);
             //RecurringJob.AddOrUpdate<IUpdateStatusService>("UpdateStatusDeadline", context => context.UpdateStatus(), Cron.Daily,TimeZoneInfo.Utc );
             //app.Run(async (context) =>
             //{
