@@ -37,6 +37,8 @@ using ContentProccessService.Application.Queries.GetStatusPublish;
 using AuthenticationService.Application.Queries.GetAds;
 using ContentProccessService.Application.Queries.GetTrend;
 using ContentProccessService.Application.Commands.CountClickContent;
+using ContentProccessService.Application.Queries.GetContentViewerByTag;
+using ContentProccessService.Application.Queries.GetContentViewerRecommend;
 
 namespace ContentProccessService.Controllers
 {
@@ -72,7 +74,7 @@ namespace ContentProccessService.Controllers
         [Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetTagsByCampaignId(int id)
         {
-            var response = await Mediator.Send(new GetTagsByCampaignIdRequest {CampaignId = id});
+            var response = await Mediator.Send(new GetTagsByCampaignIdRequest { CampaignId = id });
             return Ok(response);
         }
         [HttpGet("task/campaign/{id}")]
@@ -161,7 +163,7 @@ namespace ContentProccessService.Controllers
         [Authorize(Roles = "Editor")]
         public async Task<IActionResult> DeleteTask(int id)
         {
-            var response = await Mediator.Send(new DeleteTaskRequest {IdTask = id });
+            var response = await Mediator.Send(new DeleteTaskRequest { IdTask = id });
             return Ok(response);
         }
         [HttpPut("content/task/campaign")]
@@ -203,38 +205,12 @@ namespace ContentProccessService.Controllers
             var response = await Mediator.Send(new GetAllListTaskByIdEditorRequest { IdEditor = id });
             return Ok(response);
         }
-        [HttpGet("content/viewer")]
+        [HttpPost("content/viewer")]
         //[Authorize(Roles = "")]
-        public async Task<IActionResult> GetContent(int? id)
+        public async Task<IActionResult> GetContent(GetContentViewerRequest request)
         {
-            //string cookieValueFromContext = _httpContextAccessor.HttpContext.Request.Cookies["test"];
-            var cookieValueFromReq = Request.Cookies["CCTT"];
-            var request = new GetContentViewerRequest();
-            if (id == null && cookieValueFromReq != null)
-            {
-                var lstIdtag = cookieValueFromReq.Replace('[',' ').Replace(']',' ').Trim().Split(",");
-                var lstid = new List<int>();
-                foreach (var item in lstIdtag)
-                {
-
-                    var idTag = string.IsNullOrEmpty(item)  ? 0 : int.Parse(item) ;
-                    lstid.Add(idTag);
-                }
-                request.Tags = lstid;
-                var response = await Mediator.Send(request);
-                return Ok(response);
-            }
-            else if (id != null)
-            {
-                request.Id = id;
-                request.Tags = new List<int>();
-                var response = await Mediator.Send(request);
-                return Ok(response);
-            }
-            
-            //string[] lstvalue = cookieValueFromReq.Values.AllKeys;
-            //var response = await Mediator.Send(request);
-            return BadRequest("Please give me Cookie");
+            var response = await Mediator.Send(request);
+            return Ok(response);
         }
         [HttpGet("cookies/viewer")]
         //[Authorize(Roles = "")]
@@ -333,7 +309,36 @@ namespace ContentProccessService.Controllers
             await Mediator.Send(command);
             return Accepted("Successfull!!");
         }
+        [HttpGet("content/tag/{id}")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetContentByTag(int id)
+        {
+            var response = await Mediator.Send(new GetContentViewerByTagRequest() { IdTag = id });
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Please check fanpage id");
+            }
 
+        }
 
+        [HttpGet("content/recommend/{id}")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetContentRecommend(int id)
+        {
+            var response = await Mediator.Send(new GetContentViewerRecommendRequest() { Id = id });
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Please check fanpage id");
+            }
+
+        }
     }
 }

@@ -81,12 +81,10 @@ namespace ContentProccessService
             //addd cors
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {
-                builder.WithOrigins("http://localhost:8080", "http://contento-fe.s3-website-ap-southeast-1.amazonaws.com", "http://localhost", "http://contento-news.s3-website-ap-southeast-1.amazonaws.com", "http://localhost:8081"
-     , "http://contento-admin.s3-website-ap-southeast-1.amazonaws.com"
-     , "http://contento-view.s3-website-ap-southeast-1.amazonaws.com")
-        .AllowAnyMethod()
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
                        .AllowAnyHeader()
-                       .AllowCredentials();
+                       ;
             }));
             services.Configure<CookiePolicyOptions>(options =>
             {

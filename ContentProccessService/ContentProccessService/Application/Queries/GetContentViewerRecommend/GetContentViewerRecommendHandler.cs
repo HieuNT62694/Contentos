@@ -21,11 +21,13 @@ namespace ContentProccessService.Application.Queries.GetContentViewerRecommend
         }
         public async Task<List<ContentViewer>> Handle(GetContentViewerRecommendRequest request, CancellationToken cancellationToken)
         {
+            var listTag = await _context.Personalizations.Where(x => x.IdUser == request.Id && x.IsSuggestion == true).Select(x=>x.IdTag).ToListAsync();
             var content = await _context.Tasks.AsNoTracking()
                        .Include(x => x.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
                         .Where(x => x.Status == 7
                         && x.Contents.Any(t => t.IsActive == true)
-                        && x.TasksFanpages.Any(t => t.IdFanpage == 1))
+                        && x.TasksFanpages.Any(t => t.IdFanpage == 1)
+                         && x.TasksTags.Any(t => listTag.Contains(t.IdTag)))
                        .OrderByDescending(x => x.PublishTime)
                        .Select(x => new
                        {

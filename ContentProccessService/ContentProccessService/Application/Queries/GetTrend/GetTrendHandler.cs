@@ -37,7 +37,7 @@ namespace ContentProccessService.Application.Queries.GetTrend
              && x.Contents.Any(t => t.IsActive == true)
              && x.TasksFanpages.Any(t => t.IdFanpage == 1)
              && x.Interaction != 0)
-             .OrderByDescending(x => x.Interaction).Take(20)
+             .OrderByDescending(x => x.Interaction).Take(10)
              .Select(x => new
              {
                  x,

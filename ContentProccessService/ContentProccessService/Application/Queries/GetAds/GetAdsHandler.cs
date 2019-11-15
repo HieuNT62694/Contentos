@@ -36,7 +36,7 @@ namespace AuthenticationService.Application.Queries.GetAds
                          && x.Contents.Any(t => t.IsActive == true)
                          && x.TasksFanpages.Any(t => t.IdFanpage == 1)
                          && x.IsAds == true)
-                        .OrderByDescending(x => x.PublishTime)
+                        .OrderByDescending(x => x.PublishTime).Take(10)
                         .Select(x => new
                         {
                             x,

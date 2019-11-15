@@ -58,6 +58,8 @@ namespace BatchjobService
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+
+
             services.AddDiscoveryClient(Configuration);
             //Add timer service
 
@@ -105,14 +107,8 @@ namespace BatchjobService
             {
                 Authorization = new[] { new MyAuthorizationFilter() }
             });
-            //RecurringJob.AddOrUpdate("UpdateStatusDeadline", () => service.UpdateStatus(), "0 10 * * *", TimeZoneInfo.Utc);
             RecurringJob.AddOrUpdate<IUpdateStatusService>("UpdateStatusDeadline", context => context.UpdateStatus(), "* 17 * * *", TimeZoneInfo.Utc);
             RecurringJob.AddOrUpdate<IRun>("Recommend", context => context.Handle(), "* 17 * * *", TimeZoneInfo.Utc);
-            //RecurringJob.AddOrUpdate<IUpdateStatusService>("UpdateStatusDeadline", context => context.UpdateStatus(), Cron.Daily,TimeZoneInfo.Utc );
-            //app.Run(async (context) =>
-            //{
-            //    await context.Response.WriteAsync("Hello World!");
-            //});
             app.UseDiscoveryClient();
             app.UseHttpsRedirection();
             app.UseMvc();
