@@ -36,7 +36,7 @@ namespace AuthenticationService.Application.Queries.GetAds
                          && x.Contents.Any(t => t.IsActive == true)
                          && x.TasksFanpages.Any(t => t.IdFanpage == 1)
                          && x.IsAds == true)
-                        .OrderByDescending(x => x.PublishTime).Take(10)
+                        .OrderByDescending(x => x.PublishTime)
                         .Select(x => new
                         {
                             x,
@@ -59,6 +59,7 @@ namespace AuthenticationService.Application.Queries.GetAds
 
 
                 var lstTag = new List<TagsViewModel>();
+                var lstintTag = new List<int>();
                 foreach (var item1 in item.TasksTags)
                 {
 
@@ -68,13 +69,16 @@ namespace AuthenticationService.Application.Queries.GetAds
                         Name = item1.IdTagNavigation.Name
                     };
                     lstTag.Add(Tag);
+                    lstintTag.Add(item1.IdTag);
                 }
                 var ContentReturn = new ContentViewer
                 {
                     IdTask = item.x.Id,
                     Contents = Cnt,
                     Image = imgs,
-                    ListTags = lstTag
+                    ListTags = lstTag,
+                    PublishTime = item.x.PublishTime,
+                    ListIntTags = lstintTag
                 };
                 lstContentReturn.Add(ContentReturn);
             }

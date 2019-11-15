@@ -48,6 +48,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewerByTag
                     Name = item.Contents.Name
                 };
                 var lstTag = new List<TagsViewModel>();
+                var lstintTag = new List<int>();
                 foreach (var item1 in item.TasksTags)
                 {
                     var Tag = new TagsViewModel
@@ -56,6 +57,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewerByTag
                         Name = item1.IdTagNavigation.Name
                     };
                     lstTag.Add(Tag);
+                    lstintTag.Add(item1.IdTag);
                 }
                 var ContentReturn = new ContentViewer
                 {
@@ -63,7 +65,8 @@ namespace ContentProccessService.Application.Queries.GetContentViewerByTag
                     PublishTime = item.x.PublishTime,
                     Contents = Cnt,
                     Image = imgs,
-                    ListTags = lstTag
+                    ListTags = lstTag,
+                    ListIntTags = lstintTag
                 };
                 lstContentReturn.Add(ContentReturn);
             }

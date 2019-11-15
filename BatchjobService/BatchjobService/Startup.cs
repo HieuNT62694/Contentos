@@ -103,6 +103,14 @@ namespace BatchjobService
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.Use((context, next) =>
+            {
+                if (context.Request.Path.StartsWithSegments("/hangfire"))
+                {
+                    context.Request.PathBase = new PathString(context.Request.Headers["X-Forwarded-Prefix"]);
+                }
+                return next();
+            });
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
                 Authorization = new[] { new MyAuthorizationFilter() }

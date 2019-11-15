@@ -20,6 +20,7 @@ namespace ContentProccessService.Models
         public List<TagsViewModel> ListTags { get; set; }
         public List<string> Image { get; set; }
         public DateTime? PublishTime { get; set; }
+        public List<int> ListIntTags { get; set; }
     }
     public class ContentDetailReturn
     {

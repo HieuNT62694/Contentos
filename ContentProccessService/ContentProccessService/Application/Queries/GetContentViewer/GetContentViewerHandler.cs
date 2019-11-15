@@ -50,6 +50,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                         Name = item.Contents.Name
                     };
                     var lstTag = new List<TagsViewModel>();
+                    var lstintTag = new List<int>();
                     foreach (var item1 in item.TasksTags)
                     {
                         var Tag = new TagsViewModel
@@ -58,6 +59,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                             Name = item1.IdTagNavigation.Name
                         };
                         lstTag.Add(Tag);
+                        lstintTag.Add(item1.IdTag);
                     }
                     var ContentReturn = new ContentViewer
                     {
@@ -65,7 +67,8 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                         PublishTime = item.x.PublishTime,
                         Contents = Cnt,
                         Image = imgs,
-                        ListTags = lstTag
+                        ListTags = lstTag,
+                        ListIntTags = lstintTag
                     };
                     lstContentReturn.Add(ContentReturn);
                 }
@@ -103,6 +106,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                             Name = item.Contents.Name
                         };
                         var lstTag = new List<TagsViewModel>();
+                        var lstintTag = new List<int>();
                         foreach (var item1 in item.x.TasksTags)
                         {
                             var Tag = new TagsViewModel
@@ -111,6 +115,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                                 Name = item1.IdTagNavigation.Name
                             };
                             lstTag.Add(Tag);
+                            lstintTag.Add(item1.IdTag);
                         }
                         var ContentReturn = new ContentViewer
                         {
@@ -118,7 +123,8 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                             PublishTime = item.x.PublishTime,
                             Contents = Cnt,
                             Image = imgs,
-                            ListTags = lstTag
+                            ListTags = lstTag,
+                            ListIntTags = lstintTag
                         };
                         lstContentReturn.Add(ContentReturn);
                     }
@@ -153,6 +159,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                             Name = item.Contents.Name
                         };
                         var lstTag = new List<TagsViewModel>();
+                        var lstintTag = new List<int>();
                         foreach (var item1 in item.TasksTags)
                         {
                             var Tag = new TagsViewModel
@@ -161,6 +168,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                                 Name = item1.IdTagNavigation.Name
                             };
                             lstTag.Add(Tag);
+                            lstintTag.Add(item1.IdTag);
                         }
                         var ContentReturn = new ContentViewer
                         {
@@ -168,7 +176,8 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                             PublishTime = item.x.PublishTime,
                             Contents = Cnt,
                             Image = imgs,
-                            ListTags = lstTag
+                            ListTags = lstTag,
+                            ListIntTags = lstintTag
                         };
                         lstContentReturn.Add(ContentReturn);
                     }
@@ -204,6 +213,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                         Name = item.Contents.Name
                     };
                     var lstTag = new List<TagsViewModel>();
+                    var lstintTag = new List<int>();
                     foreach (var item1 in item.x.TasksTags)
                     {
                         var Tag = new TagsViewModel
@@ -212,6 +222,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                             Name = item1.IdTagNavigation.Name
                         };
                         lstTag.Add(Tag);
+                        lstintTag.Add(item1.IdTag);
                     }
                     var ContentReturn = new ContentViewer
                     {
@@ -219,7 +230,9 @@ namespace ContentProccessService.Application.Queries.GetContentViewer
                         PublishTime = item.x.PublishTime,
                         Contents = Cnt,
                         Image = imgs,
-                        ListTags = lstTag
+                        ListTags = lstTag,
+                        ListIntTags = lstintTag
+                        
                     };
                     lstContentReturn.Add(ContentReturn);
                 }

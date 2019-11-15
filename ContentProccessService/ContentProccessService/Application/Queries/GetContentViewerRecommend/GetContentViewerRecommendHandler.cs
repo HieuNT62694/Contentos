@@ -51,6 +51,7 @@ namespace ContentProccessService.Application.Queries.GetContentViewerRecommend
 
 
                 var lstTag = new List<TagsViewModel>();
+                var lstintTag = new List<int>();
                 foreach (var item1 in item.TasksTags)
                 {
 
@@ -60,13 +61,16 @@ namespace ContentProccessService.Application.Queries.GetContentViewerRecommend
                         Name = item1.IdTagNavigation.Name
                     };
                     lstTag.Add(Tag);
+                    lstintTag.Add(item1.IdTag);
                 }
                 var ContentReturn = new ContentViewer
                 {
                     IdTask = item.x.Id,
                     Contents = Cnt,
                     Image = imgs,
-                    ListTags = lstTag
+                    ListTags = lstTag,
+                    PublishTime = item.x.PublishTime,
+                    ListIntTags = lstintTag
                 };
                 lstContentReturn.Add(ContentReturn);
             }
