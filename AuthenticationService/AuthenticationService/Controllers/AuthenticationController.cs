@@ -6,6 +6,7 @@ using AuthenticationService.Application.Commands.CheckOldPassword;
 using AuthenticationService.Application.Commands.CreateCustomer;
 using AuthenticationService.Application.Commands.CreateUser;
 using AuthenticationService.Application.Commands.DeleteUser;
+using AuthenticationService.Application.Commands.DisableAccount;
 using AuthenticationService.Application.Commands.Notify;
 using AuthenticationService.Application.Commands.SaveToken;
 using AuthenticationService.Application.Commands.UpdateCustomer;
@@ -400,6 +401,7 @@ namespace AuthenticationService.Controllers
             return Ok(response);
         }
 
+
         [HttpGet("Free-User")]
         //[Authorize(Roles = "Marketer,Editor")]
         public async Task<IActionResult> GetListUserFree()
@@ -410,6 +412,20 @@ namespace AuthenticationService.Controllers
                 return NoContent();
             }
             return Ok(response);
+        }
+        [HttpPut("accounts")]
+        //[Authorize(Roles = "Marketer")]
+        public async Task<IActionResult> DisableAccount(DisableAccountCommand command)
+        {
+            var result = await Mediator.Send(command);
+
+            if (!result.Equals("Success"))
+            {
+                return BadRequest();
+            }
+            
+            return Accepted();
+
         }
     }
 }
