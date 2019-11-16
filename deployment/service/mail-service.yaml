@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mail-68c6879c67-nrtbk
+  name: mail-68c6879c67-mb5xx
 spec:
   type: ClusterIP
   selector:

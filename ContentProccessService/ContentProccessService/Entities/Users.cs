@@ -12,7 +12,6 @@ namespace ContentProccessService.Entities
             CampaignsIdEditorNavigation = new HashSet<Campaigns>();
             CampaignsIdMarketerNavigation = new HashSet<Campaigns>();
             Fanpages = new HashSet<Fanpages>();
-            FavoritesContents = new HashSet<FavoritesContents>();
             InverseIdManagerNavigation = new HashSet<Users>();
             Personalizations = new HashSet<Personalizations>();
             Tasks = new HashSet<Tasks>();
@@ -35,7 +34,6 @@ namespace ContentProccessService.Entities
         public virtual ICollection<Campaigns> CampaignsIdEditorNavigation { get; set; }
         public virtual ICollection<Campaigns> CampaignsIdMarketerNavigation { get; set; }
         public virtual ICollection<Fanpages> Fanpages { get; set; }
-        public virtual ICollection<FavoritesContents> FavoritesContents { get; set; }
         public virtual ICollection<Users> InverseIdManagerNavigation { get; set; }
         public virtual ICollection<Personalizations> Personalizations { get; set; }
         public virtual ICollection<Tasks> Tasks { get; set; }

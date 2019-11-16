@@ -1,4 +1,5 @@
 ﻿using BatchjobService.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,7 +61,10 @@ namespace BatchjobService.Application.Recommandation
 
             return returnModel;
         }
-
+        public void UpdateSuggestion()
+        {
+            _context.Personalizations.ToList().ForEach(x => x.IsSuggestion = false);
+        }
         public async Task<bool> CreateSuggestionAsync(int UserReciever, int UserSuggest)
         {
             List<Personalization> tagsOriginal= await _model.getListTagsAsync(UserReciever);

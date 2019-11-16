@@ -16,8 +16,6 @@ namespace AuthenticationService.Entities
         public int? IdMarketer { get; set; }
         public int? IdChannel { get; set; }
         public string Token { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
         public bool? IsActive { get; set; }
         public int? IdCustomer { get; set; }
         public DateTime? ModifiedDate { get; set; }

@@ -9,5 +9,6 @@ namespace BatchjobService.Application.Recommandation
     {
           Task<ModelAlgorithm> GetDataAsync();
           Task<bool> CreateSuggestionAsync(int UserReciever, int UserSuggest);
+        void UpdateSuggestion();
     }
 }

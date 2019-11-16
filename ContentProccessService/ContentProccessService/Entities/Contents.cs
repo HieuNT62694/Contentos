@@ -8,7 +8,6 @@ namespace ContentProccessService.Entities
         public Contents()
         {
             Comments = new HashSet<Comments>();
-            FavoritesContents = new HashSet<FavoritesContents>();
         }
 
         public int Id { get; set; }
@@ -22,6 +21,5 @@ namespace ContentProccessService.Entities
 
         public virtual Tasks IdTaskNavigation { get; set; }
         public virtual ICollection<Comments> Comments { get; set; }
-        public virtual ICollection<FavoritesContents> FavoritesContents { get; set; }
     }
 }

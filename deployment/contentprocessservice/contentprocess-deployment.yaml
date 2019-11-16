@@ -16,7 +16,7 @@ spec:
       - env:
         - name: SPRING_EUREKA
           value: http://eureka-cluster-ip-service:8761/eureka
-        image: asia.gcr.io/selforder-1553324212477/contentproccessservice:1.0.6
+        image: asia.gcr.io/selforder-1553324212477/contentproccessservice:1.0.8
         name: contentprocess
         ports:
         - containerPort: 80

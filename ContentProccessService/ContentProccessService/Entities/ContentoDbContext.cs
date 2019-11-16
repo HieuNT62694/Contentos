@@ -22,7 +22,6 @@ namespace ContentProccessService.Entities
         public virtual DbSet<Contents> Contents { get; set; }
         public virtual DbSet<Fanpages> Fanpages { get; set; }
         public virtual DbSet<FanpagesTags> FanpagesTags { get; set; }
-        public virtual DbSet<FavoritesContents> FavoritesContents { get; set; }
         public virtual DbSet<Notifys> Notifys { get; set; }
         public virtual DbSet<Personalizations> Personalizations { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
@@ -237,11 +236,7 @@ namespace ContentProccessService.Entities
                     .HasColumnName("name")
                     .HasMaxLength(250);
 
-                entity.Property(e => e.Password).HasColumnName("password");
-
                 entity.Property(e => e.Token).HasColumnName("token");
-
-                entity.Property(e => e.Username).HasColumnName("username");
 
                 entity.HasOne(d => d.IdChannelNavigation)
                     .WithMany(p => p.Fanpages)
@@ -278,37 +273,6 @@ namespace ContentProccessService.Entities
                     .HasForeignKey(d => d.IdTag)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_channel_tags_tags");
-            });
-
-            modelBuilder.Entity<FavoritesContents>(entity =>
-            {
-                entity.HasKey(e => new { e.IdContent, e.IdUser });
-
-                entity.ToTable("favorites _contents");
-
-                entity.Property(e => e.IdContent).HasColumnName("id_content");
-
-                entity.Property(e => e.IdUser).HasColumnName("id_user");
-
-                entity.Property(e => e.CreatedDate)
-                    .HasColumnName("created_date")
-                    .HasColumnType("datetime");
-
-                entity.Property(e => e.ModifiedDate)
-                    .HasColumnName("modified_date")
-                    .HasColumnType("datetime");
-
-                entity.HasOne(d => d.IdContentNavigation)
-                    .WithMany(p => p.FavoritesContents)
-                    .HasForeignKey(d => d.IdContent)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_FavoritesContentToContent");
-
-                entity.HasOne(d => d.IdUserNavigation)
-                    .WithMany(p => p.FavoritesContents)
-                    .HasForeignKey(d => d.IdUser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_FavoritesContentToUser");
             });
 
             modelBuilder.Entity<Notifys>(entity =>
