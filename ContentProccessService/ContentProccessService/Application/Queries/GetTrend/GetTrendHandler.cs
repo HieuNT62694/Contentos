@@ -33,11 +33,12 @@ namespace ContentProccessService.Application.Queries.GetTrend
 
             var contents=  await _context.Tasks.AsNoTracking()
               .Include(x => x.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
+              .Include(x=>x.UsersInteractions)
              .Where(x => x.Status == 7
              && x.Contents.Any(t => t.IsActive == true)
              && x.TasksFanpages.Any(t => t.IdFanpage == 1)
-             && x.Interaction != 0)
-             .OrderByDescending(x => x.Interaction).Take(10)
+             && x.UsersInteractions.Sum(z=>z.Interaction) != 0)
+             .OrderByDescending(x => x.UsersInteractions.Sum(z => z.Interaction)).Take(10)
              .Select(x => new
              {
                  x,

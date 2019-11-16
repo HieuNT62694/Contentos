@@ -34,6 +34,7 @@ namespace CampaignService.Entities
         public virtual DbSet<TasksTags> TasksTags { get; set; }
         public virtual DbSet<Tokens> Tokens { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<UsersInteractions> UsersInteractions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -162,9 +163,7 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Comment)
-                    .HasColumnName("comment")
-                    .HasColumnType("text");
+                entity.Property(e => e.Comment).HasColumnName("comment");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnName("created_date")
@@ -443,8 +442,6 @@ namespace CampaignService.Entities
 
                 entity.Property(e => e.IdWritter).HasColumnName("id_writter");
 
-                entity.Property(e => e.Interaction).HasColumnName("interaction");
-
                 entity.Property(e => e.IsAds).HasColumnName("is_ads");
 
                 entity.Property(e => e.ModifiedDate)
@@ -612,6 +609,32 @@ namespace CampaignService.Entities
                     .WithMany(p => p.InverseIdManagerNavigation)
                     .HasForeignKey(d => d.IdManager)
                     .HasConstraintName("FK_UserManager");
+            });
+
+            modelBuilder.Entity<UsersInteractions>(entity =>
+            {
+                entity.HasKey(e => new { e.IdUser, e.IdTask })
+                    .HasName("PK__users_in__BECC6A5686091E15");
+
+                entity.ToTable("users_interactions");
+
+                entity.Property(e => e.IdUser).HasColumnName("id_user");
+
+                entity.Property(e => e.IdTask).HasColumnName("id_task");
+
+                entity.Property(e => e.Interaction).HasColumnName("interaction");
+
+                entity.HasOne(d => d.IdTaskNavigation)
+                    .WithMany(p => p.UsersInteractions)
+                    .HasForeignKey(d => d.IdTask)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_InteractionToContent");
+
+                entity.HasOne(d => d.IdUserNavigation)
+                    .WithMany(p => p.UsersInteractions)
+                    .HasForeignKey(d => d.IdUser)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_InteractionFromUser");
             });
         }
     }

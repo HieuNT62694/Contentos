@@ -1,4 +1,5 @@
 ﻿using BatchjobService.Entities;
+using BatchjobService.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -61,9 +62,44 @@ namespace BatchjobService.Application.Recommandation
 
             return returnModel;
         }
-        public void UpdateSuggestion()
+        public async Task<List<AlgorithmDataBeforeModel>> AlgorithmDataBefore()
+        {
+            var lstAlori = new List<AlgorithmDataBeforeModel>();
+            var userInterId = await _context.UsersInteractions.Select(x=> new ListTaskModel {
+                IdUser = x.IdUser,
+                IdTask  = _context.UsersInteractions.Where(z=>z.IdUser == x.IdUser).Select(z=>z.IdTask).ToList()
+            }).Distinct().ToListAsync();
+            var lstTagsum = new List<int>();
+            foreach (var item in userInterId)
+            {
+
+                var Alori = new AlgorithmDataBeforeModel();
+                Alori.IdUser = item.IdUser;
+
+                foreach (var item1 in item.IdTask)
+                {
+                    var lstTag = _context.TasksTags.Where(x => x.IdTask == item1).Select(x=>x.IdTag);
+                    lstTagsum.AddRange(lstTag);
+                    lstTagsum.Distinct();
+                }
+                foreach (var item2 in lstTagsum)
+                {
+                    Alori.IdTag = item2;
+                }
+
+
+            }
+            
+
+
+
+
+            return lstAlori;
+        }
+        public async void UpdateSuggestion()
         {
             _context.Personalizations.ToList().ForEach(x => x.IsSuggestion = false);
+            await _context.SaveChangesAsync();
         }
         public async Task<bool> CreateSuggestionAsync(int UserReciever, int UserSuggest)
         {

@@ -53,7 +53,6 @@ namespace ContentProccessService.Application.Commands.CreateTask
                     Title = request.Task.Title,
                     CreatedDate = DateTime.UtcNow,
                     TasksTags = Tags,
-                    Interaction = 0,
                     Status = 1
                 };
                 contentodbContext.Attach(task);

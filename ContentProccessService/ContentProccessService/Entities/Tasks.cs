@@ -10,6 +10,7 @@ namespace ContentProccessService.Entities
             Contents = new HashSet<Contents>();
             TasksFanpages = new HashSet<TasksFanpages>();
             TasksTags = new HashSet<TasksTags>();
+            UsersInteractions = new HashSet<UsersInteractions>();
         }
 
         public int Id { get; set; }
@@ -19,7 +20,6 @@ namespace ContentProccessService.Entities
         public string Description { get; set; }
         public DateTime? Deadline { get; set; }
         public DateTime? StartDate { get; set; }
-        public int? Interaction { get; set; }
         public DateTime? AdsDate { get; set; }
         public bool? IsAds { get; set; }
         public DateTime? PublishTime { get; set; }
@@ -33,5 +33,6 @@ namespace ContentProccessService.Entities
         public virtual ICollection<Contents> Contents { get; set; }
         public virtual ICollection<TasksFanpages> TasksFanpages { get; set; }
         public virtual ICollection<TasksTags> TasksTags { get; set; }
+        public virtual ICollection<UsersInteractions> UsersInteractions { get; set; }
     }
 }
