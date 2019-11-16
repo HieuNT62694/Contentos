@@ -14,6 +14,7 @@ using AuthenticationService.Application.Commands.UpdateProfile;
 using AuthenticationService.Application.Commands.UpdateUser;
 using AuthenticationService.Application.Queries;
 using AuthenticationService.Application.Queries.AuthenticationViewer;
+using AuthenticationService.Application.Queries.CheckEmail;
 using AuthenticationService.Application.Queries.GetAllWriterByIdMarketer;
 using AuthenticationService.Application.Queries.GetCustomer;
 using AuthenticationService.Application.Queries.GetCustomerByIdEditor;
@@ -426,6 +427,17 @@ namespace AuthenticationService.Controllers
             
             return Accepted();
 
+        }
+        [HttpPost("email")]
+        //[Authorize(Roles = "Marketer")]
+        public async Task<IActionResult> CheckEmail(CheckEmailRequest request)
+        {
+            var response = await Mediator.Send(request);
+            if (response == false)
+            {
+                return BadRequest("Email is Existed");
+            }
+            return Ok("Right Email");
         }
     }
 }

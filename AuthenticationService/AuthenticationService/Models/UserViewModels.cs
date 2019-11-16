@@ -71,7 +71,14 @@ namespace AuthenticationService.Models
         public int? Gender { get; set; }
         public int? Age { get; set; }
         public string FullName { get; set; }
+        public List<TagViewModels> Tags { get; set; }
+        public List<int> IdTags { get; set; }
 
+    }
+    public class TagViewModels
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
     public class UserAdminModels
     {

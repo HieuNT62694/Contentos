@@ -16,5 +16,6 @@ namespace AuthenticationService.Application.Commands.UpdateProfile
         public string Phone { get; set; }
         public int? Gender { get; set; }
         public int? Age { get; set; }
+        public List<int> IdTags { get; set; }
     }
 }
