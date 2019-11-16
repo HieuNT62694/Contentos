@@ -82,17 +82,18 @@ namespace BatchjobService.HangFireService
         {
             var task = _context.Tasks.FirstOrDefault(x => x.Id == taskId);
 
+            if (isAds)
+            {
+                task.AdsDate = adsTime;
+            }
+            task.IsAds = isAds;
             if (task.Status != 7)
             {
-                if (isAds)
-                {
-                    task.AdsDate = adsTime;
-                }
-                task.IsAds = isAds;
                 task.Status = 7;
-                _context.Update(task);
-                await _context.SaveChangesAsync();
+                
             }
+            _context.Update(task);
+            await _context.SaveChangesAsync();
         }
 
         private async Task<string> GetPageIdAsync(string token)
