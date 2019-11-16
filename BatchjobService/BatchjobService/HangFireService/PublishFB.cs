@@ -12,7 +12,7 @@ namespace BatchjobService.HangFireService
 {
     public interface IPublishFBService
     {
-        Task PublishToContento(int taskId, bool isAds, DateTime? adsTime);
+        Task PublishToContento(int taskId);
         Task PublishToWP(int fanpageId, int contentId);
         Task PublishToFB(int fanpageId, int contentId);
     }
@@ -78,22 +78,16 @@ namespace BatchjobService.HangFireService
             await wordpress.PublishSimplePost(content, fanpage.Token);
         }
 
-        public async Task PublishToContento(int taskId, bool isAds, DateTime? adsTime)
+        public async Task PublishToContento(int taskId)
         {
             var task = _context.Tasks.FirstOrDefault(x => x.Id == taskId);
 
-            if (isAds)
-            {
-                task.AdsDate = adsTime;
-            }
-            task.IsAds = isAds;
             if (task.Status != 7)
             {
                 task.Status = 7;
-                
+                _context.Update(task);
+                await _context.SaveChangesAsync();
             }
-            _context.Update(task);
-            await _context.SaveChangesAsync();
         }
 
         private async Task<string> GetPageIdAsync(string token)
