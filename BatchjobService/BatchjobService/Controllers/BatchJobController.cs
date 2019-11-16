@@ -238,7 +238,7 @@ namespace BatchjobService.Controllers
         private void PublishContento(int fanpageId, int contentId, DateTime time, int taskId, bool isAds, DateTime? adsTime)
         {
             var jobId = BackgroundJob.Schedule(
-                () => _publish.PublishToContento(taskId, isAds, adsTime),
+                () => _publish.PublishToContento(taskId),
                 time);
 
             var task = _context.Tasks.FirstOrDefault(x => x.Id == taskId);
