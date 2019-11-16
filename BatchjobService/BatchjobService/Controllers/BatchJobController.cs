@@ -15,6 +15,7 @@ using BatchjobService.Application.Queries.GetFanpagesByCustomerIdAndChannelId;
 using BatchjobService.Application.Queries.GetFanpagesByMarketerId;
 using BatchjobService.Application.Queries.GetListFanpageByTags;
 using BatchjobService.Application.Queries.GetTaskFanpageByContentId;
+using BatchjobService.Application.Queries.Test;
 using BatchjobService.Entities;
 using BatchjobService.HangFireService;
 using BatchjobService.Models;
@@ -259,5 +260,20 @@ namespace BatchjobService.Controllers
             _context.TasksFanpages.Add(taskFanpages);
             _context.SaveChanges();
         }
+        [HttpGet("test")]
+        public async Task<IActionResult> GetTest()
+        {
+            try
+            {
+                var response = await Mediator.Send(new TestRequest { });
+                return Ok(response);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+           
+        }
+
     }
 }

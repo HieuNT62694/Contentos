@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BatchjobService.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,11 @@ namespace BatchjobService.Models
     public class ListTaskModel
     {
         public int IdUser { get; set; }
-        public List<int> IdTask { get; set; }
+        public List<TaskInterModel> IdTask { get; set; }
+    }
+    public class TaskInterModel
+    {
+        public int Id { get; set; }
+        public int? Interaction { get; set; }
     }
 }

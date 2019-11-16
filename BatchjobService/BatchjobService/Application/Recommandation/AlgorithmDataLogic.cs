@@ -64,34 +64,47 @@ namespace BatchjobService.Application.Recommandation
         }
         public async Task<List<AlgorithmDataBeforeModel>> AlgorithmDataBefore()
         {
+            var listIduser = await _context.UsersInteractions.Select(x => x.IdUser).Distinct().ToListAsync();
             var lstAlori = new List<AlgorithmDataBeforeModel>();
-            var userInterId = await _context.UsersInteractions.Select(x=> new ListTaskModel {
-                IdUser = x.IdUser,
-                IdTask  = _context.UsersInteractions.Where(z=>z.IdUser == x.IdUser).Select(z=>z.IdTask).ToList()
-            }).Distinct().ToListAsync();
-            var lstTagsum = new List<int>();
-            foreach (var item in userInterId)
+            var lstTest = new List<ListTaskModel>();
+            foreach (var test in listIduser)
             {
+                var userInterId = await _context.UsersInteractions.Where(x => x.IdUser == test).Select(x => new ListTaskModel
+                {
+                    IdUser = x.IdUser,
+                    IdTask = _context.UsersInteractions.Where(z => z.IdUser == x.IdUser).Select(z => new TaskInterModel { Id = z.IdTask, Interaction = z.Interaction ?? 0 }).ToList()
+                }).FirstOrDefaultAsync();
+                lstTest.Add(userInterId);
+            }
 
-                var Alori = new AlgorithmDataBeforeModel();
-                Alori.IdUser = item.IdUser;
 
+            var lstTagsum = new List<int>();
+            foreach (var item in lstTest)
+            {
                 foreach (var item1 in item.IdTask)
                 {
-                    var lstTag = _context.TasksTags.Where(x => x.IdTask == item1).Select(x=>x.IdTag);
-                    lstTagsum.AddRange(lstTag);
-                    lstTagsum.Distinct();
+                    var lstTag = _context.TasksTags.Where(x => x.IdTask == item1.Id).Select(x => x.IdTag).ToList();
+                    foreach (var item2 in lstTag)
+                    {
+                        if (lstAlori.Select(x => x.IdTag).Contains(item2) && lstAlori.Select(x => x.IdUser).Contains(item.IdUser))
+                        {
+                            lstAlori.Where(x => x.IdTag == item2 && x.IdUser == item.IdUser).FirstOrDefault().TimeInTeraction += item1.Interaction ?? 0;
+                        }
+                        else
+                        {
+                            var Alori = new AlgorithmDataBeforeModel { IdUser = item.IdUser };
+                            Alori.IdTag = item2;
+                            Alori.TimeInTeraction = Alori.TimeInTeraction + item1.Interaction ?? 0;
+                            lstAlori.Add(Alori);
+                        }
+
+                    }
+
                 }
-                foreach (var item2 in lstTagsum)
-                {
-                    Alori.IdTag = item2;
-                }
+
 
 
             }
-            
-
-
 
 
             return lstAlori;
