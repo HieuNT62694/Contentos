@@ -17,6 +17,7 @@ using AuthenticationService.Application.Queries.GetAllWriterByIdMarketer;
 using AuthenticationService.Application.Queries.GetCustomer;
 using AuthenticationService.Application.Queries.GetCustomerByIdEditor;
 using AuthenticationService.Application.Queries.GetcustomerDetail;
+using AuthenticationService.Application.Queries.GetListAccountFreeStatus;
 using AuthenticationService.Application.Queries.GetListEditorBasic;
 using AuthenticationService.Application.Queries.GetListEditorForWriter;
 using AuthenticationService.Application.Queries.GetListMarketerBasic;
@@ -392,6 +393,18 @@ namespace AuthenticationService.Controllers
         public async Task<IActionResult> GetListEditorWriterBasic()
         {
             var response = await Mediator.Send(new GetListEditorForWriterRequest { });
+            if (response.Count == 0)
+            {
+                return NoContent();
+            }
+            return Ok(response);
+        }
+
+        [HttpGet("Free-User")]
+        //[Authorize(Roles = "Marketer,Editor")]
+        public async Task<IActionResult> GetListUserFree()
+        {
+            var response = await Mediator.Send(new GetListAccountFreeStatusRequest { });
             if (response.Count == 0)
             {
                 return NoContent();

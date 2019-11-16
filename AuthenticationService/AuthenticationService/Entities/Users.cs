@@ -16,6 +16,7 @@ namespace AuthenticationService.Entities
             Personalizations = new HashSet<Personalizations>();
             Tasks = new HashSet<Tasks>();
             Tokens = new HashSet<Tokens>();
+            UsersInteractions = new HashSet<UsersInteractions>();
         }
 
         public int Id { get; set; }
@@ -38,5 +39,6 @@ namespace AuthenticationService.Entities
         public virtual ICollection<Personalizations> Personalizations { get; set; }
         public virtual ICollection<Tasks> Tasks { get; set; }
         public virtual ICollection<Tokens> Tokens { get; set; }
+        public virtual ICollection<UsersInteractions> UsersInteractions { get; set; }
     }
 }
