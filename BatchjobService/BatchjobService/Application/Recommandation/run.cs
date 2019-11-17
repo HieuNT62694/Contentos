@@ -41,7 +41,7 @@ namespace BatchjobService.Application.Recommandation
                     //int[] Rlist = _suggest[i].Suggestion;
                     if (_suggest[i].Suggestion.Length > 1)
                     {
-                        for (int j = 1; j < _suggest[i].Suggestion.Length; i++)
+                        for (int j = 1; j < _suggest[i].Suggestion.Length; j++)
                         {
                             await _Logic.CreateSuggestionAsync(_suggest[i].Reciever.Id, _suggest[i].Suggestion[j]);
 
