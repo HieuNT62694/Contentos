@@ -19,7 +19,7 @@ namespace MailService.Application.EmailSender
             {
                 var mimeMessage = new MimeMessage();
 
-                mimeMessage.From.Add(new MailboxAddress("Hieu Nguyen", "hieuntse62694@gmail.com"));
+                mimeMessage.From.Add(new MailboxAddress("Hieu Nguyen", "hieuntse62694@fpt.edu.vn"));
 
                 mimeMessage.To.Add(new MailboxAddress(email));
 
@@ -38,7 +38,7 @@ namespace MailService.Application.EmailSender
                         // connection to the server; otherwise, false).
                         await client.ConnectAsync("smtp.gmail.com", 587, false);
                     // Note: only needed if the SMTP server requires authentication
-                    await client.AuthenticateAsync("hieuntse62694@gmail.com", "hieunguyen");
+                    await client.AuthenticateAsync("hieuntse62694@fpt.edu.vn", "hieunguyen");
 
                     await client.SendAsync(mimeMessage);
 

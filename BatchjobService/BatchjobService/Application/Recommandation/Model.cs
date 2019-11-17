@@ -57,7 +57,7 @@ namespace BatchjobService.Application.Recommandation
             var user = await _context.Personalizations
                 .AsNoTracking()
                 .Include(x => x.IdUserNavigation)
-                .Where(x => x.IdTag == IdTag && x.IsChosen == true)
+                .Where(x => x.IdTag == IdTag && x.TimeInteraction !=0)
                 .Select(x=>x.IdUserNavigation)
                 .ToListAsync();
             return user;
