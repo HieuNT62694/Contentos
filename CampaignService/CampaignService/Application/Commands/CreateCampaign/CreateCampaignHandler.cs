@@ -75,6 +75,7 @@ namespace CampaignService.Application.Commands.CreateCampaign
                 var stat = _context.StatusCampaigns.Find(newCampaign.Status);
                 model.Status.Name = stat.Name;
                 model.Status.Color = stat.Color;
+                model.EmailEditor = _context.Accounts.FirstOrDefault(x => x.IdUserNavigation.Id == request.Editor.Id).Email;
 
                 //Get ListTag
                 List<Models.Tag> ls = new List<Models.Tag>();

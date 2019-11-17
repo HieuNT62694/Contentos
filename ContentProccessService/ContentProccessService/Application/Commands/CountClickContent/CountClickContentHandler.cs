@@ -19,7 +19,7 @@ namespace ContentProccessService.Application.Commands.CountClickContent
         }
         public async Task<Unit> Handle(CountClickContentCommands request, CancellationToken cancellationToken)
         {
-            contentodbContext.Personalizations.Where(x => request.Tags.Contains(x.IdTag) && x.IdUser == request.IdUser).ToList().ForEach(x => x.TimeInteraction  += 1);
+            //contentodbContext.Personalizations.Where(x => request.Tags.Contains(x.IdTag) && x.IdUser == request.IdUser).ToList().ForEach(x => x.TimeInteraction  += 1);
             var checl = await contentodbContext.UsersInteractions.FirstOrDefaultAsync(x => x.IdTask == request.IdTask && x.IdUser == request.IdUser);
             if (checl == null)
             {

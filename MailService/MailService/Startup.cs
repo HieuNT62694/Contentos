@@ -34,6 +34,8 @@ namespace MailService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IHostedService>(provider => new Consumer("AccountToEmail"));
+            services.AddSingleton<IHostedService>(provider => new Consumer("CreateCampaign"));
+            services.AddSingleton<IHostedService>(provider => new Consumer("CreateTask"));
             //Addservice mail
             services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
             //add swagger

@@ -96,7 +96,7 @@ namespace AuthenticationService.Controllers
 
         }
         [HttpGet("Editors/Marketers/{id}")]
-        [Authorize(Roles = "Marketer")]
+        [Authorize(Roles = "Marketer,Editor,Admin")]
         public async Task<IActionResult> GetListEditor(int id)
         {
             var response = await Mediator.Send(new GetUserRequest { IdMarketer = id });
@@ -109,7 +109,7 @@ namespace AuthenticationService.Controllers
         }
 
         [HttpGet("Writers/Editors/{id}")]
-        [Authorize(Roles = "Marketer,Editor")]
+        [Authorize(Roles = "Marketer,Editor,Admin")]
         public async Task<IActionResult> GetListWriter(int id)
         {
             var response = await Mediator.Send(new GetWriterRequest { EditorId = id });

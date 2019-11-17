@@ -17,14 +17,16 @@ using MailService.Application.EmailSender;
 
 namespace MailService.RabbitMQ
 {
-    public class Consumer : BackgroundService 
+    public class Consumer : BackgroundService
     {
         private IConnection connection;
         private IModel channel;
         private string queueName;
+        private string exch;
 
         public Consumer(string exch)
         {
+            this.exch = exch;
             InitRabbitMQ(exch);
 
         }
@@ -46,19 +48,41 @@ namespace MailService.RabbitMQ
         {
             stoppingToken.ThrowIfCancellationRequested();
             var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += async (model, ea) =>
+            consumer.Received += (model, ea) =>
             {
                 var body = ea.Body;
                 var message = Encoding.UTF8.GetString(body);
-                var messageAccountDTO = JsonConvert.DeserializeObject<MessageAccountDTO>(message);
                 var email = new EmailSender();
-                await email.SendEmailAsync(messageAccountDTO.Email, "Welcome To Contento System", "Username: " + messageAccountDTO.FullName + ", Password: " + messageAccountDTO.Password);
+                switch (this.exch)
+                {
+                    case "AccountToEmail":
+                        var messageAccountDTO = JsonConvert.DeserializeObject<MessageAccountDTO>(message);
+                        email.SendEmailAsync(messageAccountDTO.Email, "Welcome To Contento System", "Username: " + messageAccountDTO.FullName + ", Password: " + messageAccountDTO.Password);
+                        break;
+                    case "CreateCampaign":
+                        var campaignDTO = JsonConvert.DeserializeObject<CampaignData>(message);
+                        email.SendEmailAsync(campaignDTO.EmailEditor, "Welcome To Contento System", "You Have Campaign new: " + campaignDTO.Title);
+                        break;
+                    case "CreateTask":
+                        var TaskDTO = JsonConvert.DeserializeObject<TasksViewModelMessage>(message);
+                        email.SendEmailAsync(TaskDTO.EmailWriter, "Welcome To Contento System", "You Have new task: " + TaskDTO.Title);
+                        break;
+                }
+
             };
+            //consumer.Received += async (model, ea) =>
+            //{
+            //    var body = ea.Body;
+            //    var message = Encoding.UTF8.GetString(body);
+            //    var messageAccountDTO = JsonConvert.DeserializeObject<MessageAccountDTO>(message);
+            //    var email = new EmailSender();
+            //    await email.SendEmailAsync(messageAccountDTO.Email, "Welcome To Contento System", "Username: " + messageAccountDTO.FullName + ", Password: " + messageAccountDTO.Password);
+            //};
             channel.BasicConsume(queue: queueName,
                                  autoAck: false,
                                  consumer: consumer);
             return Task.CompletedTask;
         }
     }
-    
+
 }

@@ -14,6 +14,7 @@ namespace CampaignService.Models
         public DateTime? StartedDate { get; set; }
         public List<Tag> listTag { get; set; }
         public Customer Customer { get; set; }
+        public string EmailEditor { get; set; }
 
     }
 

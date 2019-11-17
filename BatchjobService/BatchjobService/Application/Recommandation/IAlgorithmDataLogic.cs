@@ -12,5 +12,6 @@ namespace BatchjobService.Application.Recommandation
         Task<bool> CreateSuggestionAsync(int UserReciever, int UserSuggest);
         void UpdateSuggestion();
         Task<List<AlgorithmDataBeforeModel>> AlgorithmDataBefore();
+        List<TaskInterModel> GetTaskTwoMonth(List<TaskInterModel> ListTags);
     }
 }

@@ -29,8 +29,6 @@ namespace AuthenticationService.Application.Queries.GetManagerByUserId
                 var lstRole = _context.Roles.Select(x => new Role{ Id = x.Id, Name = x.Role }).ToList();
 
                 var role = lstRole.Find(x => x.Id == entityRole);
-
-                
                 result.Role = role;
             }
             return result;

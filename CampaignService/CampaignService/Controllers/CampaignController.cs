@@ -12,8 +12,11 @@ using CampaignService.Application.Queries.GetListCampaignByEditorId;
 using CampaignService.Application.Queries.GetListCampaignByMarketerId;
 using CampaignService.Application.Queries.GetListCampaignByUserId;
 using CampaignService.Application.Queries.GetListCampaignByWriterId;
+using CampaignService.Models;
+using CampaignService.RabbitMQ;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CampaignService.Controllers
 {
@@ -67,6 +70,11 @@ namespace CampaignService.Controllers
         public async Task<IActionResult> PostCampaignAsync(CreateCampaignCommand command)
         {
             var response = await Mediator.Send(command);
+            //Create exchange
+            Producer producer = new Producer();
+            CampaignData campaignDTO = new CampaignData();
+            campaignDTO = response;
+            producer.PublishMessage(message: JsonConvert.SerializeObject(campaignDTO), "CreateCampaign");
             return Accepted(response);
         }
 

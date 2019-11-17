@@ -39,6 +39,8 @@ using ContentProccessService.Application.Queries.GetTrend;
 using ContentProccessService.Application.Commands.CountClickContent;
 using ContentProccessService.Application.Queries.GetContentViewerByTag;
 using ContentProccessService.Application.Queries.GetContentViewerRecommend;
+using ContentProccessService.RabbitMQ;
+using Newtonsoft.Json;
 
 namespace ContentProccessService.Controllers
 {
@@ -125,6 +127,15 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskModel taskchannel)
         {
             var response = await Mediator.Send(new CreateTaskRequest { Task = taskchannel });
+            //Create exchange
+            Producer producer = new Producer();
+            var TaskDTO = new TasksViewModelMessage()
+            {
+                Campaign = response.Campaign,
+                EmailWriter = response.EmailWriter,
+                Title = response.Title
+            };
+            producer.PublishMessage(message: JsonConvert.SerializeObject(TaskDTO), "CreateTask");
             return Accepted(response);
         }
         [HttpPost("tasks")]

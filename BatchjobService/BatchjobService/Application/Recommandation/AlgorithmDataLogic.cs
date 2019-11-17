@@ -64,6 +64,7 @@ namespace BatchjobService.Application.Recommandation
         {
             var listIduser = await _context.UsersInteractions.Select(x => x.IdUser).Distinct().ToListAsync();
             var lstAlori = new List<AlgorithmDataBeforeModel>();
+            var lstTwoMonth = new List<AlgorithmDataBeforeModel>();
             var lstTest = new List<ListTaskModel>();
             foreach (var test in listIduser)
             {
@@ -74,36 +75,80 @@ namespace BatchjobService.Application.Recommandation
                 }).FirstOrDefaultAsync();
                 lstTest.Add(userInterId);
             }
-
-
             var lstTagsum = new List<int>();
             foreach (var item in lstTest)
             {
-                foreach (var item1 in item.IdTask)
+                var lstTagChoose = _context.Personalizations.Where(x => x.IdUser == item.IdUser && x.IsChosen == true).Select(x => x.IdTag).ToList();
+                var listTaskTwoMonth = GetTaskTwoMonth(item.IdTask);
+                var lstOutTwoMonth = item.IdTask.Except(listTaskTwoMonth).ToList();
+                if (listTaskTwoMonth.Count != 0)
+                {
+                    foreach (var item1 in item.IdTask)
+                    {
+                        var lstTag = _context.TasksTags.Where(x => x.IdTask == item1.Id).Select(x => x.IdTag).ToList();
+                        var listfinal = lstTag.Intersect(lstTagChoose).ToList();
+                        foreach (var item2 in listfinal)
+                        {
+                            if (lstTwoMonth.Select(x => x.IdTag).Contains(item2) && lstTwoMonth.Select(x => x.IdUser).Contains(item.IdUser))
+                            {
+                                lstTwoMonth.Where(x => x.IdTag == item2 && x.IdUser == item.IdUser).FirstOrDefault().TimeInTeraction += item1.Interaction > 0 ? item1.Interaction * 0.9 : 0;
+                            }
+                            else
+                            {
+                                var Alori = new AlgorithmDataBeforeModel { IdUser = item.IdUser };
+                                Alori.IdTag = item2;
+                                Alori.TimeInTeraction = Alori.TimeInTeraction + item1.Interaction * 0.9;
+                                lstTwoMonth.Add(Alori);
+                            }
+
+                        }
+
+                    }
+                }
+                foreach (var item1 in lstOutTwoMonth)
                 {
                     var lstTag = _context.TasksTags.Where(x => x.IdTask == item1.Id).Select(x => x.IdTag).ToList();
-                    foreach (var item2 in lstTag)
+                    var listfinal = lstTag.Intersect(lstTagChoose).ToList();
+                    foreach (var item2 in listfinal)
                     {
-                        if (lstAlori.Select(x => x.IdTag).Contains(item2) && lstAlori.Select(x => x.IdUser).Contains(item.IdUser))
+                        if (lstTwoMonth.Select(x => x.IdTag).Contains(item2) && lstTwoMonth.Select(x => x.IdUser).Contains(item.IdUser))
                         {
-                            lstAlori.Where(x => x.IdTag == item2 && x.IdUser == item.IdUser).FirstOrDefault().TimeInTeraction += item1.Interaction ?? 0;
+                            lstTwoMonth.Where(x => x.IdTag == item2 && x.IdUser == item.IdUser).FirstOrDefault().TimeInTeraction += item1.Interaction > 0 ? item1.Interaction * 0.1 : 0;
                         }
                         else
                         {
                             var Alori = new AlgorithmDataBeforeModel { IdUser = item.IdUser };
                             Alori.IdTag = item2;
-                            Alori.TimeInTeraction = Alori.TimeInTeraction + item1.Interaction ?? 0;
-                            lstAlori.Add(Alori);
+                            Alori.TimeInTeraction = Alori.TimeInTeraction + item1.Interaction * 0.1;
+                            lstTwoMonth.Add(Alori);
                         }
 
                     }
-
                 }
-
             }
 
-
-            return lstAlori;
+            return lstTwoMonth;
+        }
+        public List<TaskInterModel> GetTaskTwoMonth(List<TaskInterModel> ListTags)
+        {
+            var lstTaskTwo = new List<TaskInterModel>();
+            foreach (var item in ListTags)
+            {
+                var task = _context.Tasks.FirstOrDefault(x => x.Id == item.Id
+                && x.Status == 7
+                && x.Contents.Any(t => t.IsActive == true)
+                && x.TasksFanpages.Any(t => t.IdFanpage == 1));
+                if (task.PublishTime >= DateTime.UtcNow.AddMonths(-2) && task.PublishTime < DateTime.UtcNow)
+                {
+                    var newTask = new TaskInterModel()
+                    {
+                        Id = item.Id,
+                        Interaction = item.Interaction
+                    };
+                    lstTaskTwo.Add(newTask);
+                }
+            }
+            return lstTaskTwo;
         }
         public async void UpdateSuggestion()
         {

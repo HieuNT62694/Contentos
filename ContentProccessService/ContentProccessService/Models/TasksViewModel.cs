@@ -43,6 +43,14 @@ namespace ContentProccessService.Models
         public List<int> Tag { get; set; }
         public Comments Comment { get; set; }
         public string Campaign { get; set; }
+        public string EmailWriter { get; set; }
+    }
+    public class TasksViewModelMessage
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Campaign { get; set; }
+        public string EmailWriter { get; set; }
     }
     public class ContentModels
     {

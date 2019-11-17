@@ -89,6 +89,7 @@ namespace ContentProccessService.Application.Commands.CreateTask
                     Tags = ReturnTags,
                     Status = status,
                     Title = task.Title,
+                    EmailWriter = contentodbContext.Accounts.FirstOrDefault(x => x.IdUserNavigation.Id == task.IdWritter).Email
                 };
                 var upStatus = contentodbContext.Campaigns.FirstOrDefault(y => y.Id == request.Task.IdCampaign);
                 if (upStatus.Status == 1)
