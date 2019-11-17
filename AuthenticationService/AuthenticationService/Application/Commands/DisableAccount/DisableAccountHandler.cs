@@ -21,7 +21,8 @@ namespace AuthenticationService.Application.Commands.DisableAccount
         {
             try 
             { 
-                var role = _context.Users.Include(i => i.Accounts).FirstOrDefault(f => f.Id == request.proAccount).Accounts.FirstOrDefault().IdRole;
+                var acccount = _context.Users.Include(i => i.Accounts).FirstOrDefault(f => f.Id == request.proAccount).Accounts.FirstOrDefault();
+                var role = acccount.IdRole;
 
                 if (role == 1)
                 {
@@ -82,7 +83,10 @@ namespace AuthenticationService.Application.Commands.DisableAccount
 
                 var user = _context.Users.Find(request.proAccount);
                 user.IsActive = false;
+                acccount.IsActive = false;
+
                 _context.Update(user);
+                _context.Update(acccount);
 
                 await _context.SaveChangesAsync();
                 return "Success";
