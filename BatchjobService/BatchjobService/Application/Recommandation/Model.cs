@@ -108,7 +108,7 @@ namespace BatchjobService.Application.Recommandation
 
         public async Task<TimeInteraction> GetinteractionTime(int UserId, int TagId)
         {
-            var person = _context.Personalizations.AsNoTracking()
+            var person =  await _context.Personalizations.AsNoTracking()
                 .Where(p => p.IdTag == TagId)
                 .Where(p => p.IdUser == UserId).
                 Select(p => new TimeInteraction

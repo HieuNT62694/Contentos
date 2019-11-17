@@ -27,7 +27,9 @@ namespace BatchjobService.Application.Recommandation
             var AlData = new ModelAlgorithm(); 
             try
             {
-                _Logic.UpdateSuggestion();
+                 _Logic.UpdateSuggestion();
+                var dataUpdate = await _Logic.AlgorithmDataBefore();
+                _Logic.UpdateTimeInteraction(dataUpdate);
                 AlData = await _Logic.GetDataAsync();
                 Data.data = AlData.data;
                 Data.Users = AlData.users;

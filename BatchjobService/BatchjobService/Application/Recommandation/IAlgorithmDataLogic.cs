@@ -13,5 +13,6 @@ namespace BatchjobService.Application.Recommandation
         void UpdateSuggestion();
         Task<List<AlgorithmDataBeforeModel>> AlgorithmDataBefore();
         List<TaskInterModel> GetTaskTwoMonth(List<TaskInterModel> ListTags);
+        void UpdateTimeInteraction(List<AlgorithmDataBeforeModel> ListTags);
     }
 }

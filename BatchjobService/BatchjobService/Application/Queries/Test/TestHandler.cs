@@ -41,7 +41,7 @@ namespace BatchjobService.Application.Queries.Test
                 var lstOutTwoMonth = item.IdTask.Except(listTaskTwoMonth).ToList();
                 if (listTaskTwoMonth.Count != 0)
                 {
-                    foreach (var item1 in item.IdTask)
+                    foreach (var item1 in listTaskTwoMonth)
                     {
                         var lstTag = _context.TasksTags.Where(x => x.IdTask == item1.Id).Select(x => x.IdTag).ToList();
                         var listfinal = lstTag.Intersect(lstTagChoose).ToList();
@@ -96,6 +96,7 @@ namespace BatchjobService.Application.Queries.Test
                 && x.Status == 7
                 && x.Contents.Any(t => t.IsActive == true)
                 && x.TasksFanpages.Any(t => t.IdFanpage == 1));
+                var test = DateTime.UtcNow.AddMonths(-2);
                 if (task.PublishTime >= DateTime.UtcNow.AddMonths(-2) && task.PublishTime < DateTime.UtcNow)
                 {
                     var newTask = new  TaskInterModel()

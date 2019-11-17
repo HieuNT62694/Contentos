@@ -83,7 +83,7 @@ namespace BatchjobService.Application.Recommandation
                 var lstOutTwoMonth = item.IdTask.Except(listTaskTwoMonth).ToList();
                 if (listTaskTwoMonth.Count != 0)
                 {
-                    foreach (var item1 in item.IdTask)
+                    foreach (var item1 in listTaskTwoMonth)
                     {
                         var lstTag = _context.TasksTags.Where(x => x.IdTask == item1.Id).Select(x => x.IdTag).ToList();
                         var listfinal = lstTag.Intersect(lstTagChoose).ToList();
@@ -128,6 +128,14 @@ namespace BatchjobService.Application.Recommandation
             }
 
             return lstTwoMonth;
+        }
+        public async void UpdateTimeInteraction(List<AlgorithmDataBeforeModel> ListTags)
+        {
+            foreach (var item in ListTags)
+            {
+                _context.Personalizations.FirstOrDefault(x => x.IdTag == item.IdTag && x.IdUser == item.IdUser).TimeInteraction = item.TimeInTeraction;
+            }
+            await _context.SaveChangesAsync();
         }
         public List<TaskInterModel> GetTaskTwoMonth(List<TaskInterModel> ListTags)
         {
