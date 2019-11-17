@@ -121,5 +121,15 @@ namespace AuthenticationService.Models
         public List<ListUserModel> Writer { get; set; }
     }
     
+    public class ManagerModel
+    {
+        public int Id { get; set; }
+        public Role Role { get; set; }
+    }
 
+    public class Role
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
 }

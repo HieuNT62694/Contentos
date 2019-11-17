@@ -26,6 +26,7 @@ using AuthenticationService.Application.Queries.GetListMarketerBasic;
 using AuthenticationService.Application.Queries.GetListUser;
 using AuthenticationService.Application.Queries.GetListViewer;
 using AuthenticationService.Application.Queries.GetListWriterBasic;
+using AuthenticationService.Application.Queries.GetManagerByUserId;
 using AuthenticationService.Application.Queries.GetNotify;
 using AuthenticationService.Application.Queries.GetProfile;
 using AuthenticationService.Application.Queries.GetUser;
@@ -438,6 +439,14 @@ namespace AuthenticationService.Controllers
                 return BadRequest("Email is Existed");
             }
             return Ok("Right Email");
+        }
+        [HttpGet("Manager-Id/{id}")]
+        //[Authorize(Roles = "Marketer,Editor")]
+        public async Task<IActionResult> GetManagerAccount(int id)
+        {
+            var response = await Mediator.Send(new GetManagerByUserIdRequest { id = id });
+            return Ok(response);
+
         }
     }
 }
