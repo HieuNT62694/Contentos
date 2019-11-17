@@ -29,7 +29,7 @@ namespace BatchjobService.Application.Recommandation
             var returnModel = new ModelAlgorithm();
             returnModel.users = await _model.GetRows();
             returnModel.tags = await _model.GetColumns();
-            List<Users> ListUserInteraction;
+
             if (returnModel.users != null && returnModel.tags != null)
             {
                 int NumCol = returnModel.tags.Count;
@@ -37,14 +37,12 @@ namespace BatchjobService.Application.Recommandation
                 data = new double[NumCol + 1, NumRow];
                 for (int i = 0; i < NumCol; i++)
                 {
-                    ListUserInteraction = await _model.GetListUserInteraction(returnModel.tags[i].Id);
-                    if (ListUserInteraction.Count > 0)
-                    {
+                 
                         for (int j = 0; j < NumRow; j++)
                         {
                             TimeInteraction interaction = await _model.GetinteractionTime(returnModel.users[j].Id, returnModel.tags[i].Id);
 
-                            if (interaction.IsChosen == false && interaction.time == 0 && interaction.IsSuggest == false)
+                              if (interaction == null || interaction.IsChosen == false)
                             {
                                 data[i, j] = NULL;
                             }
@@ -58,7 +56,7 @@ namespace BatchjobService.Application.Recommandation
                 }
                 rs = new AlgorithmData(data, returnModel.users, returnModel.tags);
                 returnModel.data = data;
-            }
+            
 
             return returnModel;
         }
@@ -101,8 +99,6 @@ namespace BatchjobService.Application.Recommandation
                     }
 
                 }
-
-
 
             }
 

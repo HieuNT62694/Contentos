@@ -8,8 +8,8 @@ namespace BatchjobService.Application.Recommandation
 {
     public interface IAlgorithmDataLogic
     {
-          Task<ModelAlgorithm> GetDataAsync();
-          Task<bool> CreateSuggestionAsync(int UserReciever, int UserSuggest);
+        Task<ModelAlgorithm> GetDataAsync();
+        Task<bool> CreateSuggestionAsync(int UserReciever, int UserSuggest);
         void UpdateSuggestion();
         Task<List<AlgorithmDataBeforeModel>> AlgorithmDataBefore();
     }

@@ -31,14 +31,7 @@ namespace BatchjobService.Application.Recommandation
                 }
             }
             rs = caculateSimilarity(data);
-            for (int i = 0; i < data.Users.Count; i++)
-            {
-                for (int j = 0; j < data.Users.Count; j++)
-                {
-                    Console.WriteLine(string.Format("%3f", rs[i,j]));
-                }
-                Console.WriteLine();
-            }
+        
             return rs;
         }
 
@@ -79,7 +72,7 @@ namespace BatchjobService.Application.Recommandation
                 for (int j = 0; j < data.Users.Count; j++)
                 {
                     rsTmp2 = getCol(j, data);
-                    rs[i, j] = cosineSimilarity(rsTmp1, rsTmp2);
+                    rs[i, j] = 1- cosineSimilarity(rsTmp1, rsTmp2);
                 }
             }
             return rs;
@@ -96,7 +89,9 @@ namespace BatchjobService.Application.Recommandation
                 normA += Math.Pow(vectorA[i], 2);
                 normB += Math.Pow(vectorB[i], 2);
             }
-            return dotProduct / (Math.Sqrt(normA) * Math.Sqrt(normB));
+            double rs = dotProduct / (Math.Sqrt(normA) * Math.Sqrt(normB));
+            if (double.IsNaN(rs)) return 0;
+            return rs;
         }
         public double[] getCol(int index, AlgorithmData data)
         {
@@ -172,7 +167,7 @@ namespace BatchjobService.Application.Recommandation
             {
                 for (int j = 0; j < weightTmp.Length; j++)
                 {
-                    if (weightTmp[i] > weightTmp[j])
+                    if (weightTmp[i] < weightTmp[j])
                     {
                         double temp = weightTmp[i];
                         weightTmp[i] = weightTmp[j];
