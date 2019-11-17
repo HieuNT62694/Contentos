@@ -123,7 +123,7 @@ namespace AuthenticationService.Models
     
     public class ManagerModel
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public Role Role { get; set; }
     }
 
