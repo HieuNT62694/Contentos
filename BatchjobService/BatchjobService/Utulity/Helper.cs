@@ -1,4 +1,5 @@
 ﻿using HtmlAgilityPack;
+using iText.StyledXmlParser.Jsoup;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,10 @@ namespace BatchjobService.Utulity
         public static string removeHtml(string content)
         {
             var con = Regex.Replace(content, "<[a/].*?>", "");
-            return Regex.Replace(con, "<[a-zA-Z/].*?>", Environment.NewLine);
+
+            var con2 = Regex.Replace(con, "<[a-zA-Z/].*?>", Environment.NewLine);
+
+            return Jsoup.Parse(con2).Text();
         }
 
         public static List<string> getImage(string content)

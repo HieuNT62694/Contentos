@@ -12,6 +12,8 @@ namespace BatchjobService.Models
         public DateTime? publish_time { get; set; }
         public List<Tag> listTag { get; set; }
 
+        public bool? isAds { get; set; }
+
     }
 
     public class Tag

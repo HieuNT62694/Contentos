@@ -36,6 +36,7 @@ namespace BatchjobService.Application.Queries.GetContentByFanpageId
                 model.id = fanpage.IdTaskNavigation.Id;
                 model.name = fanpage.IdTaskNavigation.Contents.FirstOrDefault(f => f.IsActive == true).Name;
                 model.publish_time = fanpage.IdTaskNavigation.PublishTime;
+                model.isAds = fanpage.IdTaskNavigation.IsAds;
 
                 List<Tag> lstTag = new List<Tag>();
                 foreach(var tag in tagsFanpage)
