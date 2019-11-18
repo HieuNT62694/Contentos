@@ -115,6 +115,10 @@
             "WordPressPCL": {
               "target": "Package",
               "version": "[1.6.2, )"
+            },
+            "itext7": {
+              "target": "Package",
+              "version": "[7.1.8, )"
             }
           },
           "imports": [
