@@ -67,6 +67,19 @@ namespace MailService.RabbitMQ
                         var TaskDTO = JsonConvert.DeserializeObject<TasksViewModelMessage>(message);
                         email.SendEmailAsync(TaskDTO.EmailWriter, "Welcome To Contento System", "You Have new task: " + TaskDTO.Title);
                         break;
+                    case "DedlineTask":
+                        var TaskDeadlineDTO = JsonConvert.DeserializeObject<List<CheckDeadlineModel>>(message);
+                        foreach (var item in TaskDeadlineDTO)
+                        {
+                            var lstTitle = ""; 
+                            foreach (var item1 in item.ListTask)
+                            {
+                                lstTitle += item1 + ",";
+                            }
+                            email.SendEmailAsync(item.Email, "Welcome To Contento System", "You Have task Deadline in tomorrow: " + lstTitle);
+                        }
+                      
+                        break;
                 }
 
             };

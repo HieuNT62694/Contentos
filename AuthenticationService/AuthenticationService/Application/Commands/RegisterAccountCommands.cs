@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Application.Commands
 {
-    public class RegisterAccountCommands : IRequest<bool>
+    public class RegisterAccountCommands : IRequest<int>
     {
         [Required]
         [EmailAddress]

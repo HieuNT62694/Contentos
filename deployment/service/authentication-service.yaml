@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: authentication-d794dcc74-tl4ck
+  name: authentication-6bdd6f6df6-g6hzx
 spec:
   type: ClusterIP
   selector:

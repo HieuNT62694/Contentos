@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AuthenticationService.Application.Commands
 {
-    public class RegisterAccountHandler : IRequestHandler<RegisterAccountCommands,bool>
+    public class RegisterAccountHandler : IRequestHandler<RegisterAccountCommands,int>
     {
         private readonly ContentoDbContext _context;
 
@@ -18,7 +18,7 @@ namespace AuthenticationService.Application.Commands
             _context = context;
         }
 
-        public async Task<bool> Handle(RegisterAccountCommands request, CancellationToken cancellationToken)
+        public async Task<int> Handle(RegisterAccountCommands request, CancellationToken cancellationToken)
         {
             var transaction = _context.Database.BeginTransaction();
             try
@@ -70,23 +70,22 @@ namespace AuthenticationService.Application.Commands
                     //await _context.SaveChangesAsync(cancellationToken);
                     await _context.SaveChangesAsync(cancellationToken);
                     transaction.Commit();
-                    return true;
+                    return 1;
                 }
                
-                return false;
+                return 0;
             }
             catch(Exception e)
             {
                 transaction.Rollback();
-                return false;
+                return 2;
 
             }
          
         }
         public bool IsEmailUnique(string Email)
         {
-            return _context.Accounts.Where(x => x.Email == Email && x.IsActive == true).Any();
-
+            return _context.Accounts.Where(x => x.Email == Email).Any();
         }
     }
 }

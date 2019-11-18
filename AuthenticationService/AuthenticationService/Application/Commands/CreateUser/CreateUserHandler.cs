@@ -28,6 +28,7 @@ namespace AuthenticationService.Application.Commands.CreateUser
             var transaction = _context.Database.BeginTransaction();
             try
             {
+                var returnAcc = new UserAdminModels();
                 string newPassword = "";
                 if (!IsEmailUnique(request.Email))
                 {
@@ -110,22 +111,21 @@ namespace AuthenticationService.Application.Commands.CreateUser
                     }
 
                     transaction.Commit();
-                    var returnAcc = new UserAdminModels
-                    {
-                        Id = newUser.Id,
-                        Role = new RoleModel { Id = newAccount.IdRole, Name = _context.Roles.Find(newAccount.IdRole).Role },
-                        Age = newUser.Age,
-                        Email = newAccount.Email,
-                        CompanyName = newUser.Company,
-                        FullName = newUser.FirstName + " " + newUser.LastName,
-                        Gender = newUser.Gender,
-                        IsActive = newUser.IsActive,
-                        Phone = string.IsNullOrEmpty(newUser.Phone) == true ? null : newUser.Phone.Trim(),
-                        Password = newPassword
-                    };
+                    returnAcc.Id = newUser.Id;
+                    returnAcc.Role = new RoleModel { Id = newAccount.IdRole, Name = _context.Roles.Find(newAccount.IdRole).Role };
+                    returnAcc.Age = newUser.Age;
+                    returnAcc.Email = newAccount.Email;
+                    returnAcc.CompanyName = newUser.Company;
+                    returnAcc.FullName = newUser.FirstName + " " + newUser.LastName;
+                    returnAcc.Gender = newUser.Gender;
+                    returnAcc.IsActive = newUser.IsActive;
+                    returnAcc.Phone = string.IsNullOrEmpty(newUser.Phone) == true ? null : newUser.Phone.Trim();
+                    returnAcc.Password = newPassword;
+                    
                     return returnAcc;
                 }
-                return null;
+                returnAcc.IdError = 0;
+                return returnAcc;
             }
             catch (Exception e)
             {
@@ -136,7 +136,7 @@ namespace AuthenticationService.Application.Commands.CreateUser
         }
         public bool IsEmailUnique(string Email)
         {
-            return _context.Accounts.Where(x => x.Email == Email && x.IsActive == true).Any();
+            return _context.Accounts.Where(x => x.Email == Email).Any();
 
         }
     }

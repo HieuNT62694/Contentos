@@ -43,11 +43,13 @@ namespace BatchjobService
             services.AddScoped<IUpdateStatusService, UpdateStatusService>();
             services.AddScoped<IPublishFBService, PublishFB>();
             services.AddScoped<IUpdateBeforePublishingService, UpdateBeforePublishingService>();
+            services.AddScoped<ICheckDeadlineForSendMail, CheckDeadlineForSendMail>();
             //and scoped
             services.AddScoped<IModel, Model>();
             services.AddScoped<IRun, Run>();
             services.AddScoped<IAlgorithmn, Algorithmn>();
             services.AddScoped<IAlgorithmDataLogic, AlgorithmDataLogic>();
+           
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddMediatR(typeof(Startup).Assembly);
@@ -117,6 +119,7 @@ namespace BatchjobService
             });
             RecurringJob.AddOrUpdate<IUpdateStatusService>("UpdateStatusDeadline", context => context.UpdateStatus(), "0 17 * * *", TimeZoneInfo.Utc);
             RecurringJob.AddOrUpdate<IRun>("Recommend", context => context.Handle(), "0 17 * * *", TimeZoneInfo.Utc);
+            RecurringJob.AddOrUpdate<ICheckDeadlineForSendMail>("CheckDeadlineForSendMail", context => context.PublishMessage(), "0 17 * * *", TimeZoneInfo.Utc);
             app.UseDiscoveryClient();
             app.UseHttpsRedirection();
             app.UseMvc();

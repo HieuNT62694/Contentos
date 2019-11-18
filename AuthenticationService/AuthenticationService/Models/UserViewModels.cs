@@ -35,6 +35,7 @@ namespace AuthenticationService.Models
         public object Token { get; set; }
         public string ImagePath { get; set; }
         public string Role { get; set; }
+        public int IdError { get; set; }
     }
     public class ListUserModel
     {
@@ -50,6 +51,7 @@ namespace AuthenticationService.Models
         public string FullName { get; set; }
         public string CompanyName { get; set; }
         public string Phone { get; set; }
+        public int IdError { get; set; }
     }
     public class UserModelDetail
     {
@@ -92,6 +94,7 @@ namespace AuthenticationService.Models
         public RoleModel Role { get; set; }
         public bool? IsActive { get; set; }
         public string Password { get; set; }
+        public int IdError { get; set; }
     }
     public class RoleModel
     {

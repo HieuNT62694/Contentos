@@ -27,7 +27,7 @@ namespace AuthenticationService.Application.Queries.GetListViewer
                .Where(x => x.IdRole == 4)
                .Select(x => new UserAdminModels
                {
-                   Id = x.Id,
+                   Id = x.IdUserNavigation.Id,
                    FullName = x.IdUserNavigation.FirstName + " " + x.IdUserNavigation.LastName,
                    Age = x.IdUserNavigation.Age,
                    CompanyName = x.IdUserNavigation.Company,

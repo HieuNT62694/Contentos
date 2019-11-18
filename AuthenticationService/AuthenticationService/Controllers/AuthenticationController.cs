@@ -51,6 +51,10 @@ namespace AuthenticationService.Controllers
             {
                 return BadRequest("Invalid User Name of Password");
             }
+            if (response.IdError == 1)
+            {
+                return Forbid();
+            }
             return Ok(response);
         }
         [HttpPost("Login-Viewer")]
@@ -60,6 +64,10 @@ namespace AuthenticationService.Controllers
             if (response == null)
             {
                 return BadRequest("Invalid User Name of Password");
+            }
+            if (response.IdError == 1)
+            {
+                return Forbid();
             }
             return Ok(response);
         }
@@ -88,12 +96,16 @@ namespace AuthenticationService.Controllers
         public async Task<object> Register(RegisterAccountCommands command)
         {
            var response = await Mediator.Send(command);
-            if (response)
+            if (response == 1)
             {
                 return Accepted("Create Successful !!");
             }
-            return BadRequest("Create Fail !!");
+            if (response == 0)
+            {
+                return Conflict("Email is exsit !!");
+            }
 
+            return BadRequest("Create Fail !!");
         }
         [HttpGet("Editors/Marketers/{id}")]
         [Authorize(Roles = "Marketer,Editor,Admin")]
@@ -152,7 +164,11 @@ namespace AuthenticationService.Controllers
             //producer.PublishMessage(message: JsonConvert.SerializeObject(messageDTO), "AccountToEmail");]
             if (result == null)
             {
-                return BadRequest("Duplicate Email !!");
+                return BadRequest("Create Fail !!");
+            }
+            if (result.IdError == 0)
+            {
+                return Conflict("Duplicate Email !!");
             }
             return Accepted(result);
 
@@ -286,7 +302,11 @@ namespace AuthenticationService.Controllers
 
             if (result == null)
             {
-                return BadRequest("Duplicate Email !!");
+                return BadRequest("Create Fail !!");
+            }
+            if (result.IdError == 0)
+            {
+                return Conflict("Duplicate Email !!");
             }
             //Create exchange
             Producer producer = new Producer();

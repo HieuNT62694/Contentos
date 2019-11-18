@@ -29,6 +29,7 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
             var transaction = _context.Database.BeginTransaction();
             try
             {
+                var returnResult = new CreateUserModel();
                 string newPassword = "";
 
                 if (!IsEmailUnique(request.Email))
@@ -68,7 +69,8 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
                         Password = newPassword
                     };
                 }
-                return null;
+                returnResult.IdError = 0;
+                return returnResult;
 
             }
             catch (Exception e)
@@ -80,7 +82,7 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
         }
         public bool IsEmailUnique(string Email)
         {
-            return _context.Accounts.Where(x => x.Email == Email && x.IsActive == true).Any();
+            return _context.Accounts.Where(x => x.Email == Email).Any();
 
         }
     }
