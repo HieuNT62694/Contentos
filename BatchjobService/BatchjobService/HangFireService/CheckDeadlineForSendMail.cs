@@ -33,24 +33,29 @@ namespace BatchjobService.HangFireService
                 && x.Deadline < DateTime.UtcNow.AddDays(1) 
                 && (x.Status == 1 || x.Status == 2))
                 .ToList();
-            var lstUser = lstTask.Select(x => x.IdWritter).Distinct().ToList();
             var lstCheckModle = new List<CheckDeadlineModel>();
-            foreach (var item in lstUser)
+            if (lstTask.Count != 0)
             {
-                var checkModle = new CheckDeadlineModel();
-                checkModle.Email = _context.Accounts.FirstOrDefault(x=>x.IdUserNavigation.Id == item).Email;
-                var lstTitile = new List<string>();
-                foreach (var item1 in lstTask)
+                var lstUser = lstTask.Select(x => x.IdWritter).Distinct().ToList();
+               
+                foreach (var item in lstUser)
                 {
-                    if (item1.IdWritter == item)
+                    var checkModle = new CheckDeadlineModel();
+                    checkModle.Email = _context.Accounts.FirstOrDefault(x => x.IdUserNavigation.Id == item).Email;
+                    var lstTitile = new List<string>();
+                    foreach (var item1 in lstTask)
                     {
-                        var title = item1.Title;
-                        lstTitile.Add(title);
+                        if (item1.IdWritter == item)
+                        {
+                            var title = item1.Title;
+                            lstTitile.Add(title);
+                        }
+
                     }
-                    
+                    checkModle.ListTask = lstTitile;
+                    lstCheckModle.Add(checkModle);
                 }
-                checkModle.ListTask = lstTitile;
-                lstCheckModle.Add(checkModle);
+                return lstCheckModle;
             }
             return lstCheckModle;
         }
