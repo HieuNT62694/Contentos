@@ -84,7 +84,8 @@ namespace AuthenticationService.Application.Commands.DisableAccount
                 var user = _context.Users.Find(request.proAccount);
                 user.IsActive = false;
                 acccount.IsActive = false;
-
+                user.IdManager = null; 
+                
                 _context.Update(user);
                 _context.Update(acccount);
 
