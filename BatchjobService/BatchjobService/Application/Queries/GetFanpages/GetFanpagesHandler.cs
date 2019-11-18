@@ -64,6 +64,8 @@ namespace BatchjobService.Application.Queries.GetFanpages
                     lstTag.Add(item.IdTag);
                 }
 
+                model.Token = fanpage.Token;
+
                 model.Tags = returnTags;
                 model.TagId = lstTag;
                 listFanpages.Add(model);

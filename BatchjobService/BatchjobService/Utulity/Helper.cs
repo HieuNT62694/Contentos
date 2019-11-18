@@ -17,11 +17,32 @@ namespace BatchjobService.Utulity
     {
         public static string removeHtml(string content)
         {
-            var con = Regex.Replace(content, "<[a/].*?>", "");
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(content);
+            var imgs = doc.DocumentNode.Descendants("img");
 
-            var con2 = Regex.Replace(con, "<[a-zA-Z/].*?>", Environment.NewLine);
+            foreach (var img in imgs)
+            {
+                var tr = img.ParentNode.ParentNode.ParentNode;
+                HtmlNode sibling = tr.NextSibling;
 
-            return Jsoup.Parse(con2).Text();
+                while (sibling != null)
+                {
+                    if (sibling.NodeType == HtmlNodeType.Element)
+                    {
+                        sibling.RemoveAll();
+                        break;
+                    }
+
+                    sibling = sibling.NextSibling;
+                }
+            }
+
+            var con = Regex.Replace(doc.DocumentNode.InnerHtml, "<[{a,i,strong,b}/].*?>", "");
+
+            var con1 = Regex.Replace(con, "<[a-zA-Z/].*?>", Environment.NewLine);
+
+            return Jsoup.Parse(con1).Text();
         }
 
         public static List<string> getImage(string content)
