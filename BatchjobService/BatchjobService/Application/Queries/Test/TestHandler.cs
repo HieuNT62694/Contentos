@@ -97,15 +97,19 @@ namespace BatchjobService.Application.Queries.Test
                 && x.Contents.Any(t => t.IsActive == true)
                 && x.TasksFanpages.Any(t => t.IdFanpage == 1));
                 var test = DateTime.UtcNow.AddMonths(-2);
-                if (task.PublishTime >= DateTime.UtcNow.AddMonths(-2) && task.PublishTime < DateTime.UtcNow)
+                if (task != null)
                 {
-                    var newTask = new  TaskInterModel()
+                    if (task.PublishTime >= DateTime.UtcNow.AddMonths(-2) && task.PublishTime < DateTime.UtcNow)
+                    {
+                        var newTask = new TaskInterModel()
                         {
                             Id = item.Id,
                             Interaction = item.Interaction
                         };
-                    lstTaskTwo.Add(newTask);
+                        lstTaskTwo.Add(newTask);
+                    }
                 }
+
             }
             return lstTaskTwo;
         }

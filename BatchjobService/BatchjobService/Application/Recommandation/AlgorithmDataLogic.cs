@@ -129,13 +129,13 @@ namespace BatchjobService.Application.Recommandation
 
             return lstTwoMonth;
         }
-        public async void UpdateTimeInteraction(List<AlgorithmDataBeforeModel> ListTags)
+        public void UpdateTimeInteraction(List<AlgorithmDataBeforeModel> ListTags)
         {
             foreach (var item in ListTags)
             {
                 _context.Personalizations.FirstOrDefault(x => x.IdTag == item.IdTag && x.IdUser == item.IdUser).TimeInteraction = item.TimeInTeraction;
             }
-            await _context.SaveChangesAsync();
+             _context.SaveChanges();
         }
         public List<TaskInterModel> GetTaskTwoMonth(List<TaskInterModel> ListTags)
         {
@@ -146,22 +146,26 @@ namespace BatchjobService.Application.Recommandation
                 && x.Status == 7
                 && x.Contents.Any(t => t.IsActive == true)
                 && x.TasksFanpages.Any(t => t.IdFanpage == 1));
-                if (task.PublishTime >= DateTime.UtcNow.AddMonths(-2) && task.PublishTime < DateTime.UtcNow)
+                if (task !=null)
                 {
-                    var newTask = new TaskInterModel()
+                    if (task.PublishTime >= DateTime.UtcNow.AddMonths(-2) && task.PublishTime < DateTime.UtcNow)
                     {
-                        Id = item.Id,
-                        Interaction = item.Interaction
-                    };
-                    lstTaskTwo.Add(newTask);
+                        var newTask = new TaskInterModel()
+                        {
+                            Id = item.Id,
+                            Interaction = item.Interaction
+                        };
+                        lstTaskTwo.Add(newTask);
+                    }
                 }
+
             }
             return lstTaskTwo;
         }
-        public async void UpdateSuggestion()
+        public  void UpdateSuggestion()
         {
             _context.Personalizations.ToList().ForEach(x => x.IsSuggestion = false);
-            await _context.SaveChangesAsync();
+             _context.SaveChanges();
         }
         public async Task<bool> CreateSuggestionAsync(int UserReciever, int UserSuggest)
         {

@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: authentication-54454c6cf-z7wt7
+  name: batchjob-67f94647b5-29486
 spec:
   type: ClusterIP
   selector:
-    component: authentication
+    component: batchjob
   ports:
   - port: 80
     targetPort: 80
