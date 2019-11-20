@@ -47,7 +47,7 @@ namespace BatchjobService.Application.Queries.Test
                         var listfinal = lstTag.Intersect(lstTagChoose).ToList();
                         foreach (var item2 in listfinal)
                         {
-                            if (lstTwoMonth.Select(x => x.IdTag).Contains(item2) && lstTwoMonth.Select(x => x.IdUser).Contains(item.IdUser))
+                            if (lstTwoMonth.Any(x => x.IdTag == item2 && x.IdUser == item.IdUser))
                             {
                                 lstTwoMonth.Where(x => x.IdTag == item2 && x.IdUser == item.IdUser).FirstOrDefault().TimeInTeraction += item1.Interaction > 0 ? item1.Interaction*0.9 : 0;
                             }
@@ -69,7 +69,7 @@ namespace BatchjobService.Application.Queries.Test
                     var listfinal = lstTag.Intersect(lstTagChoose).ToList();
                     foreach (var item2 in listfinal)
                     {
-                        if (lstTwoMonth.Select(x => x.IdTag).Contains(item2) && lstTwoMonth.Select(x => x.IdUser).Contains(item.IdUser))
+                        if (lstTwoMonth.Any(x => x.IdTag == item2 && x.IdUser == item.IdUser))
                         {
                             lstTwoMonth.Where(x => x.IdTag == item2 && x.IdUser == item.IdUser).FirstOrDefault().TimeInTeraction += item1.Interaction > 0 ? item1.Interaction * 0.1 : 0;
                         }
