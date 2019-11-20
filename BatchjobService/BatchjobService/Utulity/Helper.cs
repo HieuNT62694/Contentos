@@ -41,11 +41,16 @@ namespace BatchjobService.Utulity
                 }
             }
 
-            var con = Regex.Replace(doc.DocumentNode.InnerHtml, "<[{a,i,strong,b}/].*?>", "");
+            var con = Regex.Replace(doc.DocumentNode.InnerHtml, "<[{br}/].*?>", Environment.NewLine);
 
-            var con1 = Regex.Replace(con, "<[a-zA-Z/].*?>", Environment.NewLine);
+            var con1 = Regex.Replace(con, "<[{a,i,strong,b}/].*?>", "");
 
-            return Jsoup.Parse(con1).Text();
+            //var con1 = Regex.Replace(con, "<br>", Environment.NewLine);
+
+            var con2 = Regex.Replace(con1, "<[a-zA-Z/].*?>", Environment.NewLine);
+
+            var con3 = Regex.Replace(con2, "&nbsp;", "");
+            return con3;
         }
 
         public static List<string> getImage(string content)
