@@ -24,17 +24,20 @@ namespace BatchjobService.Utulity
             foreach (var img in imgs)
             {
                 var tr = img.ParentNode.ParentNode.ParentNode;
-                HtmlNode sibling = tr.NextSibling;
-
-                while (sibling != null)
+                if (tr != null)
                 {
-                    if (sibling.NodeType == HtmlNodeType.Element)
-                    {
-                        sibling.RemoveAll();
-                        break;
-                    }
+                    HtmlNode sibling = tr.NextSibling;
 
-                    sibling = sibling.NextSibling;
+                    while (sibling != null)
+                    {
+                        if (sibling.NodeType == HtmlNodeType.Element)
+                        {
+                            sibling.RemoveAll();
+                            break;
+                        }
+
+                        sibling = sibling.NextSibling;
+                    }
                 }
             }
 
