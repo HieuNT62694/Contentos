@@ -41,6 +41,8 @@ using ContentProccessService.Application.Queries.GetContentViewerByTag;
 using ContentProccessService.Application.Queries.GetContentViewerRecommend;
 using ContentProccessService.RabbitMQ;
 using Newtonsoft.Json;
+using ContentProccessService.Application.Queries.GetStatistics;
+using ContentProccessService.Application.Queries.GetStatisticsOneMonth;
 
 namespace ContentProccessService.Controllers
 {
@@ -341,6 +343,36 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> GetContentRecommend(int id)
         {
             var response = await Mediator.Send(new GetContentViewerRecommendRequest() { Id = id });
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Please check fanpage id");
+            }
+
+        }
+        [HttpGet("statistics-one-week")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetStatisticsOneWeek(int quantity)
+        {
+            var response = await Mediator.Send(new GetStatisticsRequest() {Quantity = quantity });
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Please check fanpage id");
+            }
+
+        }
+        [HttpGet("statistics-one-month")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetStatisticsOneMonth(int quantity)
+        {
+            var response = await Mediator.Send(new GetStatisticsOneMonthRequest() { Quantity = quantity });
             if (response != null)
             {
                 return Ok(response);
