@@ -118,7 +118,7 @@ namespace BatchjobService
                 Authorization = new[] { new MyAuthorizationFilter() }
             });
             RecurringJob.AddOrUpdate<IUpdateStatusService>("UpdateStatusDeadline", context => context.UpdateStatus(), "0 17 * * *", TimeZoneInfo.Utc);
-            RecurringJob.AddOrUpdate<IRun>("Recommend", context => context.Handle(), "25 11 * * *", TimeZoneInfo.Utc);
+            RecurringJob.AddOrUpdate<IRun>("Recommend", context => context.Handle(), "0 17 * * *", TimeZoneInfo.Utc);
             RecurringJob.AddOrUpdate<ICheckDeadlineForSendMail>("CheckDeadlineForSendMail", context => context.PublishMessage(), "0 17 * * *", TimeZoneInfo.Utc);
             app.UseDiscoveryClient();
             app.UseHttpsRedirection();
