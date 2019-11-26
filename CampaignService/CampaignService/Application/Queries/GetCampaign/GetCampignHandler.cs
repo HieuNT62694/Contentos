@@ -61,6 +61,7 @@ namespace CampaignService.Application.Queries.GetCampaign
             }
             model.listTag = ls;
             model.TagFull = lsfull;
+            model.Description = entity.Description;
             return model;
         }
 

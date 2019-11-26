@@ -121,7 +121,7 @@ namespace AuthenticationService.Application.Commands.CreateUser
                     returnAcc.IsActive = newUser.IsActive;
                     returnAcc.Phone = string.IsNullOrEmpty(newUser.Phone) == true ? null : newUser.Phone.Trim();
                     returnAcc.Password = newPassword;
-                    
+                    returnAcc.IdError = 1;
                     return returnAcc;
                 }
                 returnAcc.IdError = 0;

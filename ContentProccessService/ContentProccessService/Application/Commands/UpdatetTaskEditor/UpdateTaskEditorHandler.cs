@@ -22,7 +22,7 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
             var transaction = contentodbContext.Database.BeginTransaction();
             try
             {
-                var upTask = contentodbContext.Tasks.AsNoTracking().Include(y=>y.TasksTags).Include(y=>y.StatusNavigation).FirstOrDefault(x => x.Id == request.IdTask);
+                var upTask = contentodbContext.Tasks.Include(y=>y.TasksTags).Include(y=>y.StatusNavigation).FirstOrDefault(x => x.Id == request.IdTask);
                 var resultReturn = new ReturnUpdateTaskModel();
                 var Tags = new List<TasksTags>();
                 var TagsReturn = new List<TagsViewModel>();
@@ -94,8 +94,8 @@ namespace ContentProccessService.Application.Commands.UpdatetTaskEditor
                 var status = new StatusModels
                 {
                     Id =  upTask.Status,
-                    Name = upTask.StatusNavigation.Name,
-                    Color = upTask.StatusNavigation.Color
+                    Name = contentodbContext.StatusTasks.FirstOrDefault(x=>x.Id == upTask.Status).Name,
+                    Color = contentodbContext.StatusTasks.FirstOrDefault(x => x.Id == upTask.Status).Color
 
                 };
 

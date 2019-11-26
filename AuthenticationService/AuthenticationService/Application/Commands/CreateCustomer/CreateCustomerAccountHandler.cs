@@ -66,7 +66,8 @@ namespace AuthenticationService.Application.Commands.CreateCustomer
                         Email = request.Email,
                         CompanyName = request.CompanyName,
                         Phone = string.IsNullOrEmpty(request.Phone) ? null : request.Phone.Trim(),
-                        Password = newPassword
+                        Password = newPassword,
+                        IdError = 1
                     };
                 }
                 returnResult.IdError = 0;

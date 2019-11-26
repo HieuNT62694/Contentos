@@ -37,6 +37,8 @@ namespace ContentProccessService.Application.Queries.GetTrend
              .Where(x => x.Status == 7
              && x.Contents.Any(t => t.IsActive == true)
              && x.TasksFanpages.Any(t => t.IdFanpage == 1)
+             && x.PublishTime > DateTime.UtcNow.AddDays(-7)
+             && x.PublishTime <= DateTime.UtcNow
              && x.UsersInteractions.Sum(z=>z.Interaction) != 0)
              .OrderByDescending(x => x.UsersInteractions.Sum(z => z.Interaction)).Take(10)
              .Select(x => new

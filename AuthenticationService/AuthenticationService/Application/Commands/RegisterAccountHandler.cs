@@ -35,6 +35,7 @@ namespace AuthenticationService.Application.Commands
                             IdTag = item,
                             CreatedDate = DateTime.UtcNow,
                             IsChosen = false,
+                            IsSuggestion = false,
                             TimeInteraction = 0
 
                         };
