@@ -44,6 +44,7 @@ namespace ContentProccessService.Models
         public Comments Comment { get; set; }
         public string Campaign { get; set; }
         public string EmailWriter { get; set; }
+        public Dictionary<string, List<int>> listFanpages { get; set; }
     }
     public class TasksViewModelMessage
     {

@@ -19,11 +19,12 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
         public async Task<TasksViewModel> Handle(GetTaskDetailRequest request, CancellationToken cancellationToken)
         {
             var task = await _context.Tasks.AsNoTracking()
-                .Include(i=> i.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
+                .Include(i => i.TasksTags).ThenInclude(TasksTags => TasksTags.IdTagNavigation)
                 .Include(i => i.StatusNavigation)
                 .Include(i => i.IdWritterNavigation)
                 .Include(i => i.IdCampaignNavigation).ThenInclude(IdCampaignNavigation => IdCampaignNavigation.IdEditorNavigation)
                 .Include(i => i.Contents).ThenInclude(Contents => Contents.Comments)
+                .Include(i => i.TasksFanpages).ThenInclude(TasksFanpages => TasksFanpages.IdFanpageNavigation)
                 .FirstOrDefaultAsync(x => x.Id == request.IdTask);
             var edtId = task.IdCampaignNavigation.IdEditorNavigation.Id;
             var content = task.Contents.Where(x => x.IsActive == true).FirstOrDefault();
@@ -64,6 +65,30 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                 Comment.Comment = comment.Comments.FirstOrDefault(x => x.IsActive == true).Comment;
             }
 
+            List<int> listContento = new List<int>();
+            List<int> listFacebook = new List<int>();
+            List<int> listWordpress = new List<int>();
+
+            foreach (var item in task.TasksFanpages){
+                switch (item.IdFanpageNavigation.IdChannel)
+                {
+                    case 1: listContento.Add(item.IdFanpage);
+                        break;
+                    case 2:
+                        listFacebook.Add(item.IdFanpage);
+                        break;
+                    case 3:
+                        listWordpress.Add(item.IdFanpage);
+                        break;
+                }    
+            }
+
+            Dictionary<string, List<int>> listFanpages = new Dictionary<string, List<int>>();
+
+            listFanpages.Add("Contento", listContento);
+            listFanpages.Add("Facebook", listFacebook);
+            listFanpages.Add("Wordpress", listWordpress);
+
             var taskView = new TasksViewModel()
             {
                 Title = task.Title,
@@ -80,7 +105,7 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                 Tags = lstTag,
                 Campaign = campaign,
                 Tag = lTag,
-
+                listFanpages = listFanpages
             };
 
             return taskView;
