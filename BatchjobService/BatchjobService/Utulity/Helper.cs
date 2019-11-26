@@ -41,9 +41,9 @@ namespace BatchjobService.Utulity
                 }
             }
 
-            var con = Regex.Replace(doc.DocumentNode.InnerHtml, "<[{br}/].*?>", Environment.NewLine);
+            var con = Regex.Replace(doc.DocumentNode.InnerHtml, "<[br/].*?>", Environment.NewLine);
 
-            var con1 = Regex.Replace(con, "<[{a,i,strong,b}/].*?>", "");
+            var con1 = Regex.Replace(con, "<[a,i,strong,b/].*?>", "");
 
             //var con1 = Regex.Replace(con, "<br>", Environment.NewLine);
 
