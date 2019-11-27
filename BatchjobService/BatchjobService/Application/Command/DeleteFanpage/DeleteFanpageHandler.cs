@@ -21,6 +21,9 @@ namespace BatchjobService.Application.Command.DeleteFanpage
         {
             Fanpages fanpage = _context.Fanpages.Find(request.id);
 
+            _context.Entry(fanpage).Collection(r => r.FanpagesTags).Load();
+
+            _context.RemoveRange(fanpage.FanpagesTags);
             _context.Remove(fanpage);
 
             await _context.SaveChangesAsync();
