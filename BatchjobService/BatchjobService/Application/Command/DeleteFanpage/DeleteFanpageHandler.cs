@@ -1,4 +1,5 @@
 ﻿using BatchjobService.Entities;
+using Hangfire;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,14 @@ namespace BatchjobService.Application.Command.DeleteFanpage
             Fanpages fanpage = _context.Fanpages.Find(request.id);
 
             _context.Entry(fanpage).Collection(r => r.FanpagesTags).Load();
+            _context.Entry(fanpage).Collection(r => r.TasksFanpages).Load();
 
+            foreach(var item in fanpage.TasksFanpages)
+            {
+                BackgroundJob.Delete(item.IdJob);
+            }
+
+            _context.RemoveRange(fanpage.TasksFanpages);
             _context.RemoveRange(fanpage.FanpagesTags);
             _context.Remove(fanpage);
 
