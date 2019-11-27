@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Commands.DeleteTask
 {
-    public class DeleteTaskRequest : IRequest
+    public class DeleteTaskRequest : IRequest<bool>
     {
         public int IdTask { get; set; }
     }

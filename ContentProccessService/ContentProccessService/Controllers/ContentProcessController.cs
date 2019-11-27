@@ -177,7 +177,12 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> DeleteTask(int id)
         {
             var response = await Mediator.Send(new DeleteTaskRequest { IdTask = id });
-            return Ok(response);
+            if (response == true)
+            {
+                return Ok(response);
+            }
+            return NoContent();
+
         }
         [HttpPut("content/task/campaign")]
         [Authorize(Roles = "Writer")]
