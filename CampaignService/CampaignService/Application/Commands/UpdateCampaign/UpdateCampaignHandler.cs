@@ -29,7 +29,10 @@ namespace CampaignService.Application.Commands.UpdateCampaign
                 var upCampaign = _context.Campaigns.Include(x => x.TagsCampaigns).Single(s => s.Id == request.Id);
 
                 upCampaign.EndDate = request.EndDate;
-
+                if (request.EndDate > DateTime.UtcNow && upCampaign.Status == 4)
+                {
+                    upCampaign.Status = 2;
+                }
                 upCampaign.IdCustomer = request.Customer.Id;
 
                 upCampaign.IdEditor = request.Editor.Id;
