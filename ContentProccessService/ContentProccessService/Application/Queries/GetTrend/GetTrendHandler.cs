@@ -47,7 +47,6 @@ namespace ContentProccessService.Application.Queries.GetTrend
                  Contents = x.Contents.Where(c => c.IsActive == true).FirstOrDefault(),
                  TasksTags = x.TasksTags.ToList()
              }).ToListAsync();
-
             var lstContentReturn = new List<ContentViewer>();
             foreach (var item in contents)
             {
