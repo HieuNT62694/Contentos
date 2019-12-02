@@ -23,6 +23,7 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                 .Include(i => i.StatusNavigation)
                 .Include(i => i.IdWritterNavigation)
                 .Include(i => i.IdCampaignNavigation).ThenInclude(IdCampaignNavigation => IdCampaignNavigation.IdEditorNavigation)
+                .Include(i => i.IdCampaignNavigation).ThenInclude(IdCampaignNavigation => IdCampaignNavigation.IdCustomerNavigation)
                 .Include(i => i.Contents).ThenInclude(Contents => Contents.Comments)
                 .Include(i => i.TasksFanpages).ThenInclude(TasksFanpages => TasksFanpages.IdFanpageNavigation)
                 .FirstOrDefaultAsync(x => x.Id == request.IdTask);
@@ -35,6 +36,7 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
             var Writter = new UsersModels();
             var Status = new StatusModels();
             var Editor = new UsersModels();
+            var Customer = new UsersModels();
             //var lstTags = _context.TasksTags.Include(x => x.IdTagNavigation).Where(x => x.IdTask == request.IdTask).ToList();
             //var Customer = await _context.Tasks.AsNoTracking().Include(i => i.IdCampaignNavigation).ThenInclude(IdCampaignNavigation => IdCampaignNavigation.IdCustomerNavigation)
             // .FirstOrDefaultAsync(x => x.Id == request.IdTask);
@@ -53,6 +55,8 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
             Status.Color = task.StatusNavigation.Color;
             Editor.Id = edtId;
             Editor.Name = task.IdCampaignNavigation.IdEditorNavigation.FirstName + " " + task.IdCampaignNavigation.IdEditorNavigation.LastName;
+            Customer.Id = task.IdCampaignNavigation.IdCustomer;
+            Customer.Name = task.IdCampaignNavigation.IdCustomerNavigation.FirstName + " " + task.IdCampaignNavigation.IdCustomerNavigation.LastName;
             var Content = new ContentModels
             {
                 Id = content.Id,
@@ -105,7 +109,8 @@ namespace ContentProccessService.Application.Queries.GetTaskDetail
                 Tags = lstTag,
                 Campaign = campaign,
                 Tag = lTag,
-                listFanpages = listFanpages
+                listFanpages = listFanpages,
+                Customer = Customer
             };
 
             return taskView;

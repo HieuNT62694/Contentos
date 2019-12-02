@@ -45,6 +45,7 @@ namespace ContentProccessService.Models
         public string Campaign { get; set; }
         public string EmailWriter { get; set; }
         public Dictionary<string, List<int>> listFanpages { get; set; }
+        public UsersModels Customer { get; set; }
     }
     public class TasksViewModelMessage
     {
