@@ -86,9 +86,9 @@ namespace BatchjobService.Controllers
         }
 
         [HttpPost("fanpage/tags")]
-        public async Task<Dictionary<string, List<int>>> GetListFanpageByTagsAsync(List<int> id)
+        public async Task<Dictionary<string, List<int>>> GetListFanpageByTagsAsync(GetListFanpageByTagsRequest getListFanpageByTagsRequest)
         {
-            var response = await Mediator.Send(new GetListFanpageByTagsRequest { lstTags = id });
+            var response = await Mediator.Send(getListFanpageByTagsRequest);
 
             return response;
         }

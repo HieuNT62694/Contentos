@@ -22,7 +22,9 @@ namespace BatchjobService.Application.Queries.GetListFanpageByTags
         {
             var fanpages = await _context.Fanpages
                 .Include(i => i.IdChannelNavigation)
-                .Include(i => i.FanpagesTags).ThenInclude(FanpagesTags => FanpagesTags.IdTagNavigation).ToListAsync();
+                .Include(i => i.FanpagesTags).ThenInclude(FanpagesTags => FanpagesTags.IdTagNavigation)
+                .Where(w => w.IdCustomer == null || w.IdCustomer == request.idCustomer)
+                .ToListAsync();
 
             Dictionary<string, List<int>> result = new Dictionary<string, List<int>>();
             List<int> lstContento = new List<int>();

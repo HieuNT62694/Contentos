@@ -10,5 +10,7 @@ namespace BatchjobService.Application.Queries.GetListFanpageByTags
     public class GetListFanpageByTagsRequest : IRequest<Dictionary<string, List<int>>>
     {
         public List<int> lstTags { get; set; }
+
+        public int idCustomer { get; set; }
     }
 }
