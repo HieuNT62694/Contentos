@@ -30,7 +30,7 @@ namespace FBTest
         /// </summary>
         /// <returns>StatusCode and JSON response</returns>
         /// <param name="postText">Text for posting</param>
-        public async Task<Tuple<int, string>> PublishSimplePost(string postText)
+        public async Task<string> PublishSimplePost(string postText)
         {
             using (var http = new HttpClient())
             {
@@ -48,10 +48,7 @@ namespace FBTest
                     );
                 var httpContent = await httpResponse.Content.ReadAsStringAsync();
 
-                return new Tuple<int, string>(
-                    (int)httpResponse.StatusCode,
-                    httpContent
-                    );
+                return httpContent;
             }
         }
 
@@ -119,7 +116,7 @@ namespace FBTest
                     }
                 }
 
-                return "OK";
+                return rezTextJson.ToString();
             }
             catch (Exception ex)
             {

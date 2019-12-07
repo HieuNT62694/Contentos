@@ -492,6 +492,8 @@ namespace BatchjobService.Entities
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.IdFacebook).HasColumnName("id_facebook");
+
                 entity.Property(e => e.IdJob).HasColumnName("id_job");
 
                 entity.Property(e => e.ModifiedDate)

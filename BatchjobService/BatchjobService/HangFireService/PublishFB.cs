@@ -2,6 +2,7 @@
 using BatchjobService.Utulity;
 using FBTest;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,12 +29,12 @@ namespace BatchjobService.HangFireService
         {
             var fanpage = _context.Fanpages.FirstOrDefault(f => f.Id == fanpageId && f.IsActive == true);
             var content = _context.Contents.FirstOrDefault(w => w.Id == contentId && w.IsActive == true);
+            var taskFanpages = _context.TasksFanpages.FirstOrDefault(x => x.IdTask == content.IdTask && x.IdFanpage == fanpage.Id);
             var upTask = _context.Tasks.FirstOrDefault(x => x.Id == content.IdTask);
             if (upTask.Status != 7)
             {
                 upTask.Status = 7;
                 _context.Update(upTask);
-                _context.SaveChanges();
             }
 
             var pageId = await GetPageIdAsync(fanpage.Token);
@@ -44,20 +45,28 @@ namespace BatchjobService.HangFireService
 
             List<string> imgs = Helper.getImage(content.TheContent);
 
+            string result; 
             if(imgs.Count == 0)
             {
                 using (var http = new HttpClient())
                 {
-                    await facebook.PublishSimplePost(post);
+                    result = await facebook.PublishSimplePost(post);
                 }
             }
             else
             {
                 using (var http = new HttpClient())
                 {
-                    facebook.PublishToFacebook(post, imgs);
+                    result = facebook.PublishToFacebook(post, imgs);
                 }
             }
+
+            var rez = JObject.Parse(result);
+
+            taskFanpages.IdFacebook = rez["id"].Value<string>();
+
+            _context.Update(taskFanpages);
+            _context.SaveChanges();
         }
 
 
