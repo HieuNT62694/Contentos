@@ -20,7 +20,8 @@ namespace ContentProccessService.Application.Queries.GetStatisticsOneMonth
         public async Task<List<StatisticsModel>> Handle(GetStatisticsOneMonthRequest request, CancellationToken cancellationToken)
         {
             var lstTasks = await _context.Statistics.Where(x=>x.CreatedDate >= DateTime.UtcNow.AddMonths(-1) && x.CreatedDate < DateTime.UtcNow).ToListAsync();
-            var countTask = CountTaskInTag(lstTasks);
+            var lstIdTask = await _context.Statistics.Where(x => x.CreatedDate >= DateTime.UtcNow.AddMonths(-1) && x.CreatedDate < DateTime.UtcNow).Select(x => x.IdTask).Distinct().ToListAsync();
+            var countTask = CountTaskInTag(lstIdTask);
             var lstTagInter = new List<StatisticsModel>();
             foreach (var item in lstTasks)
             {
@@ -52,12 +53,12 @@ namespace ContentProccessService.Application.Queries.GetStatisticsOneMonth
             return lstTagInter.OrderByDescending(x => x.TimeInTeraction).Take(request.Quantity).ToList();
         }
      
-        public List<CountTask> CountTaskInTag(List<Statistics> lstTask)
+        public List<CountTask> CountTaskInTag(List<int> lstTask)
         {
             var lstTagInter = new List<CountTask>();
             foreach (var item in lstTask)
             {
-                var lstTag = _context.TasksTags.Include(x => x.IdTagNavigation).Where(x => x.IdTask == item.IdTask).Select(x => x.IdTagNavigation).ToList();
+                var lstTag = _context.TasksTags.Include(x => x.IdTagNavigation).Where(x => x.IdTask == item).Select(x => x.IdTagNavigation).ToList();
                 foreach (var item2 in lstTag)
                 {
                     if (lstTagInter.Any(x => x.Tag == item2.Name))

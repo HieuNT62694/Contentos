@@ -29,6 +29,12 @@ namespace ContentProccessService.Models
         public int View { get; set; }
         public bool Published { get; set; }
     }
+    public class TaskTrendViewStaicModel
+    {
+        public int IdTask { get; set; }
+        public string Title { get; set; }
+        public int View { get; set; }
+    }
     public class ListTaskInteractionModel
     {
         public int IdTask { get; set; }

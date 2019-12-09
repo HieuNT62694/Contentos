@@ -25,6 +25,7 @@ namespace AuthenticationService.Entities
         public virtual DbSet<Notifys> Notifys { get; set; }
         public virtual DbSet<Personalizations> Personalizations { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
+        public virtual DbSet<Statistics> Statistics { get; set; }
         public virtual DbSet<StatusCampaigns> StatusCampaigns { get; set; }
         public virtual DbSet<StatusTasks> StatusTasks { get; set; }
         public virtual DbSet<Tags> Tags { get; set; }
@@ -352,6 +353,27 @@ namespace AuthenticationService.Entities
                     .HasMaxLength(50);
             });
 
+            modelBuilder.Entity<Statistics>(entity =>
+            {
+                entity.ToTable("statistics");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.IdTask).HasColumnName("id_task");
+
+                entity.Property(e => e.Views).HasColumnName("views");
+
+                entity.HasOne(d => d.IdTaskNavigation)
+                    .WithMany(p => p.Statistics)
+                    .HasForeignKey(d => d.IdTask)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_statistics_tasks");
+            });
+
             modelBuilder.Entity<StatusCampaigns>(entity =>
             {
                 entity.ToTable("status_campaigns");
@@ -491,6 +513,8 @@ namespace AuthenticationService.Entities
                 entity.Property(e => e.CreatedDate)
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
+
+                entity.Property(e => e.IdFacebook).HasColumnName("id_facebook");
 
                 entity.Property(e => e.IdJob).HasColumnName("id_job");
 

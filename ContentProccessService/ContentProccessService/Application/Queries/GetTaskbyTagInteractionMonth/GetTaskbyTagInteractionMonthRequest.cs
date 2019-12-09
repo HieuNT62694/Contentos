@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ContentProccessService.Application.Queries.GetTaskbyTagInteraction
+namespace ContentProccessService.Application.Queries.GetTaskbyTagInteractionMonth
 {
-    public class GetTaskbyTagInteractionRequest : IRequest<List<TaskTrendViewStaicModel>>
+    public class GetTaskbyTagInteractionMonthRequest : IRequest<List<TaskTrendViewStaicModel>>
     {
         public int Id { get; set; }
     }

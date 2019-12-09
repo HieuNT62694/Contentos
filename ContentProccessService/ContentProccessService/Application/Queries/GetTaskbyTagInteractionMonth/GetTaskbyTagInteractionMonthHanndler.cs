@@ -8,19 +8,19 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ContentProccessService.Application.Queries.GetTaskbyTagInteraction
+namespace ContentProccessService.Application.Queries.GetTaskbyTagInteractionMonth
 {
-    public class GetTaskbyTagInteractionHandler : IRequestHandler<GetTaskbyTagInteractionRequest, List<TaskTrendViewStaicModel>>
+    public class GetTaskbyTagInteractionMonthHanndler : IRequestHandler<GetTaskbyTagInteractionMonthRequest, List<TaskTrendViewStaicModel>>
     {
         private readonly ContentoDbContext _context;
-        public GetTaskbyTagInteractionHandler(ContentoDbContext contentodbContext)
+        public GetTaskbyTagInteractionMonthHanndler(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }
-        public async Task<List<TaskTrendViewStaicModel>> Handle(GetTaskbyTagInteractionRequest request, CancellationToken cancellationToken)
+        public async Task<List<TaskTrendViewStaicModel>> Handle(GetTaskbyTagInteractionMonthRequest request, CancellationToken cancellationToken)
         {
-            var lstIdTask =  _context.Tasks.Include(x => x.TasksTags).Where(x => x.TasksTags.Any(y => y.IdTag == request.Id)).Select(x => x.Id).ToList();
-            var lstTask = await _context.Statistics.Include(x => x.IdTaskNavigation).ThenInclude(IdTaskNavigation => IdTaskNavigation.Contents).Where(x => x.CreatedDate >= DateTime.UtcNow.AddDays(-7) && x.CreatedDate < DateTime.UtcNow && lstIdTask.Contains(x.IdTask)).ToListAsync();
+            var lstIdTask = _context.Tasks.Include(x => x.TasksTags).Where(x => x.TasksTags.Any(y => y.IdTag == request.Id)).Select(x => x.Id).ToList();
+            var lstTask = await _context.Statistics.Include(x => x.IdTaskNavigation).ThenInclude(IdTaskNavigation => IdTaskNavigation.Contents).Where(x => x.CreatedDate >= DateTime.UtcNow.AddMonths(-1) && x.CreatedDate < DateTime.UtcNow && lstIdTask.Contains(x.IdTask)).ToListAsync();
             var lstTaskView = new List<TaskTrendViewStaicModel>();
             foreach (var item in lstTask)
             {

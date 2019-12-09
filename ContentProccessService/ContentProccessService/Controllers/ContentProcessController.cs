@@ -45,6 +45,8 @@ using ContentProccessService.Application.Queries.GetStatistics;
 using ContentProccessService.Application.Queries.GetStatisticsOneMonth;
 using ContentProccessService.Application.Queries.GetStaticsForCustomer;
 using ContentProccessService.Application.Queries.GetTaskbyTagInteraction;
+using ContentProccessService.Application.Queries.GetTaskViewTrend;
+using ContentProccessService.Application.Queries.GetTaskbyTagInteractionMonth;
 
 namespace ContentProccessService.Controllers
 {
@@ -410,6 +412,36 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> GetTaskInteractionByTags(int id)
         {
             var response = await Mediator.Send(new GetTaskbyTagInteractionRequest { Id = id });
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Please check fanpage id");
+            }
+
+        }
+        [HttpGet("statistics-by-tag-month/{id}")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetTaskInteractionByTagsMonth(int id)
+        {
+            var response = await Mediator.Send(new GetTaskbyTagInteractionMonthRequest { Id = id });
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Please check fanpage id");
+            }
+
+        }
+        [HttpGet("statistics-task-trend")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetTaskInteractionTrend()
+        {
+            var response = await Mediator.Send(new GetTaskViewTrendRequest { });
             if (response != null)
             {
                 return Ok(response);
