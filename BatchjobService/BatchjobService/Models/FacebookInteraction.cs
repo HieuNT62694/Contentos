@@ -13,6 +13,8 @@ namespace BatchjobService.Models
         public string shareCount { get; set; }
         public string commentCount { get; set; }
         public string link { get; set; }
+
+        public int possitiveCommentCount { get; set; }
     }
 
     public class FacebookInteractionModel

@@ -39,7 +39,31 @@ namespace BatchjobService.Application.Queries.GetInteractionByCampaignId
 
                 var interaction = JObject.Parse(await Helper.GetInteraction(taskFanpage.IdFacebook, taskFanpage.IdFanpageNavigation.Token));
 
+                int possitiveCommentCount = 0;
+
+                if (interaction["comments"]["data"].HasValues)
+                {
+                    var comments = interaction["comments"]["data"];
+                    foreach(var comment in comments)
+                    {
+                        string message = comment["message"].Value<string>().ToLower();
+
+                        if (message.Equals("."))
+                        {
+                            possitiveCommentCount++;
+                        }
+                        else
+                        {
+                            if (message.Contains("inbox"))
+                            {
+                                possitiveCommentCount++;
+                            }
+                        }
+                    }
+                }
+
                 string shareCount;
+
                 if (!interaction.ContainsKey("shares"))
                 {
                     shareCount = "0";
@@ -56,7 +80,8 @@ namespace BatchjobService.Application.Queries.GetInteractionByCampaignId
                     link = "https://www.facebook.com/" + taskFanpage.IdFacebook,
                     shareCount = shareCount,
                     reactiontCount = interaction["reactions"]["summary"]["total_count"].Value<string>(),
-                    commentCount = interaction["comments"]["summary"]["total_count"].Value<string>()
+                    commentCount = interaction["comments"]["summary"]["total_count"].Value<string>(),
+                    possitiveCommentCount = possitiveCommentCount
                 }
                 );
 

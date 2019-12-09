@@ -120,7 +120,7 @@ namespace BatchjobService.Utulity
             using (var http = new HttpClient())
             {
                 var httpResponse = await http.GetAsync("https://graph.facebook.com/" + id + 
-                    "?fields=shares,reactions.limit(0).summary(true),comments.limit(0).summary(true)&access_token=" + token);
+                    "?fields=shares,reactions.limit(0).summary(true),comments.summary(true)&access_token=" + token);
 
                 var httpContent = await httpResponse.Content.ReadAsStringAsync();
 
