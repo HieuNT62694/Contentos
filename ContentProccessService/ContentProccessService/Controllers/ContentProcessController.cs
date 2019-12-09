@@ -47,6 +47,7 @@ using ContentProccessService.Application.Queries.GetStaticsForCustomer;
 using ContentProccessService.Application.Queries.GetTaskbyTagInteraction;
 using ContentProccessService.Application.Queries.GetTaskViewTrend;
 using ContentProccessService.Application.Queries.GetTaskbyTagInteractionMonth;
+using ContentProccessService.Application.Queries.GetTaskViewTrendMonth;
 
 namespace ContentProccessService.Controllers
 {
@@ -442,6 +443,21 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> GetTaskInteractionTrend()
         {
             var response = await Mediator.Send(new GetTaskViewTrendRequest { });
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Please check fanpage id");
+            }
+
+        }
+        [HttpGet("statistics-task-trend-month")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetTaskInteractionTrendMonth()
+        {
+            var response = await Mediator.Send(new GetTaskViewTrendMonthRequest { });
             if (response != null)
             {
                 return Ok(response);
