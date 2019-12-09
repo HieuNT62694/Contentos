@@ -10,6 +10,7 @@ namespace ContentProccessService.Entities
         public string IdJob { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
+        public string IdFacebook { get; set; }
 
         public virtual Fanpages IdFanpageNavigation { get; set; }
         public virtual Tasks IdTaskNavigation { get; set; }

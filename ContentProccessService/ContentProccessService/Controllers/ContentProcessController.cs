@@ -43,6 +43,8 @@ using ContentProccessService.RabbitMQ;
 using Newtonsoft.Json;
 using ContentProccessService.Application.Queries.GetStatistics;
 using ContentProccessService.Application.Queries.GetStatisticsOneMonth;
+using ContentProccessService.Application.Queries.GetStaticsForCustomer;
+using ContentProccessService.Application.Queries.GetTaskbyTagInteraction;
 
 namespace ContentProccessService.Controllers
 {
@@ -378,6 +380,36 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> GetStatisticsOneMonth(int quantity)
         {
             var response = await Mediator.Send(new GetStatisticsOneMonthRequest() { Quantity = quantity });
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Please check fanpage id");
+            }
+
+        }
+        [HttpGet("statistics-for-customer/{id}")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetStatisticsForCustomer(int id)
+        {
+            var response = await Mediator.Send(new GetStaticsForCustomerRequest {IdCampaign = id });
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Please check fanpage id");
+            }
+
+        }
+        [HttpGet("statistics-by-tag/{id}")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetTaskInteractionByTags(int id)
+        {
+            var response = await Mediator.Send(new GetTaskbyTagInteractionRequest { Id = id });
             if (response != null)
             {
                 return Ok(response);

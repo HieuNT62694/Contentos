@@ -21,7 +21,20 @@ namespace ContentProccessService.Application.Commands.CountClickContent
         {
             //contentodbContext.Personalizations.Where(x => request.Tags.Contains(x.IdTag) && x.IdUser == request.IdUser).ToList().ForEach(x => x.TimeInteraction  += 1);
             var checl = await contentodbContext.UsersInteractions.FirstOrDefaultAsync(x => x.IdTask == request.IdTask && x.IdUser == request.IdUser);
-            if (checl == null)
+            var checkStatic = contentodbContext.Statistics.FirstOrDefault(x => x.IdTask == request.IdTask && x.CreatedDate.GetValueOrDefault().DayOfYear == DateTime.UtcNow.DayOfYear);
+            if (checkStatic == null)
+            {
+                var statics = new Statistics
+                {
+                    IdTask = request.IdTask,
+                    CreatedDate = DateTime.UtcNow,
+                    Views = 0
+                };
+                contentodbContext.Attach(statics);
+                contentodbContext.Statistics.Add(statics);
+                await contentodbContext.SaveChangesAsync(cancellationToken);
+            }
+            if (checl == null && request.IdUser != 0)
             {
                 var userInter = new UsersInteractions
                 {
@@ -33,7 +46,11 @@ namespace ContentProccessService.Application.Commands.CountClickContent
                 contentodbContext.UsersInteractions.Add(userInter);
                 await contentodbContext.SaveChangesAsync(cancellationToken);
             }
-            contentodbContext.UsersInteractions.FirstOrDefault(x => x.IdTask == request.IdTask && x.IdUser == request.IdUser).Interaction += 1;
+            contentodbContext.Statistics.FirstOrDefault(x => x.IdTask == request.IdTask && x.CreatedDate.GetValueOrDefault().DayOfYear == DateTime.UtcNow.DayOfYear).Views += 1;
+            if (request.IdUser != 0)
+            {
+                contentodbContext.UsersInteractions.FirstOrDefault(x => x.IdTask == request.IdTask && x.IdUser == request.IdUser).Interaction += 1;
+            }
             await contentodbContext.SaveChangesAsync(cancellationToken);
             return Unit.Value;
         }

@@ -20,10 +20,10 @@ namespace ContentProccessService.Application.Queries.GetStatistics
         }
         public async Task<List<StatisticsModel>> Handle(GetStatisticsRequest request, CancellationToken cancellationToken)
         {
-            var lstTasks = await _context.UsersInteractions.ToListAsync();
-            var listTaskWeek = GetTaskOneWeek(lstTasks);
+            var lstTasks = await _context.Statistics.Where(x=> x.CreatedDate >= DateTime.UtcNow.AddDays(-7) && x.CreatedDate < DateTime.UtcNow).ToListAsync();
+            var countTask = CountTaskInTag(lstTasks);
             var lstTagInter = new List<StatisticsModel>();
-            foreach (var item in listTaskWeek)
+            foreach (var item in lstTasks)
             {
 
                 var lstTag = _context.TasksTags.Include(x=>x.IdTagNavigation).Where(x => x.IdTask == item.IdTask).Select(x => x.IdTagNavigation).ToList();
@@ -31,18 +31,22 @@ namespace ContentProccessService.Application.Queries.GetStatistics
                 {
                     if (lstTagInter.Any(x => x.Tags == item2.Name))
                     {
-                        lstTagInter.Where(x => x.Tags == item2.Name).FirstOrDefault().TimeInTeraction += item.TimeInTeraction;
+                        lstTagInter.Where(x => x.Tags == item2.Name).FirstOrDefault().TimeInTeraction += item.Views ?? 0;
                     }
                     else
                     {
                         var Alori = new StatisticsModel ();
                         Alori.Tags = item2.Name;
-                        Alori.TimeInTeraction += item.TimeInTeraction;
+                        Alori.TimeInTeraction += item.Views ?? 0;
                         lstTagInter.Add(Alori);
                     }
                 }
             }
-            Array s1 = Array.CreateInstance(typeof(string), new[] { 5 }, new[] { 1 });
+
+            foreach (var res in lstTagInter)
+            {
+                res.TimeInTeraction = res.TimeInTeraction / countTask.FirstOrDefault(x => x.Tag == res.Tags).Task;
+            }
             if (request.Quantity == 0)
             {
                 return lstTagInter.OrderByDescending(x => x.TimeInTeraction).ToList();
@@ -51,31 +55,29 @@ namespace ContentProccessService.Application.Queries.GetStatistics
             return lstTagInter.OrderByDescending(x => x.TimeInTeraction).Take(request.Quantity).ToList();
          
         }
-        public List<ListTaskModel> GetTaskOneWeek(List<UsersInteractions> ListTags)
+        
+        public List<CountTask> CountTaskInTag(List<Statistics> lstTask) 
         {
-            var lstTaskTwo = new List<ListTaskModel>();
-            foreach (var item in ListTags)
+            var lstTagInter = new List<CountTask>();
+            foreach (var item in lstTask)
             {
-                var task = _context.Tasks.FirstOrDefault(x => x.Id == item.IdTask
-                && x.Status == 7
-                && x.Contents.Any(t => t.IsActive == true)
-                && x.TasksFanpages.Any(t => t.IdFanpage == 1));
-                var test = DateTime.UtcNow.AddDays(-7);
-                if (task != null)
+                var lstTag = _context.TasksTags.Include(x => x.IdTagNavigation).Where(x => x.IdTask == item.IdTask).Select(x => x.IdTagNavigation).ToList();
+                foreach (var item2 in lstTag)
                 {
-                    if (task.PublishTime >= DateTime.UtcNow.AddDays(-7) && task.PublishTime < DateTime.UtcNow)
+                    if (lstTagInter.Any(x => x.Tag == item2.Name))
                     {
-                        var newTask = new ListTaskModel()
-                        {
-                            IdTask = item.IdTask,
-                            TimeInTeraction = item.Interaction ?? 0
-                        };
-                        lstTaskTwo.Add(newTask);
+                        lstTagInter.Where(x => x.Tag == item2.Name).FirstOrDefault().Task += 1;
+                    }
+                    else
+                    {
+                        var Alori = new CountTask();
+                        Alori.Tag = item2.Name;
+                        Alori.Task = 1;
+                        lstTagInter.Add(Alori);
                     }
                 }
-
             }
-            return lstTaskTwo;
+            return lstTagInter;
         }
 
 
