@@ -22,4 +22,17 @@ namespace BatchjobService.Models
         public string name { get; set; }
         public List<FacebookInteraction> data { get; set; }
     }
+
+    public class FacebookPageStatisticsModel
+    {
+        public string name { get; set; }
+        public int newLikeCount { get; set; }
+        public int newInboxCount { get; set; }
+    }
+
+    public class FacebookPageStatistics
+    {
+        public int newLikeCount { get; set; }
+        public int newInboxCount { get; set; }
+    }
 }

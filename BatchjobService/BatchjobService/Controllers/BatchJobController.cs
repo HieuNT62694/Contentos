@@ -15,6 +15,7 @@ using BatchjobService.Application.Queries.GetFanpagesByCustomerIdAndChannelId;
 using BatchjobService.Application.Queries.GetFanpagesByMarketerId;
 using BatchjobService.Application.Queries.GetInteractionByCampaignId;
 using BatchjobService.Application.Queries.GetListFanpageByTags;
+using BatchjobService.Application.Queries.GetPageStatistics;
 using BatchjobService.Application.Queries.GetTaskFanpageByContentId;
 using BatchjobService.Application.Queries.Test;
 using BatchjobService.Entities;
@@ -223,6 +224,20 @@ namespace BatchjobService.Controllers
             }
         }
 
+        [HttpGet("statistics/customers/{id}")]
+        public async Task<IActionResult> GetStatisticsByCustomersId(int id)
+        {
+            try
+            {
+                var response = await Mediator.Send(new GetPageStatisticsRequest { customerId = id });
+                return Ok(response);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
         private void PublishFB(int fanpageId, int contentId, DateTime time, int taskId)
         {
             var jobId = BackgroundJob.Schedule(
@@ -275,12 +290,12 @@ namespace BatchjobService.Controllers
             _context.TasksFanpages.Add(taskFanpages);
             _context.SaveChanges();
         }
-        [HttpGet("test/{campaignId}")]
-        public async Task<IActionResult> GetTest(int campaignId)
+        [HttpGet("test/{customerId}")]
+        public async Task<IActionResult> GetTest(int customerId)
         {
             try
             {
-                var response = await Mediator.Send(new GetInteractionByCampaignIdRequest {campaignId = campaignId });
+                var response = await Mediator.Send(new GetPageStatisticsRequest { customerId = customerId });
                 return Ok(response);
             }
             catch

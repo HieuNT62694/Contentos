@@ -134,5 +134,45 @@ namespace BatchjobService.Utulity
                 return httpContent;
             }
         }
+
+        public static async Task<string> GetConversation(string id, string token)
+        {
+            using (var http = new HttpClient())
+            {
+                var httpResponse = await http.GetAsync("https://graph.facebook.com/" + id +
+                    "/conversations?folder=inbox&access_token=" + token);
+
+                var httpContent = await httpResponse.Content.ReadAsStringAsync();
+
+                var results = JsonConvert.DeserializeObject<dynamic>(httpContent);
+
+                if (results["error"] != null)
+                {
+                    return "";
+                }
+
+                return httpContent;
+            }
+        }
+
+        public static async Task<string> GetNewLike(string id, string token, DateTime? since)
+        {
+            using (var http = new HttpClient())
+            {
+                var httpResponse = await http.GetAsync("https://graph.facebook.com/" + id +
+                    "/insights/page_fan_adds?since="+ since.Value.Date +"&access_token=" + token);
+
+                var httpContent = await httpResponse.Content.ReadAsStringAsync();
+
+                var results = JsonConvert.DeserializeObject<dynamic>(httpContent);
+
+                if (results["error"] != null)
+                {
+                    return "";
+                }
+
+                return httpContent;
+            }
+        }
     }
 }
