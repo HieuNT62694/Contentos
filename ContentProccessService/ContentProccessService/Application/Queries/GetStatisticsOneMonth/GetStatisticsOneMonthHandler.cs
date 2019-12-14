@@ -10,71 +10,206 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Queries.GetStatisticsOneMonth
 {
-    public class GetStatisticsOneMonthHandler : IRequestHandler<GetStatisticsOneMonthRequest, List<StatisticsModel>>
+    public class GetStatisticsOneMonthHandler : IRequestHandler<GetStatisticsOneMonthRequest, List<StatisticReturnModel>>
     {
         private readonly ContentoDbContext _context;
         public GetStatisticsOneMonthHandler(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }
-        public async Task<List<StatisticsModel>> Handle(GetStatisticsOneMonthRequest request, CancellationToken cancellationToken)
+        public async Task<List<StatisticReturnModel>> Handle(GetStatisticsOneMonthRequest request, CancellationToken cancellationToken)
         {
-            var lstTasks = await _context.Statistics.Where(x=>x.CreatedDate >= DateTime.UtcNow.AddMonths(-1) && x.CreatedDate < DateTime.UtcNow).ToListAsync();
-            var lstIdTask = await _context.Statistics.Where(x => x.CreatedDate >= DateTime.UtcNow.AddMonths(-1) && x.CreatedDate < DateTime.UtcNow).Select(x => x.IdTask).Distinct().ToListAsync();
-            var countTask = CountTaskInTag(lstIdTask);
+            var lstTasks = await _context.Statistics.Where(x => x.CreatedDate >= DateTime.UtcNow.AddMonths(-1) && x.CreatedDate < DateTime.UtcNow).ToListAsync();
             var lstTagInter = new List<StatisticsModel>();
+            var lstTagInterReturn = new List<StatisticReturnModel>();
             foreach (var item in lstTasks)
             {
-
                 var lstTag = _context.TasksTags.Include(x => x.IdTagNavigation).Where(x => x.IdTask == item.IdTask).Select(x => x.IdTagNavigation).ToList();
                 foreach (var item2 in lstTag)
                 {
-                    if (lstTagInter.Any(x => x.Tags == item2.Name))
+                    if (lstTagInter.Any(x => x.IdTags == item2.Id && x.Date.DayOfYear == item.CreatedDate.GetValueOrDefault().DayOfYear))
                     {
-                        lstTagInter.Where(x => x.Tags == item2.Name).FirstOrDefault().TimeInTeraction += item.Views ?? 0;
+                        lstTagInter.Where(x => x.IdTags == item2.Id).FirstOrDefault().TimeInTeraction += item.Views ?? 0;
                     }
                     else
                     {
                         var Alori = new StatisticsModel();
-                        Alori.Tags = item2.Name;
+                        Alori.IdTags = item2.Id;
+                        Alori.Date = item.CreatedDate ?? DateTime.UtcNow;
                         Alori.TimeInTeraction += item.Views ?? 0;
                         lstTagInter.Add(Alori);
                     }
                 }
+
             }
-            foreach (var res in lstTagInter)
+            foreach (var item in lstTagInter)
             {
-                res.TimeInTeraction = res.TimeInTeraction / countTask.FirstOrDefault(x => x.Tag == res.Tags).Task;
+                var testst = item;
+                var test = lstTagInterReturn.Where(x => x.Date.DayOfYear == item.Date.DayOfYear).FirstOrDefault();
+                if (test != null)
+                {
+                    var test2 = test.TimeInteraction.ToArray();
+                    switch (item.IdTags)
+                    {
+                        case 1:
+                            {
+
+                                test2[0] += item.TimeInTeraction;
+                                test.TimeInteraction = test2.ToList();
+                                break;
+                            }
+                        case 2:
+                            {
+                                test2[1] += item.TimeInTeraction;
+                                test.TimeInteraction = test2.ToList();
+                                break;
+                            }
+                        case 3:
+                            {
+
+                                test2[2] += item.TimeInTeraction;
+                                test.TimeInteraction = test2.ToList();
+                                break;
+                            }
+                        case 4:
+                            {
+
+                                test2[3] += item.TimeInTeraction;
+                                test.TimeInteraction = test2.ToList();
+                                break;
+                            }
+                        case 5:
+                            {
+
+                                test2[4] += item.TimeInTeraction;
+                                test.TimeInteraction = test2.ToList();
+                                break;
+                            }
+                        case 6:
+                            {
+
+                                test2[5] += item.TimeInTeraction;
+                                test.TimeInteraction = test2.ToList();
+                                break;
+                            }
+                        case 7:
+                            {
+
+                                test2[6] += item.TimeInTeraction;
+                                test.TimeInteraction = test2.ToList();
+                                break;
+                            }
+                        case 8:
+                            {
+
+                                test2[7] += item.TimeInTeraction;
+                                test.TimeInteraction = test2.ToList();
+                                break;
+                            }
+                        case 9:
+                            {
+
+                                test2[8] += item.TimeInTeraction;
+                                test.TimeInteraction = test2.ToList();
+                                break;
+                            }
+                        case 10:
+                            {
+
+                                test2[9] += item.TimeInTeraction;
+                                test.TimeInteraction = test2.ToList();
+                                break;
+                            }
+
+                        default:
+                            {
+                                break;
+                            }
+                    }
+
+                }
+                else
+                {
+                    var statiscs = new StatisticReturnModel();
+                    statiscs.Date = item.Date;
+                    int[] arr = new int[10];
+                    switch (item.IdTags)
+                    {
+                        case 1:
+                            {
+
+                                arr[0] += item.TimeInTeraction;
+                                break;
+                            }
+                        case 2:
+                            {
+                                arr[1] += item.TimeInTeraction;
+                                break;
+                            }
+                        case 3:
+                            {
+
+                                arr[2] += item.TimeInTeraction;
+                                break;
+                            }
+                        case 4:
+                            {
+
+                                arr[3] += item.TimeInTeraction;
+                                break;
+                            }
+                        case 5:
+                            {
+
+                                arr[4] += item.TimeInTeraction;
+                                break;
+                            }
+                        case 6:
+                            {
+
+                                arr[5] += item.TimeInTeraction;
+                                break;
+                            }
+                        case 7:
+                            {
+
+                                arr[6] += item.TimeInTeraction;
+                                break;
+                            }
+                        case 8:
+                            {
+
+                                arr[7] += item.TimeInTeraction;
+                                break;
+                            }
+                        case 9:
+                            {
+
+                                arr[8] += item.TimeInTeraction;
+                                break;
+                            }
+                        case 10:
+                            {
+
+                                arr[9] += item.TimeInTeraction;
+                                break;
+                            }
+
+                        default:
+                            {
+                                break;
+                            }
+                    }
+                    statiscs.TimeInteraction = arr.ToList();
+                    lstTagInterReturn.Add(statiscs);
+
+                }
+
             }
-            if (request.Quantity == 0)
-            {
-                return lstTagInter.OrderByDescending(x => x.TimeInTeraction).ToList();
-            }
-            return lstTagInter.OrderByDescending(x => x.TimeInTeraction).Take(request.Quantity).ToList();
+
+            return lstTagInterReturn.OrderBy(x => x.Date).ToList();
         }
      
-        public List<CountTask> CountTaskInTag(List<int> lstTask)
-        {
-            var lstTagInter = new List<CountTask>();
-            foreach (var item in lstTask)
-            {
-                var lstTag = _context.TasksTags.Include(x => x.IdTagNavigation).Where(x => x.IdTask == item).Select(x => x.IdTagNavigation).ToList();
-                foreach (var item2 in lstTag)
-                {
-                    if (lstTagInter.Any(x => x.Tag == item2.Name))
-                    {
-                        lstTagInter.Where(x => x.Tag == item2.Name).FirstOrDefault().Task += 1;
-                    }
-                    else
-                    {
-                        var Alori = new CountTask();
-                        Alori.Tag = item2.Name;
-                        Alori.Task = 1;
-                        lstTagInter.Add(Alori);
-                    }
-                }
-            }
-            return lstTagInter;
-        }
+
     }
 }

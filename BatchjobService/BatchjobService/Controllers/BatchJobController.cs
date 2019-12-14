@@ -6,6 +6,8 @@ using AuthenticationService.Controllers;
 using BatchjobService.Application.Command.CheckToken;
 using BatchjobService.Application.Command.CreateFanpage;
 using BatchjobService.Application.Command.DeleteFanpage;
+using BatchjobService.Application.Command.RecommendTimePublishOneMonth;
+using BatchjobService.Application.Command.RecommendTimePushlish;
 using BatchjobService.Application.Command.UpdateFanpage;
 using BatchjobService.Application.Queries.GetContentByFanpageId;
 using BatchjobService.Application.Queries.GetCountInteractionByCampaignId;
@@ -314,6 +316,32 @@ namespace BatchjobService.Controllers
                 return Ok(response);
             }
             catch
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPost("recommend-time")]
+        public async Task<IActionResult> GetRecommendTime(RecommendTimePushlishCommands commands)
+        {
+            try
+            {
+                var response = await Mediator.Send(commands);
+                return Ok(response);
+            }
+            catch(Exception e)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPost("recommend-time-mont")]
+        public async Task<IActionResult> GetRecommendTimeMonth(RecommendTimePublishOneMonthRequest commands)
+        {
+            try
+            {
+                var response = await Mediator.Send(commands);
+                return Ok(response);
+            }
+            catch (Exception e)
             {
                 return BadRequest();
             }

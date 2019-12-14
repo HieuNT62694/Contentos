@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Queries.GetStatisticsOneMonth
 {
-    public class GetStatisticsOneMonthRequest : IRequest<List<StatisticsModel>>
+    public class GetStatisticsOneMonthRequest : IRequest<List<StatisticReturnModel>>
     {
         public int Quantity { get; set; }
     }

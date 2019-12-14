@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Queries.GetTaskbyTagInteractionMonth
 {
-    public class GetTaskbyTagInteractionMonthRequest : IRequest<List<TaskTrendViewStaicModel>>
+    public class GetTaskbyTagInteractionMonthRequest : IRequest<List<StatisticReturnModel>>
     {
         public int Id { get; set; }
     }

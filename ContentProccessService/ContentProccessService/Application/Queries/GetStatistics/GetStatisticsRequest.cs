@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Queries.GetStatistics
 {
-    public class GetStatisticsRequest : IRequest<List<StatisticsModel>>
+    public class GetStatisticsRequest : IRequest<List<StatisticReturnModel>>
     {
         public int Quantity { get; set; }
     }

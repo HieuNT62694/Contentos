@@ -7,9 +7,15 @@ namespace ContentProccessService.Models
 {
     public class StatisticsModel
     {
-        public string Tags { get; set; }
+        public int IdTags { get; set; }
+        public DateTime Date { get; set; }
         public int TimeInTeraction { get; set; }
-
+      
+    }
+    public class StatisticReturnModel
+    {
+        public DateTime Date { get; set; }
+        public List<int> TimeInteraction { get; set; }
     }
 
     public class ListTaskModel
