@@ -17,10 +17,19 @@ namespace BatchjobService.Models
         public int possitiveCommentCount { get; set; }
     }
 
-    public class FacebookInteractionModel
+    public class FacebookInteractionModel2
     {
         public string name { get; set; }
         public List<FacebookInteraction> data { get; set; }
+    }
+
+    public class FacebookInteractionModel
+    {
+        public List<FacebookInteractionModel2> data { get; set; }
+
+        public DateTime? startDate { get; set; }
+
+        public DateTime? endDate { get; set; }
     }
 
     public class FacebookPageStatisticsModel

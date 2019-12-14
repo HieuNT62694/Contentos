@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AuthenticationService.Controllers;
+using BatchjobService.Application.Command.CancelPublish;
 using BatchjobService.Application.Command.CheckToken;
 using BatchjobService.Application.Command.CreateFanpage;
 using BatchjobService.Application.Command.DeleteFanpage;
@@ -69,6 +70,19 @@ namespace BatchjobService.Controllers
                     case 3 :  PublishWP(item, models.contentId, models.time, task.Id);
                         break;
                 }
+            }
+
+            return Accepted();
+        }
+
+        [HttpPut("publish/cancel")]
+        public async Task<IActionResult> CancelPublish(CancelPublishCommand cancelPublishCommand)
+        {
+            var response = await Mediator.Send(cancelPublishCommand);
+
+            if (response.Equals(""))
+            {
+                return Conflict();
             }
 
             return Accepted();

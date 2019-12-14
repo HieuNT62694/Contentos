@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BatchjobService.Application.Queries.GetCountInteractionByCampaignId
 {
-    public class GetCountInteractionByCampaignIdRequest : IRequest<List<FacebookPageStatistics>>
+    public class GetCountInteractionByCampaignIdRequest : IRequest<FacebookPageStatistics>
     {
         public int campaignId { get; set; }
     }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BatchjobService.Application.Queries.GetInteractionByCampaignId
 {
-    public class GetInteractionByCampaignIdRequest : IRequest<List<FacebookInteractionModel>>
+    public class GetInteractionByCampaignIdRequest : IRequest<FacebookInteractionModel>
     {
         public int campaignId { get; set; }
     }

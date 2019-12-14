@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BatchjobService.Application.Queries.GetInteractionByCampaignId
 {
-    public class GetInteractionByCampaignIdHandler : IRequestHandler<GetInteractionByCampaignIdRequest, List<FacebookInteractionModel>>
+    public class GetInteractionByCampaignIdHandler : IRequestHandler<GetInteractionByCampaignIdRequest, FacebookInteractionModel>
     {
         private readonly ContentoDbContext _context;
 
@@ -21,11 +21,12 @@ namespace BatchjobService.Application.Queries.GetInteractionByCampaignId
             _context = context;
         }
 
-        public async Task<List<FacebookInteractionModel>> Handle(GetInteractionByCampaignIdRequest request, CancellationToken cancellationToken)
+        public async Task<FacebookInteractionModel> Handle(GetInteractionByCampaignIdRequest request, CancellationToken cancellationToken)
         {
             var taskFanpages = _context.TasksFanpages.Include(i => i.IdFanpageNavigation).Include(i => i.IdTaskNavigation)
                 .Where(w => w.IdFanpageNavigation.IdChannel == 2 && w.IdTaskNavigation.IdCampaign == request.campaignId).ToList();
 
+            var campaign = _context.Campaigns.Find(request.campaignId);
             Dictionary<string, List<FacebookInteraction>> map = new Dictionary<string, List<FacebookInteraction>>();
 
             foreach (var taskFanpage in taskFanpages)
@@ -88,11 +89,13 @@ namespace BatchjobService.Application.Queries.GetInteractionByCampaignId
                 map[taskFanpage.IdFanpageNavigation.Name] = lst;
             }
 
-            List<FacebookInteractionModel> result = new List<FacebookInteractionModel>();
+            List<FacebookInteractionModel2> lstInt = new List<FacebookInteractionModel2>();
             foreach (var item in map)
             {
-                result.Add(new FacebookInteractionModel { name = item.Key, data = item.Value });
+                lstInt.Add(new FacebookInteractionModel2 { name = item.Key, data = item.Value });
             }
+
+            FacebookInteractionModel result = new FacebookInteractionModel { data = lstInt, startDate = campaign.StartDate, endDate = campaign.EndDate };
 
             return result;
         }

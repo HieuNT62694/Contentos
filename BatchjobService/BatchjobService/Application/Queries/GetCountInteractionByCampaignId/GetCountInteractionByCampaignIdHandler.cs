@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BatchjobService.Application.Queries.GetCountInteractionByCampaignId
 {
-    public class GetCountInteractionByCampaignIdHandler : IRequestHandler<GetCountInteractionByCampaignIdRequest, List<FacebookPageStatistics>>
+    public class GetCountInteractionByCampaignIdHandler : IRequestHandler<GetCountInteractionByCampaignIdRequest, FacebookPageStatistics>
     {
         private readonly ContentoDbContext _context;
 
@@ -21,24 +21,18 @@ namespace BatchjobService.Application.Queries.GetCountInteractionByCampaignId
             _context = context;
         }
 
-        public async Task<List<FacebookPageStatistics>> Handle(GetCountInteractionByCampaignIdRequest request, CancellationToken cancellationToken)
+        public async Task<FacebookPageStatistics> Handle(GetCountInteractionByCampaignIdRequest request, CancellationToken cancellationToken)
         {
             var taskFanpages = _context.TasksFanpages.Include(i => i.IdFanpageNavigation).Include(i => i.IdTaskNavigation)
                .Where(w => w.IdFanpageNavigation.IdChannel == 2 && w.IdTaskNavigation.IdCampaign == request.campaignId).ToList();
 
-            Dictionary<string, int> map = new Dictionary<string, int>();
+            var campaign = _context.Campaigns.Find(request.campaignId);
+
+            int count = 0;
 
             foreach (var taskFanpage in taskFanpages)
             {
-                if (!map.ContainsKey(taskFanpage.IdFanpageNavigation.Name))
-                {
-                    map.Add(taskFanpage.IdFanpageNavigation.Name, 0);
-                }
-
                 var interaction = JObject.Parse(await Helper.GetInteraction(taskFanpage.IdFacebook, taskFanpage.IdFanpageNavigation.Token));
-
-                int count = 0;
-
                 count += interaction["reactions"]["summary"]["total_count"].Value<int>();
                 count += interaction["comments"]["summary"]["total_count"].Value<int>();
 
@@ -50,16 +44,9 @@ namespace BatchjobService.Application.Queries.GetCountInteractionByCampaignId
                 {
                     count += interaction["shares"]["count"].Value<int>();
                 }
-
-                map[taskFanpage.IdFanpageNavigation.Name] += count;
             }
 
-            List<FacebookPageStatistics> result = new List<FacebookPageStatistics>();
-
-            foreach (var item in map)
-            {
-                result.Add(new FacebookPageStatistics { name = item.Key, interaction = item.Value});
-            }
+            FacebookPageStatistics result = new FacebookPageStatistics { name = campaign.Title, interaction = count};
 
             return result;
         }
