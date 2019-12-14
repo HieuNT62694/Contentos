@@ -8,6 +8,7 @@ using BatchjobService.Application.Command.CreateFanpage;
 using BatchjobService.Application.Command.DeleteFanpage;
 using BatchjobService.Application.Command.UpdateFanpage;
 using BatchjobService.Application.Queries.GetContentByFanpageId;
+using BatchjobService.Application.Queries.GetCountInteractionByCampaignId;
 using BatchjobService.Application.Queries.GetDetailFanpage;
 using BatchjobService.Application.Queries.GetFanpages;
 using BatchjobService.Application.Queries.GetFanpagesByCustomerId;
@@ -238,6 +239,20 @@ namespace BatchjobService.Controllers
             }
         }
 
+        [HttpGet("interaction-count/campaign/{id}")]
+        public async Task<IActionResult> GetInteractionCount(int id)
+        {
+            try
+            {
+                var response = await Mediator.Send(new GetCountInteractionByCampaignIdRequest { campaignId = id });
+                return Ok(response);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
         private void PublishFB(int fanpageId, int contentId, DateTime time, int taskId)
         {
             var jobId = BackgroundJob.Schedule(
@@ -290,12 +305,12 @@ namespace BatchjobService.Controllers
             _context.TasksFanpages.Add(taskFanpages);
             _context.SaveChanges();
         }
-        [HttpGet("test/{customerId}")]
-        public async Task<IActionResult> GetTest(int customerId)
+        [HttpGet("test/{campaignId}")]
+        public async Task<IActionResult> GetTest(int campaignId)
         {
             try
             {
-                var response = await Mediator.Send(new GetPageStatisticsRequest { customerId = customerId });
+                var response = await Mediator.Send(new GetCountInteractionByCampaignIdRequest { campaignId = campaignId });
                 return Ok(response);
             }
             catch

@@ -32,7 +32,7 @@ namespace BatchjobService.Models
 
     public class FacebookPageStatistics
     {
-        public int newLikeCount { get; set; }
-        public int newInboxCount { get; set; }
+        public string name { get; set; }
+        public int interaction { get; set; }
     }
 }
