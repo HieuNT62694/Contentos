@@ -21,6 +21,7 @@ namespace BatchjobService.Entities
         public virtual DbSet<Comments> Comments { get; set; }
         public virtual DbSet<Contents> Contents { get; set; }
         public virtual DbSet<Fanpages> Fanpages { get; set; }
+        public virtual DbSet<FanpagesInteraction> FanpagesInteraction { get; set; }
         public virtual DbSet<FanpagesTags> FanpagesTags { get; set; }
         public virtual DbSet<Notifys> Notifys { get; set; }
         public virtual DbSet<Personalizations> Personalizations { get; set; }
@@ -249,6 +250,26 @@ namespace BatchjobService.Entities
                     .HasConstraintName("FK_fanpage_marketer");
             });
 
+            modelBuilder.Entity<FanpagesInteraction>(entity =>
+            {
+                entity.ToTable("fanpages_interaction");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.IdFanpages).HasColumnName("id_fanpages");
+
+                entity.Property(e => e.Interaction).HasColumnName("interaction");
+
+                entity.HasOne(d => d.IdFanpagesNavigation)
+                    .WithMany(p => p.FanpagesInteraction)
+                    .HasForeignKey(d => d.IdFanpages)
+                    .HasConstraintName("FK_fanpages_interaction_fanpages");
+            });
+
             modelBuilder.Entity<FanpagesTags>(entity =>
             {
                 entity.HasKey(e => new { e.IdFanpage, e.IdTag })
@@ -357,9 +378,7 @@ namespace BatchjobService.Entities
             {
                 entity.ToTable("statistics");
 
-                entity.Property(e => e.Id)
-                    .HasColumnName("id")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.CreatedDate)
                     .HasColumnName("created_date")

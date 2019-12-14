@@ -43,6 +43,7 @@ namespace BatchjobService
             services.AddScoped<IUpdateStatusService, UpdateStatusService>();
             services.AddScoped<IUpdateStatusCampaign, UpdateStatusCampaign>();
             services.AddScoped<IPublishFBService, PublishFB>();
+            services.AddScoped<ICountInteraction, CountInteraction>();
             services.AddScoped<IUpdateBeforePublishingService, UpdateBeforePublishingService>();
             services.AddScoped<ICheckDeadlineForSendMail, CheckDeadlineForSendMail>();
             //and scoped
@@ -122,6 +123,7 @@ namespace BatchjobService
             RecurringJob.AddOrUpdate<IRun>("Recommend", context => context.Handle(), "0 17 * * *", TimeZoneInfo.Utc);
             RecurringJob.AddOrUpdate<ICheckDeadlineForSendMail>("CheckDeadlineForSendMail", context => context.PublishMessage(), "0 17 * * *", TimeZoneInfo.Utc);
             RecurringJob.AddOrUpdate<IUpdateStatusCampaign>("UpdatestatusCampaign", context => context.UpdateStatus(), "0 17 * * *", TimeZoneInfo.Utc);
+            RecurringJob.AddOrUpdate<ICountInteraction>("CountInteraction", context => context.CountAsync(), "5 * * * *", TimeZoneInfo.Utc);
             app.UseDiscoveryClient();
             app.UseHttpsRedirection();
             app.UseMvc();
