@@ -20,7 +20,8 @@ namespace ContentProccessService.Application.Queries.GetStatistics
         }
         public async Task<List<StatisticReturnModel>> Handle(GetStatisticsRequest request, CancellationToken cancellationToken)
         {
-            var lstTasks = await _context.Statistics.Where(x=> x.CreatedDate >= DateTime.UtcNow.AddDays(-7) && x.CreatedDate < DateTime.UtcNow).ToListAsync();
+            var lstTasks = await _context
+                .Statistics.Where(x=> x.CreatedDate >= DateTime.UtcNow.AddDays(-7) && x.CreatedDate < DateTime.UtcNow).ToListAsync();
             var lstTagInter = new List<StatisticsModel>();
             var lstTagInterReturn = new List<StatisticReturnModel>();
             foreach (var item in lstTasks)
@@ -30,7 +31,7 @@ namespace ContentProccessService.Application.Queries.GetStatistics
                 {
                     if (lstTagInter.Any(x => x.IdTags == item2.Id && x.Date.DayOfYear == item.CreatedDate.GetValueOrDefault().DayOfYear))
                     {
-                        lstTagInter.Where(x => x.IdTags == item2.Id).FirstOrDefault().TimeInTeraction += item.Views ?? 0;
+                        lstTagInter.Where(x => x.IdTags == item2.Id && x.Date.DayOfYear == item.CreatedDate.GetValueOrDefault().DayOfYear).FirstOrDefault().TimeInTeraction += item.Views ?? 0;
                     }
                     else
                     {
@@ -207,8 +208,24 @@ namespace ContentProccessService.Application.Queries.GetStatistics
                 }
               
             }
+            var newlistreturn = lstTagInterReturn.OrderBy(x => x.Date).ToList();
+            if (lstTagInterReturn.Count != 7)
+            {
+                for (int i = 0; i < 7; i++)
+                {
+                    if (!newlistreturn.Any(x=>x.Date.DayOfYear == DateTime.UtcNow.AddDays(i - 7).DayOfYear))
+                    {
+                        var statiscs = new StatisticReturnModel();
+                        statiscs.Date = DateTime.UtcNow.AddDays(i - 7);
+                        int[] arr = new int[10];
+                        statiscs.TimeInteraction = arr.ToList();
+                        newlistreturn.Add(statiscs);
+                    }
+                }
 
-            return lstTagInterReturn.OrderBy(x=>x.Date).ToList();
+            }
+
+            return newlistreturn.OrderBy(x=>x.Date).ToList();
         }
     }
 }

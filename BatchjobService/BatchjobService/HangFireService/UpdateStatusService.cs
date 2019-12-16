@@ -31,7 +31,7 @@ namespace BatchjobService.HangFireService
                     item.ModifiedDate = DateTime.UtcNow;
                 }
             }
-            var lstTaskUpdateIsAds = lstTask.Where(x => x.Status == 7 || x.IsAds == true);
+            var lstTaskUpdateIsAds = lstTask.Where(x => x.Status == 7 && x.IsAds == true);
             foreach (var item in lstTaskUpdateIsAds)
             {
                 if(item.AdsDate < DateTime.UtcNow)
@@ -40,8 +40,17 @@ namespace BatchjobService.HangFireService
                     item.AdsDate = null;
                 }
             }
+            var lstTaskUpdateOverduePublish = lstTask.Where(x => x.Status == 5);
+            foreach (var item in lstTaskUpdateOverduePublish)
+            {
+                if (item.PublishTime < DateTime.UtcNow)
+                {
+                    item.Status = 4;
+                }
+            }
             _context.UpdateRange(lstTaskUpdateStatus);
             _context.UpdateRange(lstTaskUpdateIsAds);
+            _context.UpdateRange(lstTaskUpdateOverduePublish);
             _context.SaveChanges();
         }
     }

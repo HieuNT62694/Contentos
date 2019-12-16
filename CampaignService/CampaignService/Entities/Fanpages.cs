@@ -7,6 +7,7 @@ namespace CampaignService.Entities
     {
         public Fanpages()
         {
+            FanpagesInteraction = new HashSet<FanpagesInteraction>();
             FanpagesTags = new HashSet<FanpagesTags>();
             TasksFanpages = new HashSet<TasksFanpages>();
         }
@@ -23,6 +24,7 @@ namespace CampaignService.Entities
 
         public virtual Channels IdChannelNavigation { get; set; }
         public virtual Users IdMarketerNavigation { get; set; }
+        public virtual ICollection<FanpagesInteraction> FanpagesInteraction { get; set; }
         public virtual ICollection<FanpagesTags> FanpagesTags { get; set; }
         public virtual ICollection<TasksFanpages> TasksFanpages { get; set; }
     }

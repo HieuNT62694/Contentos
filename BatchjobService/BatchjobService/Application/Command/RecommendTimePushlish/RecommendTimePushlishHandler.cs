@@ -32,59 +32,70 @@ namespace BatchjobService.Application.Command.RecommendTimePushlish
                     .Where(x => x.IdFanpages == item
                     && x.CreatedDate.GetValueOrDefault().DayOfYear >= DateTime.UtcNow.AddDays(-7).DayOfYear && x.CreatedDate.GetValueOrDefault().DayOfYear < DateTime.UtcNow.DayOfYear)
                     .OrderBy(x => x.CreatedDate).ToListAsync();
-
-                for (int i = 0; i < lstInter.Count; i++)
+                if (lstInter.Count == 0)
                 {
-                    if (lstInter[i].CreatedDate.GetValueOrDefault().Hour == 23)
+                    var RtModel = new RecommendsTimeModels
                     {
-                        var interBefore = _context
-                            .FanpagesInteraction
-                            .Where(x => x.IdFanpages == item
-                            && x.CreatedDate.GetValueOrDefault().DayOfYear == lstInter[i].CreatedDate.GetValueOrDefault().AddDays(1).DayOfYear)
-                            .OrderBy(x => x.CreatedDate).FirstOrDefault();
-                        lstInter[i].Interaction = (interBefore.Interaction ?? 0) - (lstInter[i].Interaction ?? 0);
-                    }
-                    else if (i == (lstInter.Count - 1))
-                    {
-                        lstInter.RemoveAt(i);
-                    }
-                    else
-                    {
-                        lstInter[i].Interaction = (lstInter[i + 1].Interaction ?? 0) - (lstInter[i].Interaction ?? 0);
-                    }
-
-                }
-                
-                var newLst = lstInter.OrderByDescending(x => x.Interaction).ToList();
-               
-                var bestTimeInter = newLst.Where(x=>x.Interaction == newLst.FirstOrDefault().Interaction).ToList();
-                if (bestTimeInter.Count > 1)
-                {
-                    foreach (var item3 in bestTimeInter)
-                    {
-                        if (lstInterDay.CreatedDate == item3.CreatedDate)
-                        {
-                            var RtModel = new RecommendsTimeModels
-                            {
-                                FanpageName = item3.IdFanpagesNavigation.Name,
-                                PublishTime = item3.CreatedDate.GetValueOrDefault().AddDays(7)
-                            };
-                            retTime.Add(RtModel);
-                            break;
-                        }
-                    }
+                        FanpageName = _context.Fanpages.FirstOrDefault(x => x.Id == item).Name
+                    };
+                    retTime.Add(RtModel);
+                  
                 }
                 else
                 {
-                    var oneBest = newLst.FirstOrDefault();
-                    var RtModel = new RecommendsTimeModels
+                    for (int i = 0; i < lstInter.Count; i++)
                     {
-                        FanpageName = oneBest.IdFanpagesNavigation.Name,
-                        PublishTime = oneBest.CreatedDate.GetValueOrDefault().AddDays(7)
-                    };
-                    retTime.Add(RtModel);
+                        if (lstInter[i].CreatedDate.GetValueOrDefault().Hour == 23)
+                        {
+                            var interBefore = _context
+                                .FanpagesInteraction
+                                .Where(x => x.IdFanpages == item
+                                && x.CreatedDate.GetValueOrDefault().DayOfYear == lstInter[i].CreatedDate.GetValueOrDefault().AddDays(1).DayOfYear)
+                                .OrderBy(x => x.CreatedDate).FirstOrDefault();
+                            lstInter[i].Interaction = (interBefore.Interaction ?? 0) - (lstInter[i].Interaction ?? 0);
+                        }
+                        else if (i == (lstInter.Count - 1))
+                        {
+                            lstInter.RemoveAt(i);
+                        }
+                        else
+                        {
+                            lstInter[i].Interaction = (lstInter[i + 1].Interaction ?? 0) - (lstInter[i].Interaction ?? 0);
+                        }
+
+                    }
+
+                    var newLst = lstInter.OrderByDescending(x => x.Interaction).ToList();
+
+                    var bestTimeInter = newLst.Where(x => x.Interaction == newLst.FirstOrDefault().Interaction).ToList();
+                    if (bestTimeInter.Count > 1)
+                    {
+                        foreach (var item3 in bestTimeInter)
+                        {
+                            if (lstInterDay.CreatedDate == item3.CreatedDate)
+                            {
+                                var RtModel = new RecommendsTimeModels
+                                {
+                                    FanpageName = item3.IdFanpagesNavigation.Name,
+                                    PublishTime = item3.CreatedDate.GetValueOrDefault().AddDays(7).TimeOfDay.ToString().Substring(0, 5) + " " + item3.CreatedDate.GetValueOrDefault().AddDays(7).DayOfWeek.ToString()
+                                };
+                                retTime.Add(RtModel);
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var oneBest = newLst.FirstOrDefault();
+                        var RtModel = new RecommendsTimeModels
+                        {
+                            FanpageName = oneBest.IdFanpagesNavigation.Name,
+                            PublishTime = oneBest.CreatedDate.GetValueOrDefault().AddDays(7).TimeOfDay.ToString().Substring(0, 5) + " " + oneBest.CreatedDate.GetValueOrDefault().AddDays(7).DayOfWeek.ToString()
+                        };
+                        retTime.Add(RtModel);
+                    }
+
                 }
-               
             }
             return retTime;
         }

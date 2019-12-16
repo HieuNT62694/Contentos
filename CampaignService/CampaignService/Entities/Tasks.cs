@@ -8,6 +8,7 @@ namespace CampaignService.Entities
         public Tasks()
         {
             Contents = new HashSet<Contents>();
+            Statistics = new HashSet<Statistics>();
             TasksFanpages = new HashSet<TasksFanpages>();
             TasksTags = new HashSet<TasksTags>();
             UsersInteractions = new HashSet<UsersInteractions>();
@@ -31,6 +32,7 @@ namespace CampaignService.Entities
         public virtual Users IdWritterNavigation { get; set; }
         public virtual StatusTasks StatusNavigation { get; set; }
         public virtual ICollection<Contents> Contents { get; set; }
+        public virtual ICollection<Statistics> Statistics { get; set; }
         public virtual ICollection<TasksFanpages> TasksFanpages { get; set; }
         public virtual ICollection<TasksTags> TasksTags { get; set; }
         public virtual ICollection<UsersInteractions> UsersInteractions { get; set; }

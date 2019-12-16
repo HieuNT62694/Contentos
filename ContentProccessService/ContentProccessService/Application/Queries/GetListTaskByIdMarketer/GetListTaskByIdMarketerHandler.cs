@@ -26,7 +26,7 @@ namespace ContentProccessService.Application.Queries.GetListTaskByIdMarketer
                 .Select(x => new
                 {
                     x,
-                    Tasks = x.Tasks.Where(i => i.Status == 5 || i.Status == 6 ||i.Status == 7 ).OrderBy(i=>i.PublishTime).ToList()
+                    Tasks = x.Tasks.Where(i => i.Status == 5 || i.Status == 6 ||i.Status == 7 || i.Status == 8 ).OrderBy(i=>i.PublishTime).ToList()
                 })
                 .ToListAsync();
             var lstTask = new List<TasksViewModel>();

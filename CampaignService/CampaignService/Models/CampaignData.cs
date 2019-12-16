@@ -48,4 +48,18 @@ namespace CampaignService.Models
         public int Id { get; set; }
         public string Name { get; set; }
     }
+    public class CampaignStaticsModels
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public Status Status { get; set; }
+    }
+    public class CampaignStaticsTotalModels
+    {
+        public int TotalCampaign { get; set; }
+        public int CampaignInProcess { get; set; }
+        public int CampaignCompleted { get; set; }
+    }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Queries.GetTaskbyTagInteraction
 {
-    public class GetTaskbyTagInteractionRequest : IRequest<List<StatisticReturnModel>>
+    public class GetTaskbyTagInteractionRequest : IRequest<List<StaticsDetailModel>>
     {
         public int Id { get; set; }
     }

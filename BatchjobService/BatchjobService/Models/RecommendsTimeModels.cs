@@ -8,6 +8,6 @@ namespace BatchjobService.Models
     public class RecommendsTimeModels
     {
         public string FanpageName { get; set; }
-        public DateTime? PublishTime { get; set; }
+        public string PublishTime { get; set; }
     }
 }

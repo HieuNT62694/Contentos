@@ -48,6 +48,7 @@ using ContentProccessService.Application.Queries.GetTaskbyTagInteraction;
 using ContentProccessService.Application.Queries.GetTaskViewTrend;
 using ContentProccessService.Application.Queries.GetTaskbyTagInteractionMonth;
 using ContentProccessService.Application.Queries.GetTaskViewTrendMonth;
+using ContentProccessService.Application.Queries.GetTaskByCampaignIdInteraction;
 
 namespace ContentProccessService.Controllers
 {
@@ -423,11 +424,11 @@ namespace ContentProccessService.Controllers
             }
 
         }
-        [HttpGet("statistics-by-tag-month/{id}")]
+        [HttpPost("statistics-by-tag-month")]
         //[Authorize(Roles = "")]
-        public async Task<IActionResult> GetTaskInteractionByTagsMonth(int id)
+        public async Task<IActionResult> GetTaskInteractionByTagsMonth(GetTaskbyTagInteractionMonthRequest request)
         {
-            var response = await Mediator.Send(new GetTaskbyTagInteractionMonthRequest { Id = id });
+            var response = await Mediator.Send(request);
             if (response != null)
             {
                 return Ok(response);
@@ -458,6 +459,21 @@ namespace ContentProccessService.Controllers
         public async Task<IActionResult> GetTaskInteractionTrendMonth()
         {
             var response = await Mediator.Send(new GetTaskViewTrendMonthRequest { });
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest("Please check fanpage id");
+            }
+
+        }
+        [HttpGet("statistics-task-campaignid/{id}")]
+        //[Authorize(Roles = "")]
+        public async Task<IActionResult> GetTaskInteractionByCampaignId(int id)
+        {
+            var response = await Mediator.Send(new GetTaskByCampaignIdInteractionRequest { IdCampaign = id });
             if (response != null)
             {
                 return Ok(response);

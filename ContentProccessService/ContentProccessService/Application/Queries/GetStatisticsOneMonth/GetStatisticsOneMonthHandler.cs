@@ -10,32 +10,61 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Queries.GetStatisticsOneMonth
 {
-    public class GetStatisticsOneMonthHandler : IRequestHandler<GetStatisticsOneMonthRequest, List<StatisticReturnModel>>
+    public class GetStatisticsOneMonthHandler : IRequestHandler<GetStatisticsOneMonthRequest, List<StatisticMonthReturnModel>>
     {
         private readonly ContentoDbContext _context;
         public GetStatisticsOneMonthHandler(ContentoDbContext contentodbContext)
         {
             _context = contentodbContext;
         }
-        public async Task<List<StatisticReturnModel>> Handle(GetStatisticsOneMonthRequest request, CancellationToken cancellationToken)
+        public async Task<List<StatisticMonthReturnModel>> Handle(GetStatisticsOneMonthRequest request, CancellationToken cancellationToken)
         {
-            var lstTasks = await _context.Statistics.Where(x => x.CreatedDate >= DateTime.UtcNow.AddMonths(-1) && x.CreatedDate < DateTime.UtcNow).ToListAsync();
-            var lstTagInter = new List<StatisticsModel>();
-            var lstTagInterReturn = new List<StatisticReturnModel>();
+
+            
+            var lstTasks = await _context.Statistics
+                .Where(x => x.CreatedDate.GetValueOrDefault() >= DateTime.UtcNow.AddMonths(-1) && x.CreatedDate < DateTime.UtcNow)
+                .ToListAsync();
+            var lstTagInter = new List<StatisticsModelMonth>();
+            var lstTagInterReturn = new List<StatisticMonthReturnModel>();
+            var lstweek = new List<WeekStatics>();
+            for (int i = 0; i < 4; i++)
+            {
+                var week = new WeekStatics();
+                if (i == 3)
+                {
+                    week.StratDate = DateTime.UtcNow.AddMonths(-1).AddDays(7 * i);
+                    week.EndDate = DateTime.UtcNow.AddDays(-1);
+                }
+                else
+                {
+                    week.StratDate = DateTime.UtcNow.AddMonths(-1).AddDays(7 * i);
+                    week.EndDate = week.StratDate.AddDays(7);
+                }
+               
+              
+                lstweek.Add(week);
+            }
             foreach (var item in lstTasks)
             {
                 var lstTag = _context.TasksTags.Include(x => x.IdTagNavigation).Where(x => x.IdTask == item.IdTask).Select(x => x.IdTagNavigation).ToList();
                 foreach (var item2 in lstTag)
                 {
-                    if (lstTagInter.Any(x => x.IdTags == item2.Id && x.Date.DayOfYear == item.CreatedDate.GetValueOrDefault().DayOfYear))
+                    if (lstTagInter.Any(x => x.IdTags == item2.Id && x.StratDate >= item.CreatedDate && x.EndDate < item.CreatedDate))
                     {
-                        lstTagInter.Where(x => x.IdTags == item2.Id).FirstOrDefault().TimeInTeraction += item.Views ?? 0;
+                        lstTagInter.Where(x => x.IdTags == item2.Id && x.StratDate >= item.CreatedDate && x.EndDate < item.CreatedDate).FirstOrDefault().TimeInTeraction += item.Views ?? 0;
                     }
                     else
                     {
-                        var Alori = new StatisticsModel();
+                        var Alori = new StatisticsModelMonth();
                         Alori.IdTags = item2.Id;
-                        Alori.Date = item.CreatedDate ?? DateTime.UtcNow;
+                        foreach (var item3 in lstweek)
+                        {
+                            if ( item.CreatedDate >= item3.StratDate && item.CreatedDate < item3.EndDate  )
+                            {
+                                Alori.StratDate = item3.StratDate;
+                                Alori.EndDate = item3.EndDate;
+                            }
+                        }
                         Alori.TimeInTeraction += item.Views ?? 0;
                         lstTagInter.Add(Alori);
                     }
@@ -45,7 +74,7 @@ namespace ContentProccessService.Application.Queries.GetStatisticsOneMonth
             foreach (var item in lstTagInter)
             {
                 var testst = item;
-                var test = lstTagInterReturn.Where(x => x.Date.DayOfYear == item.Date.DayOfYear).FirstOrDefault();
+                var test = lstTagInterReturn.Where(x => x.StratDate == item.StratDate && x.EndDate == item.EndDate).FirstOrDefault();
                 if (test != null)
                 {
                     var test2 = test.TimeInteraction.ToArray();
@@ -130,8 +159,10 @@ namespace ContentProccessService.Application.Queries.GetStatisticsOneMonth
                 }
                 else
                 {
-                    var statiscs = new StatisticReturnModel();
-                    statiscs.Date = item.Date;
+                    var statiscs = new StatisticMonthReturnModel();
+                    statiscs.StratDate = item.StratDate;
+                    statiscs.EndDate = item.EndDate;
+                    statiscs.Date = item.StratDate.Day.ToString() + " - " + item.EndDate.ToString("dd-MM-yyyy");
                     int[] arr = new int[10];
                     switch (item.IdTags)
                     {
@@ -206,8 +237,27 @@ namespace ContentProccessService.Application.Queries.GetStatisticsOneMonth
                 }
 
             }
+            var newlistreturn = lstTagInterReturn.OrderBy(x => x.StratDate).ToList();
+            if (lstTagInterReturn.Count != 4)
+            {
+                foreach (var item5 in lstweek)
+                {
+                    if (!newlistreturn.Any(x=>x.StratDate == item5.StratDate))
+                    {
+                        var statiscs = new StatisticMonthReturnModel();
+                        statiscs.StratDate = item5.StratDate;
+                        statiscs.EndDate = item5.EndDate;
+                        statiscs.Date = item5.StratDate.Day.ToString() + " - " + item5.EndDate.ToString("dd-MM-yyyy");
+                        int[] arr = new int[10];
+                        statiscs.TimeInteraction = arr.ToList();
+                        newlistreturn.Add(statiscs);
+                    }
+                }
 
-            return lstTagInterReturn.OrderBy(x => x.Date).ToList();
+
+            }
+
+            return newlistreturn.OrderBy(x => x.StratDate).ToList();
         }
      
 

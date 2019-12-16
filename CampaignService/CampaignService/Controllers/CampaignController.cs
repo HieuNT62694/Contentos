@@ -6,8 +6,10 @@ using AutoMapper;
 using CampaignService.Application.Commands.CreateCampaign;
 using CampaignService.Application.Commands.UpdateCampaign;
 using CampaignService.Application.Queries.GetCampaign;
+using CampaignService.Application.Queries.GetCampaignStatics;
 using CampaignService.Application.Queries.GetListCampaign;
 using CampaignService.Application.Queries.GetListCampaignBasicByEditorId;
+using CampaignService.Application.Queries.GetListCampaignByCustomerId;
 using CampaignService.Application.Queries.GetListCampaignByEditorId;
 using CampaignService.Application.Queries.GetListCampaignByMarketerId;
 using CampaignService.Application.Queries.GetListCampaignByUserId;
@@ -106,6 +108,20 @@ namespace CampaignService.Controllers
         public async Task<IActionResult> GetListCampaignBasicByEditorIdAsync(int id)
         {
             var response = await Mediator.Send(new GetListCampaignBasicByEditorIdRequest { IdEditor = id });
+            return Ok(response);
+        }
+        [HttpGet("campaigns-statics/customer/{id}")]
+        ////[Authorize(Roles = "Editor")]
+        public async Task<IActionResult> GetListCampaignStaticsByCustomerIdAsync(int id)
+        {
+            var response = await Mediator.Send(new GetListCampaignByCustomerIdRequest { Id = id });
+            return Ok(response);
+        }
+        [HttpPost("campaigns-total-statics/customer")]
+        ////[Authorize(Roles = "Editor")]
+        public async Task<IActionResult> GetListCampaignTotalStaticsAsync(GetCampaignStaticsRequest request)
+        {
+            var response = await Mediator.Send(request);
             return Ok(response);
         }
     }

@@ -21,10 +21,12 @@ namespace CampaignService.Entities
         public virtual DbSet<Comments> Comments { get; set; }
         public virtual DbSet<Contents> Contents { get; set; }
         public virtual DbSet<Fanpages> Fanpages { get; set; }
+        public virtual DbSet<FanpagesInteraction> FanpagesInteraction { get; set; }
         public virtual DbSet<FanpagesTags> FanpagesTags { get; set; }
         public virtual DbSet<Notifys> Notifys { get; set; }
         public virtual DbSet<Personalizations> Personalizations { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
+        public virtual DbSet<Statistics> Statistics { get; set; }
         public virtual DbSet<StatusCampaigns> StatusCampaigns { get; set; }
         public virtual DbSet<StatusTasks> StatusTasks { get; set; }
         public virtual DbSet<Tags> Tags { get; set; }
@@ -248,6 +250,26 @@ namespace CampaignService.Entities
                     .HasConstraintName("FK_fanpage_marketer");
             });
 
+            modelBuilder.Entity<FanpagesInteraction>(entity =>
+            {
+                entity.ToTable("fanpages_interaction");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.IdFanpages).HasColumnName("id_fanpages");
+
+                entity.Property(e => e.Interaction).HasColumnName("interaction");
+
+                entity.HasOne(d => d.IdFanpagesNavigation)
+                    .WithMany(p => p.FanpagesInteraction)
+                    .HasForeignKey(d => d.IdFanpages)
+                    .HasConstraintName("FK_fanpages_interaction_fanpages");
+            });
+
             modelBuilder.Entity<FanpagesTags>(entity =>
             {
                 entity.HasKey(e => new { e.IdFanpage, e.IdTag })
@@ -350,6 +372,27 @@ namespace CampaignService.Entities
                 entity.Property(e => e.Role)
                     .HasColumnName("role")
                     .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Statistics>(entity =>
+            {
+                entity.ToTable("statistics");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnName("created_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.IdTask).HasColumnName("id_task");
+
+                entity.Property(e => e.Views).HasColumnName("views");
+
+                entity.HasOne(d => d.IdTaskNavigation)
+                    .WithMany(p => p.Statistics)
+                    .HasForeignKey(d => d.IdTask)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_statistics_tasks");
             });
 
             modelBuilder.Entity<StatusCampaigns>(entity =>
@@ -491,6 +534,8 @@ namespace CampaignService.Entities
                 entity.Property(e => e.CreatedDate)
                     .HasColumnName("created_date")
                     .HasColumnType("datetime");
+
+                entity.Property(e => e.IdFacebook).HasColumnName("id_facebook");
 
                 entity.Property(e => e.IdJob).HasColumnName("id_job");
 

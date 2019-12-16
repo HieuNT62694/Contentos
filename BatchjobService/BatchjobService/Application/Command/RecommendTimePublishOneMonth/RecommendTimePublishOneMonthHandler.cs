@@ -73,7 +73,7 @@ namespace BatchjobService.Application.Command.RecommendTimePublishOneMonth
                             var RtModel = new RecommendsTimeModels
                             {
                                 FanpageName = item3.IdFanpagesNavigation.Name,
-                                PublishTime = item3.CreatedDate.GetValueOrDefault().AddDays(7)
+                                PublishTime = item3.CreatedDate.GetValueOrDefault().AddDays(7).TimeOfDay.ToString().Substring(0, 5)+" " + item3.CreatedDate.GetValueOrDefault().AddDays(7).DayOfWeek.ToString()
                             };
                             retTime.Add(RtModel);
                             break;
@@ -86,7 +86,7 @@ namespace BatchjobService.Application.Command.RecommendTimePublishOneMonth
                     var RtModel = new RecommendsTimeModels
                     {
                         FanpageName = oneBest.IdFanpagesNavigation.Name,
-                        PublishTime = oneBest.CreatedDate.GetValueOrDefault().AddDays(7)
+                        PublishTime = oneBest.CreatedDate.GetValueOrDefault().AddDays(7).TimeOfDay.ToString().Substring(0, 5)+" " +  oneBest.CreatedDate.GetValueOrDefault().AddDays(7).DayOfWeek.ToString()
                     };
                     retTime.Add(RtModel);
                 }

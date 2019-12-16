@@ -12,6 +12,26 @@ namespace ContentProccessService.Models
         public int TimeInTeraction { get; set; }
       
     }
+    public class StatisticsModelMonth
+    {
+        public int IdTags { get; set; }
+        public DateTime StratDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public int TimeInTeraction { get; set; }
+
+    }
+    public class WeekStatics
+    {
+        public DateTime StratDate { get; set; }
+        public DateTime EndDate { get; set; }
+    }
+    public class StatisticMonthReturnModel
+    {
+        public DateTime StratDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public string Date { get; set; }
+        public List<int> TimeInteraction { get; set; }
+    }
     public class StatisticReturnModel
     {
         public DateTime Date { get; set; }
@@ -46,6 +66,11 @@ namespace ContentProccessService.Models
         public int IdTask { get; set; }
         public int View { get; set; }
 
+    }
+    public class StaticsDetailModel
+    {
+        public DateTime? Date { get; set; }
+        public int TimeInTeraction { get; set; }
     }
 
 }
