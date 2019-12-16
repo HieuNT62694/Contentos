@@ -43,5 +43,7 @@ namespace BatchjobService.Models
     {
         public string name { get; set; }
         public int interaction { get; set; }
+        public int inbox { get; set; }
+        public int view { get; set; }
     }
 }

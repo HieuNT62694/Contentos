@@ -30,6 +30,11 @@ namespace BatchjobService.Application.Queries.GetCountInteractionByCampaignId
 
             int count = 0;
 
+            int conversationCount = 0;
+
+            int viewCount = 0;
+
+            List<int?> listFanpages = new List<int?>();
             foreach (var taskFanpage in taskFanpages)
             {
                 var interaction = JObject.Parse(await Helper.GetInteraction(taskFanpage.IdFacebook, taskFanpage.IdFanpageNavigation.Token));
@@ -44,9 +49,41 @@ namespace BatchjobService.Application.Queries.GetCountInteractionByCampaignId
                 {
                     count += interaction["shares"]["count"].Value<int>();
                 }
+
+
+                if (!listFanpages.Contains(taskFanpage.IdFanpage))
+                {
+                    listFanpages.Add(taskFanpage.IdFanpage);
+
+                    var id = taskFanpage.IdFanpageNavigation.Link.Substring(taskFanpage.IdFanpageNavigation.Link.LastIndexOf("/" + 1));
+
+                    var rezConversation = JObject.Parse(await Helper.GetConversation(id, taskFanpage.IdFanpageNavigation.Token));
+
+                    if (rezConversation["data"].HasValues)
+                    {
+                        var conversations = rezConversation["data"];
+
+                        foreach (var conversation in conversations)
+                        {
+                            if (DateTime.Parse(conversation["updated_time"].Value<string>()) < taskFanpage.IdFanpageNavigation.ModifiedDate)
+                            {
+                                break;
+                            }
+                            conversationCount++;
+                        }
+                    }
+                }
+
+                var rezView = JObject.Parse(await Helper.GetView(taskFanpage.IdFacebook, taskFanpage.IdFanpageNavigation.Token));
+
+                if (rezView["data"].HasValues)
+                {
+                    var view = rezView["data"];
+                    viewCount += view[0]["values"][0]["value"].Value<int>();
+                }
             }
 
-            FacebookPageStatistics result = new FacebookPageStatistics { name = campaign.Title, interaction = count};
+            FacebookPageStatistics result = new FacebookPageStatistics { name = campaign.Title, interaction = count, inbox = conversationCount, view =viewCount};
 
             return result;
         }
