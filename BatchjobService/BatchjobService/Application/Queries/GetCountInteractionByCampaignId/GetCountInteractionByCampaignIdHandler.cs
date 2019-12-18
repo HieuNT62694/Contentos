@@ -26,7 +26,7 @@ namespace BatchjobService.Application.Queries.GetCountInteractionByCampaignId
             var taskFanpages = _context.TasksFanpages.Include(i => i.IdFanpageNavigation).Include(i => i.IdTaskNavigation)
                .Where(w => w.IdFanpageNavigation.IdChannel == 2 && w.IdTaskNavigation.IdCampaign == request.campaignId).ToList();
 
-            var campaign = _context.Campaigns.Find(request.campaignId);
+            var campaign = _context.Campaigns.Include(i => i.StatusNavigation).FirstOrDefault(f => f.Id == request.campaignId);
 
             int count = 0;
 
@@ -92,7 +92,19 @@ namespace BatchjobService.Application.Queries.GetCountInteractionByCampaignId
                 }
             }
 
-            FacebookPageStatistics result = new FacebookPageStatistics { name = campaign.Title, interaction = count, inbox = conversationCount, view =viewCount, reaction = reaction, comment = comment, share = share , start_date = campaign.StartDate, end_date = campaign.EndDate};
+            FacebookPageStatistics result = new FacebookPageStatistics
+            {
+                name = campaign.Title,
+                interaction = count,
+                inbox = conversationCount,
+                view = viewCount,
+                reaction = reaction,
+                comment = comment,
+                share = share,
+                start_date = campaign.StartDate,
+                end_date = campaign.EndDate,
+                status = new Status { id = campaign.StatusNavigation.Id, name = campaign.StatusNavigation.Name, color = campaign.StatusNavigation.Color }
+            };
 
             return result;
         }
