@@ -34,6 +34,10 @@ namespace BatchjobService.Application.Queries.GetCountInteractionByCampaignId
 
             int viewCount = 0;
 
+            int reaction = 0;
+            int comment = 0;
+            int share = 0;
+
             List<int?> listFanpages = new List<int?>();
             foreach (var taskFanpage in taskFanpages)
             {
@@ -41,13 +45,18 @@ namespace BatchjobService.Application.Queries.GetCountInteractionByCampaignId
                 count += interaction["reactions"]["summary"]["total_count"].Value<int>();
                 count += interaction["comments"]["summary"]["total_count"].Value<int>();
 
+                reaction += interaction["reactions"]["summary"]["total_count"].Value<int>();
+                comment += interaction["comments"]["summary"]["total_count"].Value<int>();
+
                 if (!interaction.ContainsKey("shares"))
                 {
                     count += 0;
+                    share += 0;
                 }
                 else
                 {
                     count += interaction["shares"]["count"].Value<int>();
+                    share += interaction["shares"]["count"].Value<int>();
                 }
 
 
@@ -83,7 +92,7 @@ namespace BatchjobService.Application.Queries.GetCountInteractionByCampaignId
                 }
             }
 
-            FacebookPageStatistics result = new FacebookPageStatistics { name = campaign.Title, interaction = count, inbox = conversationCount, view =viewCount};
+            FacebookPageStatistics result = new FacebookPageStatistics { name = campaign.Title, interaction = count, inbox = conversationCount, view =viewCount, reaction = reaction, comment = comment, share = share , start_date = campaign.StartDate, end_date = campaign.EndDate};
 
             return result;
         }

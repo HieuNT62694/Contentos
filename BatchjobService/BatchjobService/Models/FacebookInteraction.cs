@@ -45,5 +45,10 @@ namespace BatchjobService.Models
         public int interaction { get; set; }
         public int inbox { get; set; }
         public int view { get; set; }
+        public int reaction { get; set; }
+        public int comment { get; set; }
+        public int share { get; set; }
+        public DateTime? start_date { get; set; }
+        public DateTime? end_date { get; set; }
     }
 }
