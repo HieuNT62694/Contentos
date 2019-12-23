@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: batchjob-c86b5b4d7-g6lzx
+  name: batchjob-694cb75f85-67wxv
 spec:
   type: ClusterIP
   selector:
