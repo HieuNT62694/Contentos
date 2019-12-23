@@ -24,7 +24,7 @@ namespace BatchjobService.Application.Queries.GetFanpagesByCustomerId
             var fanpages = await _context.Fanpages
                 .Include(i => i.IdChannelNavigation)
                 .Include(i => i.FanpagesTags).ThenInclude(FanpagesTags => FanpagesTags.IdTagNavigation)
-                .Where(w => w.IdCustomer == request.CustomerId).ToListAsync();
+                .Where(w => w.IdCustomer == request.CustomerId || w.IdCustomer == null).ToListAsync();
 
             List<FanpageViewModel> listFanpages = new List<FanpageViewModel>();
 
