@@ -22,6 +22,8 @@ namespace BatchjobService.Application.Command.DeleteFanpage
         {
             Fanpages fanpage = _context.Fanpages.Find(request.id);
 
+            var fanpagesInteraction = _context.FanpagesInteraction.Where(w => w.IdFanpages == request.id).ToList();
+
             _context.Entry(fanpage).Collection(r => r.FanpagesTags).Load();
             _context.Entry(fanpage).Collection(r => r.TasksFanpages).Load();
 
@@ -32,6 +34,7 @@ namespace BatchjobService.Application.Command.DeleteFanpage
 
             _context.RemoveRange(fanpage.TasksFanpages);
             _context.RemoveRange(fanpage.FanpagesTags);
+            _context.RemoveRange(fanpagesInteraction);
             _context.Remove(fanpage);
 
             await _context.SaveChangesAsync();
