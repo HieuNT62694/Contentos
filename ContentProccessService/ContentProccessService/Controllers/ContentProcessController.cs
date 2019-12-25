@@ -157,8 +157,12 @@ namespace ContentProccessService.Controllers
         [Authorize(Roles = "Editor")]
         public async Task<IActionResult> ApprovalsContent(ApproveRejectContentRequest command)
         {
-            await Mediator.Send(command);
-            return Accepted("Successful!!");
+            var response = await Mediator.Send(command);
+            if (response)
+            {
+                return Accepted("Successful!!");
+            }
+            return Conflict("Fail!!");
         }
         [HttpPut("task")]
         [Authorize(Roles = "Editor")]

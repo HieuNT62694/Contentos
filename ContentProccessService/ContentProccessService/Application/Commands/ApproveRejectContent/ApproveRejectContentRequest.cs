@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ContentProccessService.Application.Commands.ApproveRejectContent
 {
-    public class ApproveRejectContentRequest : IRequest
+    public class ApproveRejectContentRequest : IRequest<bool>
     {
         public int IdTask { get; set; }
         public int IdContent { get; set; }
